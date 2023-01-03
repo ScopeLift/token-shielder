@@ -7,7 +7,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 
 // TODO this is an example list, update token list with real list of supported tokens
-const exampleTokenList = [
+const tokenList = [
   {
     chainId: 1,
     address: "0x111111111117dC0aa78b770fA6A738034120C302",
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
         <FormControl>
           <FormLabel>Token</FormLabel>
           <Select placeholder="Ether" size="lg" height="4rem" mb=".75rem">
-            {exampleTokenList.map((item) => {
+            {tokenList.map((item) => {
               return (
                 <option key={item.name} value={item.name}>
                   {item.name}
