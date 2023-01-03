@@ -2,15 +2,11 @@ import { Button } from "@chakra-ui/button";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-} from "@chakra-ui/form-control";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import type { NextPage } from "next";
 import Head from "next/head";
 
+// TODO this is an example list, update token list with real list of supported tokens
 const exampleTokenList = [
   {
     chainId: 1,

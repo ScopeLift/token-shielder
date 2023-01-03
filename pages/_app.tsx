@@ -6,14 +6,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import {
-  mainnet,
-  polygon,
-  optimism,
-  arbitrum,
-  bsc,
-  goerli,
-} from "wagmi/chains";
+import { mainnet, polygon, arbitrum, bsc, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -30,16 +23,10 @@ const colors = {
 const theme = extendTheme({ colors });
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [
-    mainnet,
-    bsc,
-    polygon,
-    arbitrum,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [goerli] : []),
-  ],
+  [mainnet, bsc, polygon, arbitrum, goerli],
   [
     alchemyProvider({
-      apiKey: process.env.NEXT_PUBLIC_API_KEY!,
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
     }),
     publicProvider(),
   ]
