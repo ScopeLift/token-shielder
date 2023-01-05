@@ -1,8 +1,8 @@
 import { Button } from "@chakra-ui/button";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex, Heading, Text } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
-import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import type { NextPage } from "next";
 import Head from "next/head";
 
