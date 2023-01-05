@@ -1,16 +1,15 @@
-import "@rainbow-me/rainbowkit/styles.css";
-import { ChakraProvider } from "@chakra-ui/provider";
+import Header from "../components/Header";
 import { Grid, GridItem } from "@chakra-ui/layout";
+import { ChakraProvider } from "@chakra-ui/provider";
 import { extendTheme } from "@chakra-ui/theme-utils";
+import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, polygon, arbitrum, bsc, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
-
-import Header from "../components/Header";
 
 const colors = {
   brand: {
