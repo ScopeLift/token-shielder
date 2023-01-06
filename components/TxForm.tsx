@@ -1,3 +1,4 @@
+import useNotifications from "../hooks/useNotifications";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
@@ -25,6 +26,9 @@ const tokenList = [
 ];
 
 export const TxForm = () => {
+  // TODO: Placeholder notification for shielding
+  //
+  const { notifyUser } = useNotifications();
   return (
     <Box width="24rem">
       <FormControl>
@@ -68,7 +72,17 @@ export const TxForm = () => {
         </InputGroup>
         <Flex justify="flex-end"></Flex>
       </FormControl>
-      <Button size="lg" mt="1rem" width="100%">
+      <Button
+        size="lg"
+        mt="1rem"
+        width="100%"
+        onClick={() => {
+          notifyUser({
+            alertType: "success",
+            message: "Token was shielded successfully",
+          });
+        }}
+      >
         Shield
       </Button>
     </Box>
