@@ -1,0 +1,2 @@
+[build]
+    environment = { NODE_VERSION = "18.12.1", YARN_VERSION = "3.3.1"}
