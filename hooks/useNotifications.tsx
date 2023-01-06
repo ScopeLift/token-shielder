@@ -1,4 +1,4 @@
-import { getEtherscanUrl } from "../utils/networks";
+import { getEtherscanUrl } from "@/utils/networks";
 import { Box, Link } from "@chakra-ui/layout";
 import { AlertStatus } from "@chakra-ui/react";
 import {

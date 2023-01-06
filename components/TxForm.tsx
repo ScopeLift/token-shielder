@@ -1,4 +1,4 @@
-import useNotifications from "../hooks/useNotifications";
+import useNotifications from "@/hooks/useNotifications";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
