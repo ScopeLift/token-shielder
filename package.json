@@ -15,6 +15,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@railgun-community/quickstart": "^3.6.3",
+    "@railgun-community/shared-models": "^3.6.3",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "ethers": "^5.0.0",
     "framer-motion": "^6",
