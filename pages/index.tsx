@@ -1,3 +1,4 @@
+import HowTo from "@/components/HowTo";
 import { TxForm } from "@/components/TxForm";
 import { Flex, Heading } from "@chakra-ui/layout";
 import type { NextPage } from "next";
@@ -10,6 +11,7 @@ const Home: NextPage = () => {
         Shield
       </Heading>
       <TxForm />
+      <HowTo />
     </Flex>
   );
 };
