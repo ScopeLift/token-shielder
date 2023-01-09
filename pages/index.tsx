@@ -1,5 +1,6 @@
 import { TxForm } from "@/components/TxForm";
 import { Flex, Heading } from "@chakra-ui/layout";
+import { useQuery } from "@tanstack/react-query";
 import type { NextPage } from "next";
 import Head from "next/head";
 
