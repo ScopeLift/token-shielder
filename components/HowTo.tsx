@@ -7,9 +7,10 @@ const HowTo = () => {
       direction="column"
       border="1px solid"
       borderRadius="0.3rem"
-      padding="1rem"
+      padding="2rem"
       maxWidth="40rem"
       marginTop="3rem"
+      marginBottom="3rem"
     >
       <Heading as="h1" size="lg" alignSelf="center">
         Tutorial
