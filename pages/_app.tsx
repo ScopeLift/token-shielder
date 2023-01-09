@@ -1,6 +1,6 @@
-import Header from "../components/Header";
+import Header from "@/components/Header";
 import { Grid, GridItem } from "@chakra-ui/layout";
-import { ChakraProvider } from "@chakra-ui/provider";
+import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/theme-utils";
 import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
