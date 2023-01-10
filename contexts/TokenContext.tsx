@@ -1,4 +1,5 @@
-import useTokenList from "@/hooks/useTokenList";
+import useTokenBalance from "@/hooks/useTokenBalance";
+import { useTokenList } from "@/hooks/useTokenList";
 import React, { createContext, useContext } from "react";
 
 // 1. Add token list fetching from networks object
@@ -12,12 +13,13 @@ const TokenContext = createContext<TokenContextType>(initialContext);
 
 export const TokenListProvider = ({ children }) => {
   const { isLoading, error, tokenList } = useTokenList();
-  const balances = null;
+  const { data } = useTokenBalance({ tokenList: tokenList || [] });
   // Add multicall
   // tokenAddress to balance
   console.log(isLoading);
   console.log(error);
   console.log(tokenList);
+  console.log(data);
   return (
     <TokenContext.Provider value={{ tokenList }}>
       {children}

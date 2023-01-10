@@ -2,7 +2,7 @@ import { networks } from "@/utils/networks";
 import useSWR from "swr";
 import { useNetwork } from "wagmi";
 
-interface TokenListItem {
+export interface TokenListItem {
   chainId: number;
   symbol: string;
   address: string;
@@ -15,7 +15,7 @@ interface TokenListJson {
   tokens: TokenListItem[];
 }
 
-const useTokenList = () => {
+export const useTokenList = () => {
   const { chain } = useNetwork();
   const chainId = chain?.id || 1; // default to mainnet if no chain id
   const network = networks[chainId];
@@ -32,5 +32,3 @@ const useTokenList = () => {
   );
   return { isLoading, error, tokenList: data };
 };
-
-export default useTokenList;
