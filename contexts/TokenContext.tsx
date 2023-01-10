@@ -6,10 +6,6 @@ import React, { ReactNode, createContext, useContext } from "react";
 
 type TokenListContextItem = TokenListItem & { balance: BigNumber | null };
 
-// 1. Add token list fetching from networks object
-// 2. Filter token list by name
-// 2. Store list of tokens in object
-// 3. Fetch balances for each token in a multicall
 export type TokenContextType = {
   tokenList: TokenListContextItem[];
   isLoading: boolean;
