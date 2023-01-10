@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import { TokenListProvider } from "@/contexts/TokenContext";
+import { initialize } from "@/util/railgun";
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/theme-utils";
@@ -45,6 +46,7 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  initialize();
   return (
     <>
       <Head>
