@@ -1,4 +1,5 @@
 import { TokenListItem } from "@/hooks/useTokenList";
+import { BigNumber } from "@ethersproject/bignumber";
 import { multicall } from "@wagmi/core";
 import useSWR from "swr";
 import { useAccount, useNetwork } from "wagmi";
@@ -30,11 +31,14 @@ const useTokenList = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const data = await multicall({
         contracts: multicallArgs,
       });
-      console.log("Multicall");
-      console.log(multicallArgs);
-      console.log(data);
-      // map of token address to metadata
-      return data;
+      const tokelistWithUserBalance = [];
+      for (const [i, token] of tokenList.entries()) {
+        tokelistWithUserBalance.push({
+          ...token,
+          balance: data[i] as BigNumber | null,
+        });
+      }
+      return tokelistWithUserBalance;
     }
   );
   return { isLoading, error, data };

@@ -16,8 +16,7 @@ export const networks = {
   },
   56: {
     blockExplorerUrl: "https://bscxplorer.com/",
-    tokenList:
-      "https://github.com/pancakeswap/token-list/blob/main/lists/pancakeswap-top-100.json", // TODO: We may want to move this list to a more anchored url
+    tokenList: "pancakeswap-top-100.json", // TODO: We may want to move this list to a more anchored url
   },
   137: {
     blockExplorerUrl: "https://polygonscan.com/",

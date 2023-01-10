@@ -1,3 +1,4 @@
+import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -27,7 +28,7 @@ const tokenList = [
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  //
+  const { tokenList } = useToken();
   const { notifyUser } = useNotifications();
   return (
     <Box width="24rem">
@@ -45,7 +46,7 @@ export const TxForm = () => {
       </FormControl>
       <FormControl>
         <FormLabel>Token</FormLabel>
-        <Select placeholder="Ether" size="lg" height="4rem" mb=".75rem">
+        <Select size="lg" height="4rem" mb=".75rem">
           {tokenList.map((item) => {
             return (
               <option key={item.name} value={item.name}>
