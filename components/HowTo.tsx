@@ -1,4 +1,11 @@
-import { Flex, Heading, OrderedList, ListItem, Text } from "@chakra-ui/layout";
+import {
+  Flex,
+  Heading,
+  OrderedList,
+  ListItem,
+  Text,
+  Link,
+} from "@chakra-ui/layout";
 
 // TODO: Copy is a placeholder and pulled from their docs
 const HowTo = () => {
@@ -16,10 +23,15 @@ const HowTo = () => {
         Tutorial
       </Heading>
       <Heading as="h4" size="sm" marginTop="1rem">
-        How to shield?
+        How to shield funds?
       </Heading>
       <OrderedList marginTop="1rem">
-        <ListItem>Create a Railgun wallet</ListItem>
+        <ListItem>
+          Create a Railgun wallet on{" "}
+          <Link href="https://app.railway.xyz/" isExternal>
+            Railway
+          </Link>
+        </ListItem>
         <ListItem>Complete the above form</ListItem>
       </OrderedList>
       <Heading as="h4" size="sm" marginTop="1rem">
