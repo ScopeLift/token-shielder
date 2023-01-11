@@ -9,25 +9,24 @@ import { keccak256 } from "@railgun-community/engine";
 import {
   getShieldPrivateKeySignatureMessage,
   gasEstimateForShield,
-  startRailgunEngine,
-  loadProvider,
-  ArtifactStore,
-  setLoggers,
   getRailgunSmartWalletContractForNetwork,
+  populateShield,
 } from "@railgun-community/quickstart";
 import {
   RailgunERC20AmountRecipient,
   NetworkName,
-  FallbackProviderJsonConfig,
+  TransactionGasDetailsSerialized,
+  EVMGasType,
+  NETWORK_CONFIG,
+  deserializeTransaction,
 } from "@railgun-community/shared-models";
-import { Wallet, BigNumber, utils, Signer, ethers, constants } from "ethers";
-import LevelDB from "level-js";
-import localforage from "localforage";
+import { BigNumber, Signer, ethers, constants } from "ethers";
 import {
   useAccount,
   useSigner,
   usePrepareContractWrite,
   useContractWrite,
+  useProvider,
 } from "wagmi";
 
 export const TxForm = () => {
@@ -43,6 +42,7 @@ export const TxForm = () => {
   );
   const { isConnected, address } = useAccount();
   const { data: signer } = useSigner();
+  const provider = useProvider();
   const { config } = usePrepareContractWrite({
     address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
     abi,
@@ -53,7 +53,7 @@ export const TxForm = () => {
       constants.MaxUint256,
     ],
   });
-  const { writeAsync } = useContractWrite(config);
+  const { writeAsync: doErc20Approval } = useContractWrite(config);
 
   const doSubmit: React.FormEventHandler = async (e) => {
     // Formatted token amounts and recipients.
@@ -62,7 +62,7 @@ export const TxForm = () => {
         tokenAddress: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6", // goerli weth
         amountString: "0x10", // hexadecimal amount
         recipientAddress:
-          "0zk1qyxxgmvh5pcmxjy6fulfjxdxrz5f0gpmgl8fvm6s6ucg4frjekq4erv7j6fe3z53lul3xmu43hg3r7sgnsxq90ktfc8aznrakvknz2q0rpexxyr4mdfhyafx9g0", // RAILGUN address
+          "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4", // RAILGUN address
       },
     ];
 
@@ -73,12 +73,14 @@ export const TxForm = () => {
         getShieldPrivateKeySignatureMessage()
       )
     );
-    if (!writeAsync) throw "not prepared";
-    await writeAsync();
+
+    // if (!doErc20Approval) throw "not prepared";
+    // await doErc20Approval();
+
     // Public wallet to shield from.
     const fromWalletAddress = address as `0x{string}`;
 
-    const { gasEstimateString, error } = await gasEstimateForShield(
+    const { gasEstimateString, error: err } = await gasEstimateForShield(
       NetworkName.EthereumGoerli,
       shieldPrivateKey,
       erc20AmountRecipients,
@@ -86,15 +88,50 @@ export const TxForm = () => {
       fromWalletAddress
     );
 
+    if (err) {
+      throw err;
+    }
+
+    const { maxFeePerGas, maxPriorityFeePerGas } = await provider.getFeeData();
+    const gasDetailsSerialized: TransactionGasDetailsSerialized = {
+      evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
+      gasEstimateString: gasEstimateString!, // Output from gasEstimateForShield
+      maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
+      maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
+    };
+
+    const { serializedTransaction, error } = await populateShield(
+      NetworkName.EthereumGoerli,
+      shieldPrivateKey,
+      erc20AmountRecipients,
+      [], // nftAmountRecipients
+      gasDetailsSerialized
+    );
     if (error) {
       throw error;
     }
     console.log(gasEstimateString);
     const gasEstimate = BigNumber.from(gasEstimateString);
     console.log(gasEstimate);
-    notifyUser({
-      alertType: "success",
-      message: "Token was shielded successfully",
+
+    const { chain } = NETWORK_CONFIG[NetworkName.EthereumGoerli];
+
+    const transactionRequest: ethers.providers.TransactionRequest =
+      deserializeTransaction(
+        serializedTransaction as string,
+        undefined, // nonce (optional)
+        chain.id
+      );
+
+    // Public wallet to shield from.
+    transactionRequest.from = address;
+    const tx = await signer?.sendTransaction(transactionRequest);
+    console.log(tx);
+    await tx?.wait().then(() => {
+      notifyUser({
+        alertType: "success",
+        message: "Token was shielded successfully",
+      });
     });
   };
 
