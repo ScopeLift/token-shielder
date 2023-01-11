@@ -3,6 +3,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { useTokenList, TokenListItem } from "@/hooks/useTokenList";
 import { BigNumber } from "@ethersproject/bignumber";
 import React, { ReactNode, createContext, useContext } from "react";
+import { useAccount } from "wagmi";
 
 type TokenListContextItem = TokenListItem & { balance: BigNumber | null };
 
@@ -20,6 +21,7 @@ const TokenContext = createContext<TokenContextType>(initialContext);
 export const TokenListProvider = ({ children }: { children: ReactNode }) => {
   const { notifyUser } = useNotifications();
   const { isLoading, error, tokenList } = useTokenList();
+  const { isConnected } = useAccount();
   const {
     isLoading: balanceIsLoading,
     error: balanceError,
@@ -31,13 +33,12 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
       message: "Something went wrong fetching the token list",
     });
   }
-  if (balanceError) {
+  if (balanceError && isConnected) {
     notifyUser({
       alertType: "error",
       message: "Something went wrong fetching the token balances",
     });
   }
-  console.log(data);
   return (
     <TokenContext.Provider
       value={{
