@@ -1,6 +1,6 @@
 import { TokenListItem } from "@/hooks/useTokenList";
 import { BigNumber } from "@ethersproject/bignumber";
-import { multicall } from "@wagmi/core";
+import { readContracts } from "@wagmi/core";
 import useSWR from "swr";
 import { useAccount, useNetwork } from "wagmi";
 
@@ -19,25 +19,23 @@ const useTokenList = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       if (!tokenList || tokenList.length === 0) {
         return;
       }
-      let multicallArgs = [];
-      for (const token of tokenList) {
-        multicallArgs.push({
+      const readContractsArgs = tokenList.map((token) => {
+        return {
           abi: ERC20_ABI,
           functionName: "balanceOf",
           address: token.address,
           args: [address],
-        });
-      }
-      const data = await multicall({
-        contracts: multicallArgs,
+        };
       });
-      const tokelistWithUserBalance = [];
-      for (const [i, token] of tokenList.entries()) {
-        tokelistWithUserBalance.push({
+      const data = await readContracts({
+        contracts: readContractsArgs,
+      });
+      const tokelistWithUserBalance = tokenList.map((token, i) => {
+        return {
           ...token,
           balance: data[i] as BigNumber | null,
-        });
-      }
+        };
+      });
       return tokelistWithUserBalance;
     }
   );

@@ -2,29 +2,29 @@ import { isHexString } from "@ethersproject/bytes";
 
 export type NetworkConfig = {
   blockExplorerUrl: string;
-  tokenList: string;
+  tokenListUrl: string;
 };
 
 export const networks = {
   1: {
     blockExplorerUrl: "https://etherscan.io/",
-    tokenList: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
+    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
   },
   5: {
     blockExplorerUrl: "https://goerli.etherscan.io/",
-    tokenList: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
+    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
   },
   56: {
     blockExplorerUrl: "https://bscxplorer.com/",
-    tokenList: "pancakeswap-top-100.json",
+    tokenListUrl: "pancakeswap-top-100.json",
   },
   137: {
     blockExplorerUrl: "https://polygonscan.com/",
-    tokenList: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
+    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
   },
   42161: {
     blockExplorerUrl: "https://arbiscan.io/",
-    tokenList: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
+    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
   },
 } as { [key: number]: NetworkConfig };
 
