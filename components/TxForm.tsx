@@ -1,13 +1,12 @@
 import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
+import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
-import { keccak256 } from "@railgun-community/engine";
 import {
-  getShieldPrivateKeySignatureMessage,
   gasEstimateForShield,
   getRailgunSmartWalletContractForNetwork,
   populateShield,
@@ -21,7 +20,7 @@ import {
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
-import { BigNumber, Signer, ethers, constants } from "ethers";
+import { ethers, constants } from "ethers";
 import { useState } from "react";
 import {
   useAccount,
@@ -34,6 +33,7 @@ import {
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
   const { tokenList } = useToken();
+  const network = NetworkName.EthereumGoerli;
   const { txNotify } = useNotifications();
   let abi = [
     "function transfer(address,uint256) returns (bool)",
@@ -45,13 +45,13 @@ export const TxForm = () => {
   const { isConnected, address } = useAccount();
   const { data: signer } = useSigner();
   const provider = useProvider();
+  const { getShieldPrivateKey } = useShieldPrivateKey();
   const { config } = usePrepareContractWrite({
     address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
     abi: erc20ABI,
     functionName: "approve",
     args: [
-      getRailgunSmartWalletContractForNetwork(NetworkName.EthereumGoerli)
-        .address as `0x{string}`,
+      getRailgunSmartWalletContractForNetwork(network).address as `0x{string}`,
       constants.MaxUint256,
     ],
   });
@@ -65,6 +65,7 @@ export const TxForm = () => {
   const { writeAsync: doErc20Approval } = useContractWrite(config);
 
   const doSubmit: React.FormEventHandler = async (e) => {
+    // TODO: Form validation
     // Formatted token amounts and recipients.
     const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
       {
@@ -78,11 +79,7 @@ export const TxForm = () => {
 
     // The shieldPrivateKey enables the sender to decrypt
     // the receiver's address in the future.
-    const shieldPrivateKey = keccak256(
-      await (signer as Signer).signMessage(
-        getShieldPrivateKeySignatureMessage()
-      )
-    );
+    const shieldPrivateKey = await getShieldPrivateKey();
 
     // if (!doErc20Approval) throw "not prepared";
     // await doErc20Approval();
@@ -91,7 +88,7 @@ export const TxForm = () => {
     const fromWalletAddress = address as `0x{string}`;
 
     const { gasEstimateString, error: err } = await gasEstimateForShield(
-      NetworkName.EthereumGoerli,
+      network,
       shieldPrivateKey,
       erc20AmountRecipients,
       [], // nftAmountRecipients
@@ -111,7 +108,7 @@ export const TxForm = () => {
     };
 
     const { serializedTransaction, error } = await populateShield(
-      NetworkName.EthereumGoerli,
+      network,
       shieldPrivateKey,
       erc20AmountRecipients,
       [], // nftAmountRecipients
@@ -121,7 +118,7 @@ export const TxForm = () => {
       throw error;
     }
 
-    const { chain } = NETWORK_CONFIG[NetworkName.EthereumGoerli];
+    const { chain } = NETWORK_CONFIG[network];
 
     const transactionRequest: ethers.providers.TransactionRequest =
       deserializeTransaction(
@@ -132,8 +129,8 @@ export const TxForm = () => {
 
     // Public wallet to shield from.
     transactionRequest.from = address;
+    // TODO: handle transaction status and notifications in a feature
     const tx = await signer?.sendTransaction(transactionRequest);
-    console.log(tx);
     await tx?.wait().then(() => {
       txNotify(tx.hash);
     });
@@ -160,6 +157,7 @@ export const TxForm = () => {
           size="lg"
           height="4rem"
           mb=".75rem"
+          value={tokenAddress}
           onChange={(e) => {
             const { address, decimals } = tokenList[+e.target.value];
             setTokenAddress(address);
