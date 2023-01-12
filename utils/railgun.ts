@@ -60,6 +60,7 @@ export const initialize = () => {
 
   startRailgunEngine(
     walletSource,
+    // @ts-ignore
     db,
     shouldDebug,
     artifactStore,
