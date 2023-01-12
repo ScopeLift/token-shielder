@@ -20,7 +20,9 @@ import {
   NETWORK_CONFIG,
   deserializeTransaction,
 } from "@railgun-community/shared-models";
+import { erc20ABI } from "@wagmi/core";
 import { BigNumber, Signer, ethers, constants } from "ethers";
+import { useState } from "react";
 import {
   useAccount,
   useSigner,
@@ -32,7 +34,7 @@ import {
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
   const { tokenList } = useToken();
-  const { notifyUser } = useNotifications();
+  const { txNotify } = useNotifications();
   let abi = [
     "function transfer(address,uint256) returns (bool)",
     "function approve(address,uint256) returns (bool)",
@@ -45,24 +47,32 @@ export const TxForm = () => {
   const provider = useProvider();
   const { config } = usePrepareContractWrite({
     address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
-    abi,
+    abi: erc20ABI,
     functionName: "approve",
     args: [
       getRailgunSmartWalletContractForNetwork(NetworkName.EthereumGoerli)
-        .address,
+        .address as `0x{string}`,
       constants.MaxUint256,
     ],
   });
+  const [recipient, setRecipient] = useState<string>(
+    "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
+  );
+  const [tokenAddress, setTokenAddress] = useState<string>();
+  const [tokenAmount, setTokenAmount] = useState<string>();
+  const [tokenDecimals, setTokenDecimals] = useState<number>();
+
   const { writeAsync: doErc20Approval } = useContractWrite(config);
 
   const doSubmit: React.FormEventHandler = async (e) => {
     // Formatted token amounts and recipients.
     const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
       {
-        tokenAddress: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6", // goerli weth
-        amountString: "0x10", // hexadecimal amount
-        recipientAddress:
-          "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4", // RAILGUN address
+        tokenAddress: tokenAddress!,
+        amountString: ethers.utils
+          .parseUnits(tokenAmount!, tokenDecimals)
+          .toHexString(), // must be hex
+        recipientAddress: recipient!, // RAILGUN address
       },
     ];
 
@@ -110,9 +120,6 @@ export const TxForm = () => {
     if (error) {
       throw error;
     }
-    console.log(gasEstimateString);
-    const gasEstimate = BigNumber.from(gasEstimateString);
-    console.log(gasEstimate);
 
     const { chain } = NETWORK_CONFIG[NetworkName.EthereumGoerli];
 
@@ -128,10 +135,7 @@ export const TxForm = () => {
     const tx = await signer?.sendTransaction(transactionRequest);
     console.log(tx);
     await tx?.wait().then(() => {
-      notifyUser({
-        alertType: "success",
-        message: "Token was shielded successfully",
-      });
+      txNotify(tx.hash);
     });
   };
 
@@ -143,18 +147,29 @@ export const TxForm = () => {
           type="string"
           variant="outline"
           size="lg"
-          placeholder="vitalik.eth"
           pr="4.5rem"
           height="4rem"
           mb=".75rem"
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
         />
       </FormControl>
       <FormControl>
         <FormLabel>Token</FormLabel>
-        <Select size="lg" height="4rem" mb=".75rem">
-          {tokenList.map((item) => {
+        <Select
+          size="lg"
+          height="4rem"
+          mb=".75rem"
+          onChange={(e) => {
+            const { address, decimals } = tokenList[+e.target.value];
+            setTokenAddress(address);
+            setTokenDecimals(decimals);
+          }}
+        >
+          <option></option>
+          {tokenList.map((item, i) => {
             return (
-              <option key={item.name} value={item.name}>
+              <option key={item.name} value={i}>
                 {item.name}
               </option>
             );
@@ -168,9 +183,10 @@ export const TxForm = () => {
             type="number"
             variant="outline"
             size="lg"
-            placeholder="0"
             pr="4.5rem"
             height="100%"
+            value={tokenAmount}
+            onChange={(e) => setTokenAmount(e.target.value)}
           />
           <InputRightElement width="4.5rem" height="100%">
             <Button size="sm">Max</Button>
