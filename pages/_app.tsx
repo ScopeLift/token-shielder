@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { TokenListProvider } from "@/contexts/TokenContext";
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/theme-utils";
@@ -6,6 +7,7 @@ import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { useState } from "react";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, polygon, arbitrum, bsc, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -18,7 +20,6 @@ const colors = {
     700: "#2a69ac",
   },
 };
-
 const theme = extendTheme({ colors });
 
 const { chains, provider, webSocketProvider } = configureChains(
@@ -57,21 +58,23 @@ function MyApp({ Component, pageProps }: AppProps) {
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
           <ChakraProvider theme={theme}>
-            <Grid
-              templateAreas={`". header ."
+            <TokenListProvider>
+              <Grid
+                templateAreas={`". header ."
                   ". body ."`}
-              gridTemplateRows={"4.8rem 100vh"}
-              gridTemplateColumns={"1fr minmax(auto, 150rem) 1fr"}
-              gap="1"
-              marginX="1rem"
-            >
-              <GridItem area={"header"}>
-                <Header />
-              </GridItem>
-              <GridItem area={"body"}>
-                <Component {...pageProps} />
-              </GridItem>
-            </Grid>
+                gridTemplateRows={"4.8rem 100vh"}
+                gridTemplateColumns={"1fr minmax(auto, 150rem) 1fr"}
+                gap="1"
+                marginX="1rem"
+              >
+                <GridItem area={"header"}>
+                  <Header />
+                </GridItem>
+                <GridItem area={"body"}>
+                  <Component {...pageProps} />
+                </GridItem>
+              </Grid>
+            </TokenListProvider>
           </ChakraProvider>
         </RainbowKitProvider>
       </WagmiConfig>
