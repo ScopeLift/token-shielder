@@ -1,5 +1,5 @@
 import useNotifications from "@/hooks/useNotifications";
-import useTokenBalance from "@/hooks/useTokenBalances";
+import useTokenBalances from "@/hooks/useTokenBalances";
 import { useTokenList, TokenListItem } from "@/hooks/useTokenList";
 import { BigNumber } from "@ethersproject/bignumber";
 import React, { ReactNode, createContext, useContext } from "react";
