@@ -34,6 +34,7 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     });
   }
   if (balanceError && isConnected) {
+    console.error(balanceError)
     notifyUser({
       alertType: "error",
       message: "Something went wrong fetching the token balances",
