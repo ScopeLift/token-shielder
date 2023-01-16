@@ -3,9 +3,12 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { readContracts } from "@wagmi/core";
 import useSWR from "swr";
 import { useAccount, useNetwork } from "wagmi";
-import { erc20ABI } from "@wagmi/core";
 
-const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
+export const ERC20_ABI = [
+  "function balanceOf(address owner) view returns (uint256 balance)",
+];
+
+const useTokenList = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { chain } = useNetwork();
   const { address } = useAccount();
 
@@ -18,7 +21,7 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       }
       const readContractsArgs = tokenList.map((token) => {
         return {
-          abi: erc20ABI,
+          abi: ERC20_ABI,
           functionName: "balanceOf",
           address: token.address,
           args: [address],
@@ -27,16 +30,16 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const data = await readContracts({
         contracts: readContractsArgs,
       });
-      const tokenListWithUserBalance = tokenList.map((token, i) => {
+      const tokelistWithUserBalance = tokenList.map((token, i) => {
         return {
           ...token,
           balance: data[i] as BigNumber | null,
         };
       });
-      return tokenListWithUserBalance;
+      return tokelistWithUserBalance;
     }
   );
   return { isLoading, error, data };
 };
 
-export default useTokenBalances;
+export default useTokenList;

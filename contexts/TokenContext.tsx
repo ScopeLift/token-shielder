@@ -28,14 +28,14 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     data,
   } = useTokenBalance({ tokenList: tokenList || [] });
   if (error) {
-    console.error(error)
+    console.error(error);
     notifyUser({
       alertType: "error",
       message: "Something went wrong fetching the token list",
     });
   }
   if (balanceError && isConnected) {
-    console.error(balanceError)
+    console.error(balanceError);
     notifyUser({
       alertType: "error",
       message: "Something went wrong fetching the token balances",
