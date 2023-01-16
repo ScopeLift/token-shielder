@@ -30,13 +30,13 @@ const useTokenList = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const data = await readContracts({
         contracts: readContractsArgs,
       });
-      const tokelistWithUserBalance = tokenList.map((token, i) => {
+      const tokenListWithUserBalance = tokenList.map((token, i) => {
         return {
           ...token,
           balance: data[i] as BigNumber | null,
         };
       });
-      return tokelistWithUserBalance;
+      return tokenListWithUserBalance;
     }
   );
   return { isLoading, error, data };
