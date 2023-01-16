@@ -8,7 +8,7 @@ export const ERC20_ABI = [
   "function balanceOf(address owner) view returns (uint256 balance)",
 ];
 
-const useTokenList = ({ tokenList }: { tokenList: TokenListItem[] }) => {
+const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { chain } = useNetwork();
   const { address } = useAccount();
 
@@ -42,4 +42,4 @@ const useTokenList = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   return { isLoading, error, data };
 };
 
-export default useTokenList;
+export default useTokenBalances;
