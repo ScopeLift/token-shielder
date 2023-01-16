@@ -12,7 +12,6 @@ const Home: NextPage = () => {
     const fn = async () => {
       await loadProviders();
       setProviderLoaded(true);
-      console.log(true);
     };
     fn();
   }, []);

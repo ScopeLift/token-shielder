@@ -55,14 +55,13 @@ export const TxForm = () => {
       constants.MaxUint256,
     ],
   });
+  const { writeAsync: doErc20Approval } = useContractWrite(config);
   const [recipient, setRecipient] = useState<string>(
     "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
   );
   const [tokenAddress, setTokenAddress] = useState<string>();
-  const [tokenAmount, setTokenAmount] = useState<string>();
+  const [tokenAmount, setTokenAmount] = useState<string>("");
   const [tokenDecimals, setTokenDecimals] = useState<number>();
-
-  const { writeAsync: doErc20Approval } = useContractWrite(config);
 
   const doSubmit: React.FormEventHandler = async (e) => {
     // TODO: Form validation
@@ -81,8 +80,8 @@ export const TxForm = () => {
     // the receiver's address in the future.
     const shieldPrivateKey = await getShieldPrivateKey();
 
-    // if (!doErc20Approval) throw "not prepared";
-    // await doErc20Approval();
+    if (!doErc20Approval) throw "not prepared";
+    await doErc20Approval();
 
     // Public wallet to shield from.
     const fromWalletAddress = address as `0x{string}`;
@@ -157,7 +156,6 @@ export const TxForm = () => {
           size="lg"
           height="4rem"
           mb=".75rem"
-          value={tokenAddress}
           onChange={(e) => {
             const { address, decimals } = tokenList[+e.target.value];
             setTokenAddress(address);
