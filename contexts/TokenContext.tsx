@@ -26,7 +26,7 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     isLoading: balanceIsLoading,
     error: balanceError,
     data,
-  } = useTokenBalance({ tokenList: tokenList || [] });
+  } = useTokenBalances({ tokenList: tokenList || [] });
   if (error) {
     console.error(error);
     notifyUser({
