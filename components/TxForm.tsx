@@ -30,16 +30,6 @@ import {
   useProvider,
 } from "wagmi";
 
-// 1. onClick pop modal
-// 2. show data, and then shield
-//
-// Modal info
-// 1. amount
-// 2. tokens
-// 3. recipient
-// 4. Shielding and gas fees
-//
-// Button should show approval if amount is greater than approval amount
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
   const { tokenList, tokenAllowances } = useToken();
@@ -66,7 +56,6 @@ export const TxForm = () => {
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
-  // fetch approval amount
   const [recipient, setRecipient] = useState<string>(
     "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
   );
