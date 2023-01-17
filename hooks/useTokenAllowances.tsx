@@ -33,7 +33,7 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
         contracts: readContractsArgs,
       });
       const allowancesPerToken = new Map();
-      const tokenListWithUserBalance = tokenList.forEach((token, i) => {
+      tokenList.forEach((token, i) => {
         allowancesPerToken.set(token.address, data[i]);
       });
       return allowancesPerToken;
