@@ -34,7 +34,7 @@ export const TxForm = () => {
   // TODO: Placeholder notification for shielding
   const { tokenList, tokenAllowances } = useToken();
   const network = NetworkName.EthereumGoerli;
-  const { txNotify } = useNotifications();
+  const { txNotify, notifyUser } = useNotifications();
   let abi = [
     "function transfer(address,uint256) returns (bool)",
     "function approve(address,uint256) returns (bool)",
@@ -197,7 +197,11 @@ export const TxForm = () => {
           width="100%"
           onClick={async () => {
             if (!doErc20Approval) {
-              throw "not prepared";
+              notifyUser({
+                alertType: "error",
+                message: "Page is not prepared for ERC20 approval",
+              });
+              return;
             }
             await doErc20Approval();
           }}

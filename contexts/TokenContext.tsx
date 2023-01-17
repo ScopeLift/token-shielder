@@ -50,11 +50,18 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
       message: "Something went wrong fetching the token balances",
     });
   }
+  if (allowanceError && isConnected) {
+    console.error(allowanceError);
+    notifyUser({
+      alertType: "error",
+      message: "Something went wrong fetching the token allowances",
+    });
+  }
   return (
     <TokenContext.Provider
       value={{
         tokenList: data || [],
-        isLoading: isLoading && balanceIsLoading,
+        isLoading: isLoading && balanceIsLoading && allowanceIsLoading,
         tokenAllowances: allowances || new Map(),
       }}
     >
