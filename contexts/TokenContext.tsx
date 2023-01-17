@@ -61,7 +61,7 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     <TokenContext.Provider
       value={{
         tokenList: data || [],
-        isLoading: isLoading && balanceIsLoading && allowanceIsLoading,
+        isLoading: isLoading || balanceIsLoading || allowanceIsLoading,
         tokenAllowances: allowances || new Map(),
       }}
     >
