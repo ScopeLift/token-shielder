@@ -1,10 +1,16 @@
+import ReviewTransactionModal from "@/components/ReviewTransactionModal";
 import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
 import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
 import { Button } from "@chakra-ui/button";
-import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+} from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
+import { useDisclosure } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/select";
 import {
   gasEstimateForShield,
@@ -20,7 +26,7 @@ import {
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
-import { ethers, constants } from "ethers";
+import { ethers, constants, BigNumber } from "ethers";
 import { useState } from "react";
 import {
   useAccount,
@@ -30,11 +36,21 @@ import {
   useProvider,
 } from "wagmi";
 
+// 1. onClick pop modal
+// 2. show data, and then shield
+//
+// Button should show approval if amount is greater than approval amount
+
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenList } = useToken();
+  const { tokenList, tokenAllowances } = useToken();
   const network = NetworkName.EthereumGoerli;
-  const { txNotify } = useNotifications();
+  const { txNotify, notifyUser } = useNotifications();
+  const {
+    isOpen: isReviewOpen,
+    onOpen: onReviewOpen,
+    onClose: onReviewClose,
+  } = useDisclosure();
   let abi = [
     "function transfer(address,uint256) returns (bool)",
     "function approve(address,uint256) returns (bool)",
@@ -62,10 +78,27 @@ export const TxForm = () => {
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const [tokenDecimals, setTokenDecimals] = useState<number>();
+  const [tokenBalance, setTokenBalance] = useState<string>("");
+  const [serializedTransaction, setSerializedTransaction] =
+    useState<string>("");
+  const needsApproval = ethers.utils
+    .parseUnits(tokenAmount || "0", tokenDecimals)
+    .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
+  console.log(tokenAmount);
+  console.log(tokenBalance);
+  console.log(
+    ethers.utils.parseUnits(tokenAmount || "0", tokenDecimals).toString()
+  );
+  console.log(
+    ethers.utils
+      .parseUnits(tokenAmount || "0", tokenDecimals)
+      .gt(BigNumber.from(tokenBalance || "0"))
+  );
+  const invalidAmount = ethers.utils
+    .parseUnits(tokenAmount || "0", tokenDecimals)
+    .gt(BigNumber.from(tokenBalance || "0"));
 
-  const doSubmit: React.FormEventHandler = async (e) => {
-    // TODO: Form validation
-    // Formatted token amounts and recipients.
+  const prepTransaction = async () => {
     const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
       {
         tokenAddress: tokenAddress!,
@@ -79,9 +112,6 @@ export const TxForm = () => {
     // The shieldPrivateKey enables the sender to decrypt
     // the receiver's address in the future.
     const shieldPrivateKey = await getShieldPrivateKey();
-
-    if (!doErc20Approval) throw "not prepared";
-    await doErc20Approval();
 
     // Public wallet to shield from.
     const fromWalletAddress = address as `0x{string}`;
@@ -113,26 +143,11 @@ export const TxForm = () => {
       [], // nftAmountRecipients
       gasDetailsSerialized
     );
-    if (error) {
+    if (error || !serializedTransaction) {
+      setSerializedTransaction("");
       throw error;
     }
-
-    const { chain } = NETWORK_CONFIG[network];
-
-    const transactionRequest: ethers.providers.TransactionRequest =
-      deserializeTransaction(
-        serializedTransaction as string,
-        undefined, // nonce (optional)
-        chain.id
-      );
-
-    // Public wallet to shield from.
-    transactionRequest.from = address;
-    // TODO: handle transaction status and notifications in a feature
-    const tx = await signer?.sendTransaction(transactionRequest);
-    await tx?.wait().then(() => {
-      txNotify(tx.hash);
-    });
+    setSerializedTransaction(serializedTransaction);
   };
 
   return (
@@ -157,9 +172,12 @@ export const TxForm = () => {
           height="4rem"
           mb=".75rem"
           onChange={(e) => {
-            const { address, decimals } = tokenList[+e.target.value];
+            const { address, decimals, balance } = tokenList[+e.target.value];
             setTokenAddress(address);
             setTokenDecimals(decimals);
+            if (balance) {
+              setTokenBalance(balance.toString());
+            }
           }}
         >
           <option></option>
@@ -172,7 +190,7 @@ export const TxForm = () => {
           })}
         </Select>
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={invalidAmount}>
         <FormLabel>Amount</FormLabel>
         <InputGroup size="lg" width="auto" height="4rem">
           <Input
@@ -188,11 +206,49 @@ export const TxForm = () => {
             <Button size="sm">Max</Button>
           </InputRightElement>
         </InputGroup>
-        <Flex justify="flex-end"></Flex>
+        <FormErrorMessage>Amount is greater than balance.</FormErrorMessage>
       </FormControl>
-      <Button size="lg" mt="1rem" width="100%" onClick={doSubmit}>
-        Shield
-      </Button>
+      {needsApproval ? (
+        <Button
+          size="lg"
+          mt="1rem"
+          width="100%"
+          onClick={async () => {
+            if (!doErc20Approval) {
+              notifyUser({
+                alertType: "error",
+                message: "Page is not prepared for ERC20 approval",
+              });
+              return;
+            }
+            await doErc20Approval();
+          }}
+        >
+          Approve
+        </Button>
+      ) : (
+        <Button
+          size="lg"
+          mt="1rem"
+          width="100%"
+          isDisabled={invalidAmount}
+          onClick={async () => {
+            await prepTransaction();
+            onReviewOpen();
+          }}
+        >
+          Shield
+        </Button>
+      )}
+      <ReviewTransactionModal
+        isOpen={isReviewOpen}
+        onClose={onReviewClose}
+        recipient={recipient}
+        tokenAmount={tokenAmount}
+        tokenDecimals={tokenDecimals}
+        tokenAddress={tokenAddress}
+        serializedTransaction={serializedTransaction}
+      />
     </Box>
   );
 };

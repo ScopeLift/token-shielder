@@ -1,4 +1,5 @@
 import useNotifications from "@/hooks/useNotifications";
+import useTokenAllowances from "@/hooks/useTokenAllowances";
 import useTokenBalances from "@/hooks/useTokenBalances";
 import { useTokenList, TokenListItem } from "@/hooks/useTokenList";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -10,10 +11,12 @@ type TokenListContextItem = TokenListItem & { balance: BigNumber | null };
 export type TokenContextType = {
   tokenList: TokenListContextItem[];
   isLoading: boolean;
+  tokenAllowances: Map<string, BigNumber>;
 };
 const initialContext = {
   isLoading: false,
   tokenList: [],
+  tokenAllowances: new Map(),
 };
 
 const TokenContext = createContext<TokenContextType>(initialContext);
@@ -27,6 +30,12 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     error: balanceError,
     data,
   } = useTokenBalances({ tokenList: tokenList || [] });
+  const {
+    isLoading: allowanceIsLoading,
+    error: allowanceError,
+    data: allowances,
+  } = useTokenAllowances({ tokenList: tokenList || [] });
+
   if (error) {
     console.error(error);
     notifyUser({
@@ -41,11 +50,19 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
       message: "Something went wrong fetching the token balances",
     });
   }
+  if (allowanceError && isConnected) {
+    console.error(allowanceError);
+    notifyUser({
+      alertType: "error",
+      message: "Something went wrong fetching the token allowances",
+    });
+  }
   return (
     <TokenContext.Provider
       value={{
         tokenList: data || [],
-        isLoading: isLoading && balanceIsLoading,
+        isLoading: isLoading || balanceIsLoading || allowanceIsLoading,
+        tokenAllowances: allowances || new Map(),
       }}
     >
       {children}
