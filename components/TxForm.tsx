@@ -20,7 +20,7 @@ import {
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
-import { ethers, constants } from "ethers";
+import { ethers, constants, BigNumber } from "ethers";
 import { useState } from "react";
 import {
   useAccount,
@@ -30,9 +30,19 @@ import {
   useProvider,
 } from "wagmi";
 
+// 1. onClick pop modal
+// 2. show data, and then shield
+//
+// Modal info
+// 1. amount
+// 2. tokens
+// 3. recipient
+// 4. Shielding and gas fees
+//
+// Button should show approval if amount is greater than approval amount
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenList } = useToken();
+  const { tokenList, tokenAllowances } = useToken();
   const network = NetworkName.EthereumGoerli;
   const { txNotify } = useNotifications();
   let abi = [
@@ -56,12 +66,16 @@ export const TxForm = () => {
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
+  // fetch approval amount
   const [recipient, setRecipient] = useState<string>(
     "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
   );
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const [tokenDecimals, setTokenDecimals] = useState<number>();
+  const needsApproval = ethers.utils
+    .parseUnits(tokenAmount || "0", tokenDecimals)
+    .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
 
   const doSubmit: React.FormEventHandler = async (e) => {
     // TODO: Form validation
@@ -79,9 +93,6 @@ export const TxForm = () => {
     // The shieldPrivateKey enables the sender to decrypt
     // the receiver's address in the future.
     const shieldPrivateKey = await getShieldPrivateKey();
-
-    if (!doErc20Approval) throw "not prepared";
-    await doErc20Approval();
 
     // Public wallet to shield from.
     const fromWalletAddress = address as `0x{string}`;
@@ -190,9 +201,25 @@ export const TxForm = () => {
         </InputGroup>
         <Flex justify="flex-end"></Flex>
       </FormControl>
-      <Button size="lg" mt="1rem" width="100%" onClick={doSubmit}>
-        Shield
-      </Button>
+      {needsApproval ? (
+        <Button
+          size="lg"
+          mt="1rem"
+          width="100%"
+          onClick={async () => {
+            if (!doErc20Approval) {
+              throw "not prepared";
+            }
+            await doErc20Approval();
+          }}
+        >
+          Approve
+        </Button>
+      ) : (
+        <Button size="lg" mt="1rem" width="100%" onClick={doSubmit}>
+          Shield
+        </Button>
+      )}
     </Box>
   );
 };
