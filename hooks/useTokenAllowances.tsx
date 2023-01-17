@@ -10,7 +10,7 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { address } = useAccount();
   const network = networks[chain?.id || 1];
 
-  const chainId = chain?.id || 1; // default to mainnet if no chain id
+  const chainId = network.chainId;
   const { isLoading, error, data } = useSWR(
     `useTokenAllowances-${chainId}-${tokenList.length}`,
     async () => {
@@ -33,7 +33,7 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
         contracts: readContractsArgs,
       });
       const allowancesPerToken = new Map();
-      const tokenListWithUserBalance = tokenList.map((token, i) => {
+      const tokenListWithUserBalance = tokenList.forEach((token, i) => {
         allowancesPerToken.set(token.address, data[i]);
       });
       return allowancesPerToken;
