@@ -12,9 +12,11 @@ export type TokenContextType = {
   tokenList: TokenListContextItem[];
   isLoading: boolean;
   tokenAllowances: Map<string, BigNumber>;
+  weth?: string;
 };
 const initialContext = {
   isLoading: false,
+  weth: "",
   tokenList: [],
   tokenAllowances: new Map(),
 };
@@ -23,7 +25,7 @@ const TokenContext = createContext<TokenContextType>(initialContext);
 
 export const TokenListProvider = ({ children }: { children: ReactNode }) => {
   const { notifyUser } = useNotifications();
-  const { isLoading, error, tokenList } = useTokenList();
+  const { isLoading, error, tokenList, weth } = useTokenList();
   const { isConnected } = useAccount();
   const {
     isLoading: balanceIsLoading,
@@ -63,6 +65,7 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
         tokenList: data || [],
         isLoading: isLoading || balanceIsLoading || allowanceIsLoading,
         tokenAllowances: allowances || new Map(),
+        weth,
       }}
     >
       {children}

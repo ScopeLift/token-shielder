@@ -8,11 +8,14 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import {
   gasEstimateForShield,
+  gasEstimateForShieldBaseToken,
   getRailgunSmartWalletContractForNetwork,
   populateShield,
+  populateShieldBaseToken,
 } from "@railgun-community/quickstart";
 import {
   RailgunERC20AmountRecipient,
+  RailgunERC20Amount,
   NetworkName,
   TransactionGasDetailsSerialized,
   EVMGasType,
@@ -32,16 +35,13 @@ import {
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenList, tokenAllowances } = useToken();
+  const { tokenList, tokenAllowances, weth } = useToken();
   const network = NetworkName.EthereumGoerli;
   const { txNotify, notifyUser } = useNotifications();
   let abi = [
     "function transfer(address,uint256) returns (bool)",
     "function approve(address,uint256) returns (bool)",
   ];
-  console.log(
-    getRailgunSmartWalletContractForNetwork(NetworkName.EthereumGoerli).address
-  );
   const { isConnected, address } = useAccount();
   const { data: signer } = useSigner();
   const provider = useProvider();
@@ -69,6 +69,77 @@ export const TxForm = () => {
 
   const doSubmit: React.FormEventHandler = async (e) => {
     // TODO: Form validation
+
+    // Public wallet to shield from.
+    const fromWalletAddress = address as `0x{string}`;
+
+    // The shieldPrivateKey enables the sender to decrypt
+    // the receiver's address in the future.
+    const shieldPrivateKey = await getShieldPrivateKey();
+
+    // baseToken
+    if (tokenAddress === ethers.utils.getAddress("0x" + "e".repeat(40))) {
+      const wrappedERC20Amount: RailgunERC20Amount = {
+        tokenAddress: weth!, // wETH
+        amountString: ethers.utils
+          .parseUnits(tokenAmount!, tokenDecimals)
+          .toHexString(), // hexadecimal amount
+      };
+
+      const { gasEstimateString, error: err } =
+        await gasEstimateForShieldBaseToken(
+          network,
+          recipient,
+          shieldPrivateKey,
+          wrappedERC20Amount,
+          fromWalletAddress
+        );
+      if (err) {
+        // Handle gas estimate error.
+      }
+
+      const { maxFeePerGas, maxPriorityFeePerGas } =
+        await provider.getFeeData();
+
+      const gasDetailsSerialized: TransactionGasDetailsSerialized = {
+        evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
+        gasEstimateString: gasEstimateString!, // Output from gasEstimateForShieldBaseToken
+        maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
+        maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
+      };
+
+      const { serializedTransaction, error } = await populateShieldBaseToken(
+        network,
+        recipient,
+        shieldPrivateKey,
+        wrappedERC20Amount,
+        gasDetailsSerialized
+      );
+      if (error) {
+        throw error;
+      }
+
+      const { chain } = NETWORK_CONFIG[network];
+
+      const transactionRequest: ethers.providers.TransactionRequest =
+        deserializeTransaction(
+          serializedTransaction!,
+          undefined, // nonce (optional)
+          chain.id
+        );
+
+      // Public wallet to shield from.
+      transactionRequest.from = address;
+
+      const tx = await signer?.sendTransaction(transactionRequest);
+      await tx?.wait().then(() => {
+        txNotify(tx.hash);
+      });
+      return;
+    }
+
+    // else: ERC20
+
     // Formatted token amounts and recipients.
     const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
       {
@@ -79,13 +150,6 @@ export const TxForm = () => {
         recipientAddress: recipient!, // RAILGUN address
       },
     ];
-
-    // The shieldPrivateKey enables the sender to decrypt
-    // the receiver's address in the future.
-    const shieldPrivateKey = await getShieldPrivateKey();
-
-    // Public wallet to shield from.
-    const fromWalletAddress = address as `0x{string}`;
 
     const { gasEstimateString, error: err } = await gasEstimateForShield(
       network,

@@ -1,4 +1,5 @@
 import { networks } from "@/utils/networks";
+import { ethers } from "ethers";
 import useSWR from "swr";
 import { useNetwork } from "wagmi";
 
@@ -27,8 +28,18 @@ export const useTokenList = () => {
       const tokenList = json.tokens.filter(
         (token) => token.chainId === chainId
       );
-      return tokenList;
+      const weth = tokenList.find((token) => token.symbol === "WETH")?.address;
+      if (!weth) throw new Error("No WETH found in token list");
+      const eth: TokenListItem = {
+        chainId,
+        symbol: "ETH",
+        address: ethers.utils.getAddress(`0x${"e".repeat(40)}`),
+        decimals: 18,
+        name: "ETH",
+        logoURI: "",
+      };
+      return { tokenList: [eth, ...tokenList], weth };
     }
   );
-  return { isLoading, error, tokenList: data };
+  return { isLoading, error, tokenList: data?.tokenList, weth: data?.weth };
 };
