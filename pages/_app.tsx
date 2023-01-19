@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import { TokenListProvider } from "@/contexts/TokenContext";
+import { AppProvider } from "@/contexts/AppContext";
 import { loadProviders } from "@/utils/railgun";
 import { initialize } from "@/utils/railgun";
 import { Grid, GridItem } from "@chakra-ui/layout";
@@ -71,7 +71,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <ChakraProvider theme={theme}>
             {isProviderLoaded && (
-              <TokenListProvider>
+              <AppProvider>
                 <Grid
                   templateAreas={`". header ."
                   ". body ."`}
@@ -87,7 +87,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                   </GridItem>
                 </Grid>
-              </TokenListProvider>
+              </AppProvider>
             )}
           </ChakraProvider>
         </RainbowKitProvider>

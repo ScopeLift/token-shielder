@@ -1,4 +1,5 @@
-import { useToken } from "@/contexts/TokenContext";
+import ReviewTransactionModal from "@/components/ReviewTransactionModal";
+import { useApp } from "@/contexts/AppContext";
 import useNotifications from "@/hooks/useNotifications";
 import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
 import { Button } from "@chakra-ui/button";
@@ -32,7 +33,7 @@ import {
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenList, tokenAllowances } = useToken();
+  const { tokenList, tokenMap } = useApp();
   const network = NetworkName.EthereumGoerli;
   const { txNotify, notifyUser } = useNotifications();
   let abi = [
@@ -199,7 +200,8 @@ export const TxForm = () => {
             if (!doErc20Approval) {
               notifyUser({
                 alertType: "error",
-                message: "Page is not prepared for ERC20 approval",
+                message:
+                  "Page is not prepared for ERC20 approval. Please try again in a few seconds",
               });
               return;
             }

@@ -5,14 +5,14 @@ import { readContracts } from "@wagmi/core";
 import useSWR from "swr";
 import { useAccount, useNetwork, erc20ABI } from "wagmi";
 
-const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
+const useToken = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { chain } = useNetwork();
   const { address } = useAccount();
   const network = networks[chain?.id || 1];
 
   const chainId = network.chainId;
   const { isLoading, error, data } = useSWR(
-    `useTokenAllowances-${chainId}-${tokenList.length}`,
+    `useToken-${chainId}-${tokenList.length}`,
     async () => {
       if (!tokenList || tokenList.length === 0) {
         return new Map();
@@ -21,25 +21,35 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const contractAddress = getRailgunSmartWalletContractForNetwork(
         network.railgunNetworkName
       ).address;
-      const readContractsArgs = tokenList.map((token) => {
-        return {
+      const readContractsArgs = [];
+      for (const token of tokenList) {
+        readContractsArgs.push({
+          abi: erc20ABI,
+          functionName: "balance",
+          address: token.address,
+          args: [address, contractAddress],
+        });
+        readContractsArgs.push({
           abi: erc20ABI,
           functionName: "allowance",
           address: token.address,
           args: [address, contractAddress],
-        };
-      });
+        });
+      }
       const data = await readContracts({
         contracts: readContractsArgs,
       });
-      const allowancesPerToken = new Map();
+      const tokenMap = new Map();
       tokenList.forEach((token, i) => {
-        allowancesPerToken.set(token.address, data[i]);
+        tokenMap.set(token.address, {
+          balance: data[i],
+          allowance: data[i + 1],
+        });
       });
-      return allowancesPerToken;
+      return tokenMap;
     }
   );
   return { isLoading, error, data };
 };
 
-export default useTokenAllowances;
+export default useToken;
