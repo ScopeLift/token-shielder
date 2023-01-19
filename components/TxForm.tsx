@@ -46,8 +46,11 @@ export const TxForm = () => {
   const { data: signer } = useSigner();
   const provider = useProvider();
   const { getShieldPrivateKey } = useShieldPrivateKey();
+  const [tokenAddress, setTokenAddress] = useState<string>();
+  const [tokenAmount, setTokenAmount] = useState<string>("");
+  const [tokenDecimals, setTokenDecimals] = useState<number>();
   const { config } = usePrepareContractWrite({
-    address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
+    address: tokenAddress,
     abi: erc20ABI,
     functionName: "approve",
     args: [
@@ -59,9 +62,7 @@ export const TxForm = () => {
   const [recipient, setRecipient] = useState<string>(
     "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
   );
-  const [tokenAddress, setTokenAddress] = useState<string>();
-  const [tokenAmount, setTokenAmount] = useState<string>("");
-  const [tokenDecimals, setTokenDecimals] = useState<number>();
+
   const needsApproval = ethers.utils
     .parseUnits(tokenAmount || "0", tokenDecimals)
     .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
