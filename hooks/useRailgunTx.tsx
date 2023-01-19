@@ -70,7 +70,7 @@ const useRailgunTx = () => {
         fromWalletAddress
       );
     if (err) {
-      // Handle gas estimate error.
+      throw err;
     }
 
     const { maxFeePerGas, maxPriorityFeePerGas } = await provider.getFeeData();
