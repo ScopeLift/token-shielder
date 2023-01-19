@@ -28,6 +28,17 @@ const useRailgunTx = () => {
   const { weth } = useToken();
   const provider = useProvider();
 
+  const shield = async (args: {
+    tokenAddress: string;
+    tokenAmount: string;
+    tokenDecimals: number;
+    recipient: string;
+  }) => {
+    if (args.tokenAddress === getAddress(`0x${"e".repeat(40)}`))
+      return shieldBaseToken(args);
+    return shieldToken(args);
+  };
+
   const shieldBaseToken = async ({
     tokenAddress,
     tokenAmount,
@@ -46,61 +57,56 @@ const useRailgunTx = () => {
     // the receiver's address in the future.
     const shieldPrivateKey = await getShieldPrivateKey();
 
-    // baseToken
-    if (tokenAddress === ethers.utils.getAddress("0x" + "e".repeat(40))) {
-      const wrappedERC20Amount: RailgunERC20Amount = {
-        tokenAddress: weth!, // wETH
-        amountString: parseUnits(tokenAmount!, tokenDecimals).toHexString(), // hexadecimal amount
-      };
+    const wrappedERC20Amount: RailgunERC20Amount = {
+      tokenAddress: weth!, // wETH
+      amountString: parseUnits(tokenAmount!, tokenDecimals).toHexString(), // hexadecimal amount
+    };
 
-      const { gasEstimateString, error: err } =
-        await gasEstimateForShieldBaseToken(
-          network,
-          recipient,
-          shieldPrivateKey,
-          wrappedERC20Amount,
-          fromWalletAddress
-        );
-      if (err) {
-        // Handle gas estimate error.
-      }
-
-      const { maxFeePerGas, maxPriorityFeePerGas } =
-        await provider.getFeeData();
-
-      const gasDetailsSerialized: TransactionGasDetailsSerialized = {
-        evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
-        gasEstimateString: gasEstimateString!, // Output from gasEstimateForShieldBaseToken
-        maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
-        maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
-      };
-
-      const { serializedTransaction, error } = await populateShieldBaseToken(
+    const { gasEstimateString, error: err } =
+      await gasEstimateForShieldBaseToken(
         network,
         recipient,
         shieldPrivateKey,
         wrappedERC20Amount,
-        gasDetailsSerialized
+        fromWalletAddress
       );
-      if (error) {
-        throw error;
-      }
-
-      const { chain } = NETWORK_CONFIG[network];
-
-      const transactionRequest: ethers.providers.TransactionRequest =
-        deserializeTransaction(
-          serializedTransaction!,
-          undefined, // nonce (optional)
-          chain.id
-        );
-
-      // Public wallet to shield from.
-      transactionRequest.from = address;
-
-      const tx = await signer?.sendTransaction(transactionRequest);
-      return tx;
+    if (err) {
+      // Handle gas estimate error.
     }
+
+    const { maxFeePerGas, maxPriorityFeePerGas } = await provider.getFeeData();
+
+    const gasDetailsSerialized: TransactionGasDetailsSerialized = {
+      evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
+      gasEstimateString: gasEstimateString!, // Output from gasEstimateForShieldBaseToken
+      maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
+      maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
+    };
+
+    const { serializedTransaction, error } = await populateShieldBaseToken(
+      network,
+      recipient,
+      shieldPrivateKey,
+      wrappedERC20Amount,
+      gasDetailsSerialized
+    );
+    if (error) {
+      throw error;
+    }
+
+    const { chain } = NETWORK_CONFIG[network];
+
+    const transactionRequest: ethers.providers.TransactionRequest =
+      deserializeTransaction(
+        serializedTransaction!,
+        undefined, // nonce (optional)
+        chain.id
+      );
+
+    // Public wallet to shield from.
+    transactionRequest.from = address;
+
+    return signer?.sendTransaction(transactionRequest);
   };
 
   const shieldToken = async ({
@@ -175,17 +181,6 @@ const useRailgunTx = () => {
     // Public wallet to shield from.
     transactionRequest.from = address;
     return signer?.sendTransaction(transactionRequest);
-  };
-
-  const shield = async (args: {
-    tokenAddress: string;
-    tokenAmount: string;
-    tokenDecimals: number;
-    recipient: string;
-  }) => {
-    if (args.tokenAddress === getAddress(`0x${"e".repeat(40)}`))
-      return shieldBaseToken(args);
-    return shieldToken(args);
   };
 
   return { shield };
