@@ -40,7 +40,6 @@ const useRailgunTx = () => {
   };
 
   const shieldBaseToken = async ({
-    tokenAddress,
     tokenAmount,
     tokenDecimals,
     recipient,
