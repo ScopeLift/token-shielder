@@ -199,7 +199,8 @@ export const TxForm = () => {
             if (!doErc20Approval) {
               notifyUser({
                 alertType: "error",
-                message: "Page is not prepared for ERC20 approval",
+                message:
+                  "Page is not prepared for ERC20 approval. Please try again in a few seconds",
               });
               return;
             }
