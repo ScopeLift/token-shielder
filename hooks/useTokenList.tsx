@@ -28,14 +28,6 @@ export const useTokenList = () => {
       const tokenList = json.tokens.filter(
         (token) => token.chainId === chainId
       );
-      let weth = tokenList.find((token) => token.symbol === "WETH") || {
-        chainId,
-        symbol: "WETH",
-        address: network.wethAddress,
-        decimals: 18,
-        name: "Wrapped ETH",
-        logoURI: "",
-      };
       const baseToken: TokenListItem = {
         chainId,
         symbol: network.baseToken.symbol,
@@ -44,8 +36,8 @@ export const useTokenList = () => {
         name: network.baseToken.name,
         logoURI: "",
       };
-      return { tokenList: [baseToken, ...tokenList], weth };
+      return { tokenList: [baseToken, ...tokenList] };
     }
   );
-  return { isLoading, error, tokenList: data?.tokenList, weth: data?.weth };
+  return { isLoading, error, tokenList: data?.tokenList };
 };

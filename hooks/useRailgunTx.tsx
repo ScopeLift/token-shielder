@@ -28,8 +28,11 @@ const useRailgunTx = () => {
   const { getShieldPrivateKey } = useShieldPrivateKey();
   const { chain } = useNetwork();
   const chainId = chain?.id || 1; // default to mainnet if no chain id
-  const { railgunNetworkName: network, evmGasType } = networks[chainId];
-  const { weth } = useToken();
+  const {
+    railgunNetworkName: network,
+    evmGasType,
+    wethAddress,
+  } = networks[chainId];
   const provider = useProvider();
 
   const shield = async (args: {
@@ -82,7 +85,7 @@ const useRailgunTx = () => {
     const shieldPrivateKey = await getShieldPrivateKey();
 
     const wrappedERC20Amount: RailgunERC20Amount = {
-      tokenAddress: weth!.address, // wETH
+      tokenAddress: wethAddress, // wETH
       amountString: parseUnits(tokenAmount!, tokenDecimals).toHexString(), // hexadecimal amount
     };
 
