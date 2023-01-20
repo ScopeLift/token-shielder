@@ -1,8 +1,9 @@
 import { TokenListItem } from "@/hooks/useTokenList";
+import { ethAddress } from "@/utils/constants";
 import { BigNumber } from "@ethersproject/bignumber";
 import { readContracts } from "@wagmi/core";
 import useSWR from "swr";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useNetwork, useBalance } from "wagmi";
 
 export const ERC20_ABI = [
   "function balanceOf(address owner) view returns (uint256 balance)",
@@ -11,7 +12,15 @@ export const ERC20_ABI = [
 const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { chain } = useNetwork();
   const { address } = useAccount();
+  const {
+    data: balance,
+    isError,
+    isLoading: balanceLoading,
+  } = useBalance({
+    address,
+  });
 
+  const eth = tokenList.find((token) => token.address === ethAddress);
   const chainId = chain?.id || 1; // default to mainnet if no chain id
   const { isLoading, error, data } = useSWR(
     `userTokenList-${chainId}-${tokenList.length}`,
@@ -19,18 +28,25 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       if (!tokenList || tokenList.length === 0) {
         return;
       }
-      const readContractsArgs = tokenList.map((token) => {
-        return {
-          abi: ERC20_ABI,
-          functionName: "balanceOf",
-          address: token.address,
-          args: [address],
-        };
-      });
+      const readContractsArgs = tokenList
+        .filter((token) => token.address !== ethAddress)
+        .map((token) => {
+          return {
+            abi: ERC20_ABI,
+            functionName: "balanceOf",
+            address: token.address,
+            args: [address],
+          };
+        });
       const data = await readContracts({
         contracts: readContractsArgs,
       });
       const tokenListWithUserBalance = tokenList.map((token, i) => {
+        if (token.address === ethAddress)
+          return {
+            ...token,
+            balance,
+          };
         return {
           ...token,
           balance: data[i] as BigNumber | null,
@@ -39,7 +55,11 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       return tokenListWithUserBalance;
     }
   );
-  return { isLoading, error, data };
+  return {
+    isLoading: isLoading || balanceLoading,
+    error: error || isError,
+    data,
+  };
 };
 
 export default useTokenBalances;
