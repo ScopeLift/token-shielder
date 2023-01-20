@@ -49,7 +49,7 @@ export const networks = {
     tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
     railgunNetworkName: NetworkName.EthereumGoerli,
     chainId: goerli.id,
-    wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    wethAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     evmGasType: EVMGasType.Type2,
     baseToken: {
       symbol: "GoerliETH",
@@ -76,7 +76,7 @@ export const networks = {
     tokenListUrl: "pancakeswap-top-100.json",
     railgunNetworkName: NetworkName.BNBChain,
     chainId: bsc.id,
-    wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    wethAddress: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
     evmGasType: EVMGasType.Type0,
     baseToken: {
       symbol: "BNB",
@@ -98,7 +98,7 @@ export const networks = {
     tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
     railgunNetworkName: NetworkName.Polygon,
     chainId: polygon.id,
-    wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    wethAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
     evmGasType: EVMGasType.Type2,
     baseToken: {
       symbol: "MATIC",
@@ -125,7 +125,7 @@ export const networks = {
     tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
     railgunNetworkName: NetworkName.ArbitrumGoerli, // TODO: Regular arbitrum is missing from railgun-community
     chainId: arbitrum.id,
-    wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    wethAddress: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
     evmGasType: EVMGasType.Type2,
     baseToken: {
       symbol: "ETH",
