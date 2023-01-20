@@ -1,4 +1,5 @@
 import { TokenListItem } from "@/hooks/useTokenList";
+import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
 import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
 import { readContracts } from "@wagmi/core";
@@ -21,14 +22,16 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const contractAddress = getRailgunSmartWalletContractForNetwork(
         network.railgunNetworkName
       ).address;
-      const readContractsArgs = tokenList.map((token) => {
-        return {
-          abi: erc20ABI,
-          functionName: "allowance",
-          address: token.address,
-          args: [address, contractAddress],
-        };
-      });
+      const readContractsArgs = tokenList
+        .filter((token) => token.address !== ethAddress)
+        .map((token) => {
+          return {
+            abi: erc20ABI,
+            functionName: "allowance",
+            address: token.address,
+            args: [address, contractAddress],
+          };
+        });
       const data = await readContracts({
         contracts: readContractsArgs,
       });

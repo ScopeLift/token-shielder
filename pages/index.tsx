@@ -1,10 +1,8 @@
 import HowTo from "@/components/HowTo";
 import { TxForm } from "@/components/TxForm";
-import { loadProviders } from "@/utils/railgun";
 import { Flex, Heading } from "@chakra-ui/layout";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   return (

@@ -20,12 +20,6 @@ const toastDefaultArgs = {
 
 const toastLink = ({
   toast,
-  title,
-  description,
-  status,
-  id,
-  duration,
-  icon,
   href,
   ...props
 }: ToastProps & { toast: CreateToastFnReturn; href: string }) => {
@@ -71,6 +65,7 @@ const useNotifications = () => {
       toast,
       href,
       description: "Transaction pending",
+      duration: null,
       status: "loading",
     });
 
