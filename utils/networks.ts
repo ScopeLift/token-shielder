@@ -52,8 +52,8 @@ export const networks = {
     wethAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
     evmGasType: EVMGasType.Type2,
     baseToken: {
-      symbol: "GoerliETH",
-      name: "Goerli Ether",
+      symbol: "ETH",
+      name: "Ether",
     },
     fallbackProviders: {
       chainId: goerli.id,
