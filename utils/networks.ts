@@ -12,7 +12,7 @@ export type NetworkConfig = {
   chainId: number;
   wethAddress: string;
   evmGasType: EVMGasType;
-  baseToken: { symbol: string; name: string };
+  baseToken: { symbol: string; name: string; logoURI: string };
   fallbackProviders: FallbackProviderJsonConfig;
 };
 
@@ -27,6 +27,7 @@ export const networks = {
     baseToken: {
       symbol: "ETH",
       name: "Ether",
+      logoURI: "",
     },
     fallbackProviders: {
       chainId: mainnet.id,
@@ -54,6 +55,7 @@ export const networks = {
     baseToken: {
       symbol: "ETH",
       name: "Ether",
+      logoURI: "",
     },
     fallbackProviders: {
       chainId: goerli.id,
@@ -81,6 +83,7 @@ export const networks = {
     baseToken: {
       symbol: "BNB",
       name: "Binance coin",
+      logoURI: "",
     },
     fallbackProviders: {
       chainId: bsc.id,
@@ -103,6 +106,7 @@ export const networks = {
     baseToken: {
       symbol: "MATIC",
       name: "MATIC",
+      logoURI: "",
     },
     fallbackProviders: {
       chainId: polygon.id,
@@ -130,6 +134,7 @@ export const networks = {
     baseToken: {
       symbol: "ETH",
       name: "Ether",
+      logoURI: "",
     },
     fallbackProviders: {
       chainId: arbitrum.id,

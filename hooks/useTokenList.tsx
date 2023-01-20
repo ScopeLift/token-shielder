@@ -34,7 +34,7 @@ export const useTokenList = () => {
         address: ethAddress,
         decimals: 18,
         name: network.baseToken.name,
-        logoURI: "",
+        logoURI: network.baseToken.logoURI,
       };
       return { tokenList: [baseToken, ...tokenList] };
     }
