@@ -1,3 +1,4 @@
+import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
 import { ethers } from "ethers";
 import useSWR from "swr";
@@ -33,7 +34,7 @@ export const useTokenList = () => {
       const eth: TokenListItem = {
         chainId,
         symbol: "ETH",
-        address: ethers.utils.getAddress(`0x${"e".repeat(40)}`),
+        address: ethAddress,
         decimals: 18,
         name: "ETH",
         logoURI: "",

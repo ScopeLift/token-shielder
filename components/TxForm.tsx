@@ -1,6 +1,7 @@
 import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
 import useRailgunTx from "@/hooks/useRailgunTx";
+import { ethAddress } from "@/utils/constants";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
@@ -38,7 +39,7 @@ export const TxForm = () => {
   const { shield } = useRailgunTx();
 
   const needsApproval =
-    tokenAddress !== getAddress(`0x${"e".repeat(40)}`) &&
+    tokenAddress !== ethAddress &&
     ethers.utils
       .parseUnits(tokenAmount || "0", tokenDecimals)
       .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));

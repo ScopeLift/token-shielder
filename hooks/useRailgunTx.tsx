@@ -1,5 +1,6 @@
 import { useToken } from "@/contexts/TokenContext";
 import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
+import { ethAddress } from "@/utils/constants";
 import {
   gasEstimateForShield,
   gasEstimateForShieldBaseToken,
@@ -34,8 +35,7 @@ const useRailgunTx = () => {
     tokenDecimals: number;
     recipient: string;
   }) => {
-    if (args.tokenAddress === getAddress(`0x${"e".repeat(40)}`))
-      return shieldBaseToken(args);
+    if (args.tokenAddress === ethAddress) return shieldBaseToken(args);
     return shieldToken(args);
   };
 
