@@ -13,9 +13,22 @@ export const loadProviders = async () => {
   // Whether to forward debug logs from Fallback Provider.
   const shouldDebug = true;
 
-  const { feesSerialized } = await loadProvider(
+  await loadProvider(
     GOERLI_ETH_PROVIDERS_JSON,
     NetworkName.EthereumGoerli,
+    shouldDebug
+  );
+
+  await loadProvider(ETH_PROVIDERS_JSON, NetworkName.Ethereum, shouldDebug);
+
+  await loadProvider(POLYGON_PROVIDERS_JSON, NetworkName.Polygon, shouldDebug);
+
+  await loadProvider(BNB_PROVIDERS_JSON, NetworkName.BNBChain, shouldDebug);
+
+  // TODO: Replace with real goerli
+  await loadProvider(
+    ARBI_PROVIDERS_JSON,
+    NetworkName.ArbitrumGoerli,
     shouldDebug
   );
 };
@@ -96,6 +109,44 @@ const GOERLI_ETH_PROVIDERS_JSON: FallbackProviderJsonConfig = {
     },
     {
       provider: "https://rpc.ankr.com/eth_goerli",
+      priority: 1,
+      weight: 1,
+    },
+  ],
+};
+
+const POLYGON_PROVIDERS_JSON: FallbackProviderJsonConfig = {
+  chainId: 137,
+  providers: [
+    {
+      provider: "https://polygon-rpc.com",
+      priority: 2,
+      weight: 1,
+    },
+    {
+      provider: "https://rpc-mainnet.maticvigil.com",
+      priority: 1,
+      weight: 1,
+    },
+  ],
+};
+
+const BNB_PROVIDERS_JSON: FallbackProviderJsonConfig = {
+  chainId: 56,
+  providers: [
+    {
+      provider: "https://bsc-dataseed.binance.org/",
+      priority: 1,
+      weight: 1,
+    },
+  ],
+};
+
+const ARBI_PROVIDERS_JSON: FallbackProviderJsonConfig = {
+  chainId: 42161,
+  providers: [
+    {
+      provider: "https://arb1.arbitrum.io/rpc",
       priority: 1,
       weight: 1,
     },

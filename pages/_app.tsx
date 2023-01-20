@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import { TokenListProvider } from "@/contexts/TokenContext";
+import { useRailgunProvider } from "@/hooks/useRailgunProvider";
 import { loadProviders } from "@/utils/railgun";
 import { initialize } from "@/utils/railgun";
 import { Grid, GridItem } from "@chakra-ui/layout";
@@ -10,7 +11,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useState, useEffect } from "react";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, useNetwork, WagmiConfig } from "wagmi";
 import { mainnet, polygon, arbitrum, bsc, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
@@ -48,15 +49,7 @@ const wagmiClient = createClient({
 
 function MyApp({ Component, pageProps }: AppProps) {
   initialize();
-  const [isProviderLoaded, setProviderLoaded] = useState<Boolean>(false);
-  useEffect(() => {
-    const fn = async () => {
-      await loadProviders();
-      setProviderLoaded(true);
-    };
-    fn();
-  }, []);
-
+  const { isProviderLoaded } = useRailgunProvider();
   return (
     <>
       <Head>
