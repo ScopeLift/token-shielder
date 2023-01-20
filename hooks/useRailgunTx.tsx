@@ -131,7 +131,7 @@ const useRailgunTx = () => {
       {
         tokenAddress: tokenAddress!,
         amountString: ethers.utils
-          .parseUnits(tokenAmount!, tokenDecimals)
+          .parseUnits(tokenAmount, tokenDecimals)
           .toHexString(), // must be hex
         recipientAddress: recipient!, // RAILGUN address
       },
