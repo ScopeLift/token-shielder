@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import { TokenListProvider } from "@/contexts/TokenContext";
 import { useRailgunProvider } from "@/hooks/useRailgunProvider";
+import { bscIcon } from "@/utils/constants";
 import { initialize } from "@/utils/railgun";
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -24,7 +25,16 @@ const colors = {
 const theme = extendTheme({ colors });
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, bsc, polygon, arbitrum, goerli],
+  [
+    mainnet,
+    {
+      ...bsc,
+      iconUrl: bscIcon,
+    },
+    polygon,
+    arbitrum,
+    goerli,
+  ],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
