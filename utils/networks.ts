@@ -72,7 +72,7 @@ export const networks = {
     },
   },
   [bsc.id]: {
-    blockExplorerUrl: "https://bscxplorer.com/",
+    blockExplorerUrl: "https://bscscan.com/",
     tokenListUrl: "pancakeswap-top-100.json",
     railgunNetworkName: NetworkName.BNBChain,
     chainId: bsc.id,
