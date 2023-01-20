@@ -10,7 +10,7 @@ import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quic
 import { NetworkName } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
 import { ethers, constants, BigNumber } from "ethers";
-import { useState } from "react";
+import React, { useState } from "react";
 import { usePrepareContractWrite, useContractWrite } from "wagmi";
 
 export const TxForm = () => {
@@ -18,10 +18,6 @@ export const TxForm = () => {
   const { tokenList, tokenAllowances } = useToken();
   const network = NetworkName.EthereumGoerli;
   const { txNotify, notifyUser } = useNotifications();
-  let abi = [
-    "function transfer(address,uint256) returns (bool)",
-    "function approve(address,uint256) returns (bool)",
-  ];
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const [tokenDecimals, setTokenDecimals] = useState<number>();
@@ -54,7 +50,6 @@ export const TxForm = () => {
       tokenDecimals,
       recipient,
     });
-    await tx?.wait();
     txNotify(tx!.hash);
   };
 
