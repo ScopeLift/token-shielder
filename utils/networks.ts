@@ -102,7 +102,7 @@ export const networks = {
     evmGasType: EVMGasType.Type2,
     baseToken: {
       symbol: "MATIC",
-      name: "Polygon",
+      name: "MATIC",
     },
     fallbackProviders: {
       chainId: polygon.id,
