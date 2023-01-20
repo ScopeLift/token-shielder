@@ -18,25 +18,26 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       if (!tokenList || tokenList.length === 0) {
         return new Map();
       }
+      const filteredTokenList = tokenList.filter(
+        (token) => token.address !== ethAddress
+      );
 
       const contractAddress = getRailgunSmartWalletContractForNetwork(
         network.railgunNetworkName
       ).address;
-      const readContractsArgs = tokenList
-        .filter((token) => token.address !== ethAddress)
-        .map((token) => {
-          return {
-            abi: erc20ABI,
-            functionName: "allowance",
-            address: token.address,
-            args: [address, contractAddress],
-          };
-        });
+      const readContractsArgs = filteredTokenList.map((token) => {
+        return {
+          abi: erc20ABI,
+          functionName: "allowance",
+          address: token.address,
+          args: [address, contractAddress],
+        };
+      });
       const data = await readContracts({
         contracts: readContractsArgs,
       });
       const allowancesPerToken = new Map();
-      tokenList.forEach((token, i) => {
+      filteredTokenList.forEach((token, i) => {
         allowancesPerToken.set(token.address, data[i]);
       });
       return allowancesPerToken;
