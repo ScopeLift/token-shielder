@@ -45,7 +45,7 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
         if (token.address === ethAddress)
           return {
             ...token,
-            balance,
+            balance: balance?.value || null,
           };
         return {
           ...token,
