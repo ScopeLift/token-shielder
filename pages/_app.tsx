@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import { TokenListProvider } from "@/contexts/TokenContext";
 import { useRailgunProvider } from "@/hooks/useRailgunProvider";
-import { loadProviders } from "@/utils/railgun";
 import { initialize } from "@/utils/railgun";
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -10,8 +9,7 @@ import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useState, useEffect } from "react";
-import { configureChains, createClient, useNetwork, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, polygon, arbitrum, bsc, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";

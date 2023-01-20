@@ -33,18 +33,18 @@ export const useTokenList = () => {
         symbol: "WETH",
         address: network.wethAddress,
         decimals: 18,
-        name: "wETH",
+        name: "Wrapped ETH",
         logoURI: "",
       };
-      const eth: TokenListItem = {
+      const baseToken: TokenListItem = {
         chainId,
-        symbol: "ETH",
+        symbol: network.baseToken.symbol,
         address: ethAddress,
         decimals: 18,
-        name: "ETH",
+        name: network.baseToken.name,
         logoURI: "",
       };
-      return { tokenList: [eth, ...tokenList], weth };
+      return { tokenList: [baseToken, ...tokenList], weth };
     }
   );
   return { isLoading, error, tokenList: data?.tokenList, weth: data?.weth };

@@ -1,10 +1,7 @@
 // import { loadProviders } from "@/utils/railgun";
 import { networks } from "@/utils/networks";
 import { loadProviders } from "@/utils/railgun";
-import {
-  loadProvider,
-  setProviderForNetwork,
-} from "@railgun-community/quickstart";
+import { setProviderForNetwork } from "@railgun-community/quickstart";
 import { useState, useEffect } from "react";
 import { useNetwork, useProvider } from "wagmi";
 

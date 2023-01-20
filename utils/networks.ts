@@ -1,6 +1,7 @@
 import { isHexString } from "@ethersproject/bytes";
 import { NetworkName } from "@railgun-community/shared-models";
 import { EVMGasType } from "@railgun-community/shared-models";
+import { FallbackProviderJsonConfig } from "@railgun-community/shared-models";
 import { mainnet, goerli } from "wagmi";
 import { bsc, polygon, arbitrum } from "wagmi/chains";
 
@@ -11,6 +12,8 @@ export type NetworkConfig = {
   chainId: number;
   wethAddress: string;
   evmGasType: EVMGasType;
+  baseToken: { symbol: string; name: string };
+  fallbackProviders: FallbackProviderJsonConfig;
 };
 
 export const networks = {
@@ -21,6 +24,25 @@ export const networks = {
     chainId: mainnet.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     evmGasType: EVMGasType.Type2,
+    baseToken: {
+      symbol: "ETH",
+      name: "Ether",
+    },
+    fallbackProviders: {
+      chainId: mainnet.id,
+      providers: [
+        {
+          provider: "https://cloudflare-eth.com/",
+          priority: 1,
+          weight: 1,
+        },
+        {
+          provider: "https://rpc.ankr.com/eth",
+          priority: 2,
+          weight: 1,
+        },
+      ],
+    },
   },
   [goerli.id]: {
     blockExplorerUrl: "https://goerli.etherscan.io/",
@@ -29,6 +51,25 @@ export const networks = {
     chainId: goerli.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     evmGasType: EVMGasType.Type2,
+    baseToken: {
+      symbol: "GoerliETH",
+      name: "Goerli Ether",
+    },
+    fallbackProviders: {
+      chainId: goerli.id,
+      providers: [
+        {
+          provider: "https://eth-goerli.public.blastapi.io",
+          priority: 2,
+          weight: 1,
+        },
+        {
+          provider: "https://rpc.ankr.com/eth_goerli",
+          priority: 1,
+          weight: 1,
+        },
+      ],
+    },
   },
   [bsc.id]: {
     blockExplorerUrl: "https://bscxplorer.com/",
@@ -37,6 +78,20 @@ export const networks = {
     chainId: bsc.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     evmGasType: EVMGasType.Type0,
+    baseToken: {
+      symbol: "BNB",
+      name: "Binance coin",
+    },
+    fallbackProviders: {
+      chainId: bsc.id,
+      providers: [
+        {
+          provider: "https://bsc-dataseed1.binance.org/",
+          priority: 1,
+          weight: 1,
+        },
+      ],
+    },
   },
   [polygon.id]: {
     blockExplorerUrl: "https://polygonscan.com/",
@@ -45,6 +100,25 @@ export const networks = {
     chainId: polygon.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     evmGasType: EVMGasType.Type2,
+    baseToken: {
+      symbol: "MATIC",
+      name: "Polygon",
+    },
+    fallbackProviders: {
+      chainId: polygon.id,
+      providers: [
+        {
+          provider: "https://rpc.ankr.com/polygon",
+          priority: 2,
+          weight: 1,
+        },
+        {
+          provider: "https://rpc-mainnet.maticvigil.com",
+          priority: 1,
+          weight: 1,
+        },
+      ],
+    },
   },
   [arbitrum.id]: {
     blockExplorerUrl: "https://arbiscan.io/",
@@ -53,6 +127,20 @@ export const networks = {
     chainId: arbitrum.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     evmGasType: EVMGasType.Type2,
+    baseToken: {
+      symbol: "ETH",
+      name: "Ether",
+    },
+    fallbackProviders: {
+      chainId: arbitrum.id,
+      providers: [
+        {
+          provider: "https://arb1.arbitrum.io/rpc",
+          priority: 1,
+          weight: 1,
+        },
+      ],
+    },
   },
 } as { [key: number]: NetworkConfig };
 
