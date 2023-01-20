@@ -57,7 +57,7 @@ const useRailgunTx = () => {
     if (evmGasType === EVMGasType.Type2)
       return {
         evmGasType,
-        gasEstimateString: gasEstimateString, // Output from gasEstimateForShieldBaseToken
+        gasEstimateString,
         maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
         maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
       };
