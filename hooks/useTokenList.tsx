@@ -1,6 +1,5 @@
 import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
-import { ethers } from "ethers";
 import useSWR from "swr";
 import { useNetwork } from "wagmi";
 

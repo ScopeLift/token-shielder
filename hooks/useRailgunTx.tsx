@@ -1,6 +1,7 @@
 import { useToken } from "@/contexts/TokenContext";
 import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
 import { ethAddress } from "@/utils/constants";
+import { networks } from "@/utils/networks";
 import {
   gasEstimateForShield,
   gasEstimateForShieldBaseToken,
@@ -10,22 +11,24 @@ import {
 import {
   RailgunERC20AmountRecipient,
   RailgunERC20Amount,
-  NetworkName,
   TransactionGasDetailsSerialized,
   EVMGasType,
   NETWORK_CONFIG,
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { ethers } from "ethers";
-import { getAddress, parseUnits } from "ethers/lib/utils.js";
+import { parseUnits } from "ethers/lib/utils.js";
 import { useAccount, useSigner } from "wagmi";
 import { useProvider } from "wagmi";
+import { useNetwork } from "wagmi";
 
 const useRailgunTx = () => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const { getShieldPrivateKey } = useShieldPrivateKey();
-  const network = NetworkName.EthereumGoerli;
+  const { chain } = useNetwork();
+  const chainId = chain?.id || 1; // default to mainnet if no chain id
+  const { railgunNetworkName: network, evmGasType } = networks[chainId];
   const { weth } = useToken();
   const provider = useProvider();
 
@@ -37,6 +40,28 @@ const useRailgunTx = () => {
   }) => {
     if (args.tokenAddress === ethAddress) return shieldBaseToken(args);
     return shieldToken(args);
+  };
+
+  const getGasDetailsSerialized = async (
+    gasEstimateString: string
+  ): Promise<TransactionGasDetailsSerialized> => {
+    const { maxFeePerGas, maxPriorityFeePerGas, gasPrice } =
+      await provider.getFeeData();
+    // evmGasType depends on the chain. BNB uses type 0.
+    if (evmGasType === EVMGasType.Type0)
+      return {
+        evmGasType,
+        gasEstimateString,
+        gasPriceString: gasPrice!.toHexString(),
+      };
+    if (evmGasType === EVMGasType.Type2)
+      return {
+        evmGasType,
+        gasEstimateString: gasEstimateString, // Output from gasEstimateForShieldBaseToken
+        maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
+        maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
+      };
+    throw new Error("Unsupported gas type for chain");
   };
 
   const shieldBaseToken = async ({
@@ -73,14 +98,9 @@ const useRailgunTx = () => {
       throw err;
     }
 
-    const { maxFeePerGas, maxPriorityFeePerGas } = await provider.getFeeData();
-
-    const gasDetailsSerialized: TransactionGasDetailsSerialized = {
-      evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
-      gasEstimateString: gasEstimateString!, // Output from gasEstimateForShieldBaseToken
-      maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
-      maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
-    };
+    const gasDetailsSerialized = await getGasDetailsSerialized(
+      gasEstimateString!
+    );
 
     const { serializedTransaction, error } = await populateShieldBaseToken(
       network,
@@ -149,13 +169,9 @@ const useRailgunTx = () => {
       throw err;
     }
 
-    const { maxFeePerGas, maxPriorityFeePerGas } = await provider.getFeeData();
-    const gasDetailsSerialized: TransactionGasDetailsSerialized = {
-      evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
-      gasEstimateString: gasEstimateString!, // Output from gasEstimateForShield
-      maxFeePerGasString: maxFeePerGas!.toHexString(), // Current gas Max Fee
-      maxPriorityFeePerGasString: maxPriorityFeePerGas!.toHexString(), // Current gas Max Priority Fee
-    };
+    const gasDetailsSerialized = await getGasDetailsSerialized(
+      gasEstimateString!
+    );
 
     const { serializedTransaction, error } = await populateShield(
       network,

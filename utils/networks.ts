@@ -1,5 +1,6 @@
 import { isHexString } from "@ethersproject/bytes";
 import { NetworkName } from "@railgun-community/shared-models";
+import { EVMGasType } from "@railgun-community/shared-models";
 import { mainnet, goerli } from "wagmi";
 import { bsc, polygon, arbitrum } from "wagmi/chains";
 
@@ -9,6 +10,7 @@ export type NetworkConfig = {
   railgunNetworkName: NetworkName;
   chainId: number;
   wethAddress: string;
+  evmGasType: EVMGasType;
 };
 
 export const networks = {
@@ -18,6 +20,7 @@ export const networks = {
     railgunNetworkName: NetworkName.Ethereum,
     chainId: mainnet.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    evmGasType: EVMGasType.Type2,
   },
   [goerli.id]: {
     blockExplorerUrl: "https://goerli.etherscan.io/",
@@ -25,6 +28,7 @@ export const networks = {
     railgunNetworkName: NetworkName.EthereumGoerli,
     chainId: goerli.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    evmGasType: EVMGasType.Type2,
   },
   [bsc.id]: {
     blockExplorerUrl: "https://bscxplorer.com/",
@@ -32,6 +36,7 @@ export const networks = {
     railgunNetworkName: NetworkName.BNBChain,
     chainId: bsc.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    evmGasType: EVMGasType.Type0,
   },
   [polygon.id]: {
     blockExplorerUrl: "https://polygonscan.com/",
@@ -39,6 +44,7 @@ export const networks = {
     railgunNetworkName: NetworkName.Polygon,
     chainId: polygon.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    evmGasType: EVMGasType.Type2,
   },
   [arbitrum.id]: {
     blockExplorerUrl: "https://arbiscan.io/",
@@ -46,6 +52,7 @@ export const networks = {
     railgunNetworkName: NetworkName.ArbitrumGoerli, // TODO: Regular arbitrum is missing from railgun-community
     chainId: arbitrum.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    evmGasType: EVMGasType.Type2,
   },
 } as { [key: number]: NetworkConfig };
 
