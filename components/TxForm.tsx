@@ -30,7 +30,8 @@ export const TxForm = () => {
     abi: erc20ABI,
     functionName: "approve",
     args: [
-      getRailgunSmartWalletContractForNetwork(network).address as `0x{string}`,
+      getRailgunSmartWalletContractForNetwork(network.railgunNetworkName)
+        .address as `0x{string}`,
       constants.MaxUint256,
     ],
   });
