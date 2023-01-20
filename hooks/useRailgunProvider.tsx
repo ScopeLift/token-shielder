@@ -1,4 +1,3 @@
-// import { loadProviders } from "@/utils/railgun";
 import { networks } from "@/utils/networks";
 import { loadProviders } from "@/utils/railgun";
 import { setProviderForNetwork } from "@railgun-community/quickstart";
