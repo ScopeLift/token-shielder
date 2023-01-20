@@ -12,11 +12,11 @@ export type TokenContextType = {
   tokenList: TokenListContextItem[];
   isLoading: boolean;
   tokenAllowances: Map<string, BigNumber>;
-  weth?: string;
+  weth?: TokenListItem;
 };
 const initialContext = {
   isLoading: false,
-  weth: "",
+  weth: undefined,
   tokenList: [],
   tokenAllowances: new Map(),
 };

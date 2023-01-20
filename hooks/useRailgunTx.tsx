@@ -57,7 +57,7 @@ const useRailgunTx = () => {
     const shieldPrivateKey = await getShieldPrivateKey();
 
     const wrappedERC20Amount: RailgunERC20Amount = {
-      tokenAddress: weth!, // wETH
+      tokenAddress: weth!.address, // wETH
       amountString: parseUnits(tokenAmount!, tokenDecimals).toHexString(), // hexadecimal amount
     };
 

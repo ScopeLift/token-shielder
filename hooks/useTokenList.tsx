@@ -28,7 +28,7 @@ export const useTokenList = () => {
       const tokenList = json.tokens.filter(
         (token) => token.chainId === chainId
       );
-      const weth = tokenList.find((token) => token.symbol === "WETH")?.address;
+      const weth = tokenList.find((token) => token.symbol === "WETH");
       if (!weth) throw new Error("No WETH found in token list");
       const eth: TokenListItem = {
         chainId,

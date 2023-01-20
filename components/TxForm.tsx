@@ -10,6 +10,7 @@ import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quic
 import { NetworkName } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
 import { ethers, constants, BigNumber } from "ethers";
+import { getAddress } from "ethers/lib/utils.js";
 import React, { useState } from "react";
 import { usePrepareContractWrite, useContractWrite } from "wagmi";
 
@@ -36,9 +37,11 @@ export const TxForm = () => {
   );
   const { shield } = useRailgunTx();
 
-  const needsApproval = ethers.utils
-    .parseUnits(tokenAmount || "0", tokenDecimals)
-    .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
+  const needsApproval =
+    tokenAddress !== getAddress(`0x${"e".repeat(40)}`) &&
+    ethers.utils
+      .parseUnits(tokenAmount || "0", tokenDecimals)
+      .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
 
   const doSubmit: React.FormEventHandler = async (e) => {
     // TODO: Form validation
