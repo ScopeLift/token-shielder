@@ -9,10 +9,8 @@ import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
-import { NetworkName } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
 import { ethers, constants, BigNumber } from "ethers";
-import { getAddress } from "ethers/lib/utils.js";
 import React, { useState } from "react";
 import { usePrepareContractWrite, useContractWrite, useNetwork } from "wagmi";
 

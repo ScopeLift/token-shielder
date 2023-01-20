@@ -1,4 +1,3 @@
-import { useToken } from "@/contexts/TokenContext";
 import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
 import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
@@ -14,6 +13,7 @@ import {
   TransactionGasDetailsSerialized,
   EVMGasType,
   NETWORK_CONFIG,
+  NetworkName,
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { ethers } from "ethers";
@@ -48,8 +48,21 @@ const useRailgunTx = () => {
   const getGasDetailsSerialized = async (
     gasEstimateString: string
   ): Promise<TransactionGasDetailsSerialized> => {
-    const { maxFeePerGas, maxPriorityFeePerGas, gasPrice } =
-      await provider.getFeeData();
+    const { maxFeePerGas, maxPriorityFeePerGas, gasPrice } = await provider
+      .getFeeData()
+      .then((data) => {
+        // polygon maxPriorityFee must be at least 30
+        if (network === NetworkName.Polygon) {
+          const gwei30 = parseUnits("30", "gwei");
+          return {
+            ...data,
+            maxPriorityFeePerGas: data.maxPriorityFeePerGas!.lt(gwei30)
+              ? gwei30
+              : data.maxPriorityFeePerGas,
+          };
+        }
+        return data;
+      });
     // evmGasType depends on the chain. BNB uses type 0.
     if (evmGasType === EVMGasType.Type0)
       return {
