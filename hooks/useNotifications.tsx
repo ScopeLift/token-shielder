@@ -13,7 +13,7 @@ import { useRef } from "react";
 import { useProvider } from "wagmi";
 
 const toastDefaultArgs = {
-  position: "top-right" as ToastPosition,
+  position: "bottom-right" as ToastPosition,
   duration: 5000,
   isClosable: true,
 };
@@ -71,6 +71,7 @@ const useNotifications = () => {
 
     const { status } = await provider.waitForTransaction(txHash);
     toast.update(toastIdRef.current, {
+      ...toastDefaultArgs,
       description: status ? "Transaction succeeded" : "Transaction failed",
       status: status ? "success" : "error",
     });
