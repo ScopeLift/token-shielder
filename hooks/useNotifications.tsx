@@ -18,6 +18,12 @@ const toastDefaultArgs = {
   isClosable: true,
 };
 
+const ToastLink = ({ href, ...props }: ToastProps & { href: string }) => (
+  <Link href={href} isExternal>
+    <Toast {...props} />
+  </Link>
+);
+
 const toastLink = ({
   toast,
   href,
@@ -25,13 +31,10 @@ const toastLink = ({
 }: ToastProps & { toast: CreateToastFnReturn; href: string }) => {
   return toast({
     ...props,
-    render: () => (
-      <Link href={href} isExternal>
-        <Toast {...props} />
-      </Link>
-    ),
+    render: () => <ToastLink {...props} href={href} />,
   });
 };
+// Pass new custom component in update
 
 const useNotifications = () => {
   const defaultTimeout = 5000;
@@ -74,6 +77,7 @@ const useNotifications = () => {
       ...toastDefaultArgs,
       description: status ? "Transaction succeeded" : "Transaction failed",
       status: status ? "success" : "error",
+      render: (props) => <ToastLink {...props} href={href} />,
     });
   };
 
