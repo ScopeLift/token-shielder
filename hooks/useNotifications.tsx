@@ -13,24 +13,9 @@ import { useRef } from "react";
 import { useProvider } from "wagmi";
 
 const toastDefaultArgs = {
-  position: "top-right" as ToastPosition,
+  position: "bottom-right" as ToastPosition,
   duration: 5000,
   isClosable: true,
-};
-
-const toastLink = ({
-  toast,
-  href,
-  ...props
-}: ToastProps & { toast: CreateToastFnReturn; href: string }) => {
-  return toast({
-    ...props,
-    render: () => (
-      <Link href={href} isExternal>
-        <Toast {...props} />
-      </Link>
-    ),
-  });
 };
 
 const useNotifications = () => {
@@ -60,18 +45,31 @@ const useNotifications = () => {
   const txNotify = async (txHash: string) => {
     const { chainId } = await provider.getNetwork();
     const href = getEtherscanUrl(txHash, chainId);
-    toastIdRef.current = toastLink({
+    toastIdRef.current = toast({
       ...toastDefaultArgs,
-      toast,
-      href,
-      description: "Transaction pending",
+      isClosable: false,
+      description: (
+        <Link href={href} isExternal>
+          Transaction Pending
+        </Link>
+      ),
+
       duration: null,
       status: "loading",
     });
 
     const { status } = await provider.waitForTransaction(txHash);
     toast.update(toastIdRef.current, {
-      description: status ? "Transaction succeeded" : "Transaction failed",
+      ...toastDefaultArgs,
+      description: status ? (
+        <Link href={href} isExternal>
+          Transaction succeeded
+        </Link>
+      ) : (
+        <Link href={href} isExternal>
+          Transaction failed
+        </Link>
+      ),
       status: status ? "success" : "error",
     });
   };
