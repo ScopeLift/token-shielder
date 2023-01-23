@@ -20,6 +20,7 @@
     "browser-level": "^1.0.1",
     "ethers": "^5.0.0",
     "framer-motion": "^6",
+    "fuse.js": "^6.6.2",
     "level-js": "^6.1.0",
     "levelup": "^5.1.1",
     "localforage": "^1.10.0",
