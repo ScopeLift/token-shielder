@@ -51,15 +51,8 @@ const useRailgunTx = () => {
     const { maxFeePerGas, maxPriorityFeePerGas, gasPrice } = await provider
       .getFeeData()
       .then((data) => {
-        // polygon maxPriorityFee must be at least 30
         if (network === NetworkName.Polygon) {
-          const gwei30 = parseUnits("30", "gwei");
-          return {
-            ...data,
-            maxPriorityFeePerGas: data.maxPriorityFeePerGas!.lt(gwei30)
-              ? gwei30
-              : data.maxPriorityFeePerGas,
-          };
+          // TODO: polygon gas
         }
         return data;
       });
