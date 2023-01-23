@@ -1,6 +1,7 @@
 import useShieldPrivateKey from "@/hooks/useShieldPrivateKey";
 import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
+import { parseUnits } from "@ethersproject/units";
 import {
   gasEstimateForShield,
   gasEstimateForShieldBaseToken,
@@ -17,7 +18,6 @@ import {
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { ethers } from "ethers";
-import { parseUnits } from "ethers/lib/utils.js";
 import { useAccount, useSigner } from "wagmi";
 import { useProvider } from "wagmi";
 import { useNetwork } from "wagmi";
