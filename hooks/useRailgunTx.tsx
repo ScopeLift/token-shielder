@@ -18,6 +18,7 @@ import {
   deserializeTransaction,
 } from "@railgun-community/shared-models";
 import { ethers } from "ethers";
+import { useState } from "react";
 import { useAccount, useSigner } from "wagmi";
 import { useProvider } from "wagmi";
 import { useNetwork } from "wagmi";
@@ -34,6 +35,7 @@ const useRailgunTx = () => {
     wethAddress,
   } = networks[chainId];
   const provider = useProvider();
+  const [isShielding, setIsShielding] = useState(false);
 
   const shield = async (args: {
     tokenAddress: string;
@@ -41,8 +43,13 @@ const useRailgunTx = () => {
     tokenDecimals: number;
     recipient: string;
   }) => {
-    if (args.tokenAddress === ethAddress) return shieldBaseToken(args);
-    return shieldToken(args);
+    setIsShielding(true);
+    const resp =
+      args.tokenAddress === ethAddress
+        ? await shieldBaseToken(args)
+        : await shieldToken(args);
+    setIsShielding(false);
+    return resp;
   };
 
   const getGasDetailsSerialized = async (
@@ -207,7 +214,7 @@ const useRailgunTx = () => {
     return signer?.sendTransaction(transactionRequest);
   };
 
-  return { shield };
+  return { shield, isShielding };
 };
 
 export default useRailgunTx;
