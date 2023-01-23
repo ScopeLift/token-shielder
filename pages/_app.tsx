@@ -31,7 +31,7 @@ const { chains, provider, webSocketProvider } = configureChains(
       ...bsc,
       iconUrl: bscIcon,
     },
-    polygon,
+    // polygon,
     arbitrum,
     goerli,
   ],
