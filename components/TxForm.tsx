@@ -2,23 +2,23 @@ import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
 import useRailgunTx from "@/hooks/useRailgunTx";
 import { ethAddress } from "@/utils/constants";
+import { networks } from "@/utils/networks";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
 import { Select } from "@chakra-ui/select";
 import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
-import { NetworkName } from "@railgun-community/shared-models";
 import { erc20ABI } from "@wagmi/core";
 import { ethers, constants, BigNumber } from "ethers";
-import { getAddress } from "ethers/lib/utils.js";
 import React, { useState } from "react";
-import { usePrepareContractWrite, useContractWrite } from "wagmi";
+import { usePrepareContractWrite, useContractWrite, useNetwork } from "wagmi";
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
   const { tokenList, tokenAllowances } = useToken();
-  const network = NetworkName.EthereumGoerli;
+  const { chain } = useNetwork();
+  const network = networks[chain?.id || 1];
   const { txNotify, notifyUser } = useNotifications();
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenAmount, setTokenAmount] = useState<string>("");
@@ -28,7 +28,8 @@ export const TxForm = () => {
     abi: erc20ABI,
     functionName: "approve",
     args: [
-      getRailgunSmartWalletContractForNetwork(network).address as `0x{string}`,
+      getRailgunSmartWalletContractForNetwork(network.railgunNetworkName)
+        .address as `0x{string}`,
       constants.MaxUint256,
     ],
   });

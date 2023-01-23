@@ -1,22 +1,20 @@
+import { networks } from "./networks";
 import {
   startRailgunEngine,
   loadProvider,
   ArtifactStore,
   setLoggers,
 } from "@railgun-community/quickstart";
-import { NetworkName } from "@railgun-community/shared-models";
-import { FallbackProviderJsonConfig } from "@railgun-community/shared-models";
 import { BrowserLevel } from "browser-level";
 import localforage from "localforage";
 
 export const loadProviders = async () => {
   // Whether to forward debug logs from Fallback Provider.
   const shouldDebug = true;
-
-  const { feesSerialized } = await loadProvider(
-    GOERLI_ETH_PROVIDERS_JSON,
-    NetworkName.EthereumGoerli,
-    shouldDebug
+  return Promise.all(
+    Object.values(networks).map(({ railgunNetworkName, fallbackProviders }) => {
+      return loadProvider(fallbackProviders, railgunNetworkName, shouldDebug);
+    })
   );
 };
 
@@ -68,36 +66,4 @@ export const initialize = () => {
     skipMerkleTreeScans
   );
   setLogging();
-};
-
-const ETH_PROVIDERS_JSON: FallbackProviderJsonConfig = {
-  chainId: 1,
-  providers: [
-    {
-      provider: "https://cloudflare-eth.com/",
-      priority: 1,
-      weight: 1,
-    },
-    {
-      provider: "https://rpc.ankr.com/eth",
-      priority: 2,
-      weight: 1,
-    },
-  ],
-};
-
-const GOERLI_ETH_PROVIDERS_JSON: FallbackProviderJsonConfig = {
-  chainId: 5,
-  providers: [
-    {
-      provider: "https://eth-goerli.public.blastapi.io",
-      priority: 2,
-      weight: 1,
-    },
-    {
-      provider: "https://rpc.ankr.com/eth_goerli",
-      priority: 1,
-      weight: 1,
-    },
-  ],
 };

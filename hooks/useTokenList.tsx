@@ -1,6 +1,5 @@
 import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
-import { ethers } from "ethers";
 import useSWR from "swr";
 import { useNetwork } from "wagmi";
 
@@ -29,24 +28,16 @@ export const useTokenList = () => {
       const tokenList = json.tokens.filter(
         (token) => token.chainId === chainId
       );
-      let weth = tokenList.find((token) => token.symbol === "WETH") || {
+      const baseToken: TokenListItem = {
         chainId,
-        symbol: "WETH",
-        address: network.wethAddress,
-        decimals: 18,
-        name: "wETH",
-        logoURI: "",
-      };
-      const eth: TokenListItem = {
-        chainId,
-        symbol: "ETH",
+        symbol: network.baseToken.symbol,
         address: ethAddress,
         decimals: 18,
-        name: "ETH",
-        logoURI: "",
+        name: network.baseToken.name,
+        logoURI: network.baseToken.logoURI,
       };
-      return { tokenList: [eth, ...tokenList], weth };
+      return { tokenList: [baseToken, ...tokenList] };
     }
   );
-  return { isLoading, error, tokenList: data?.tokenList, weth: data?.weth };
+  return { isLoading, error, tokenList: data?.tokenList };
 };

@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import { TokenListProvider } from "@/contexts/TokenContext";
-import { loadProviders } from "@/utils/railgun";
+import { useRailgunProvider } from "@/hooks/useRailgunProvider";
+import { bscIcon } from "@/utils/constants";
 import { initialize } from "@/utils/railgun";
 import { Grid, GridItem } from "@chakra-ui/layout";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -9,7 +10,6 @@ import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useState, useEffect } from "react";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, polygon, arbitrum, bsc, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -25,7 +25,16 @@ const colors = {
 const theme = extendTheme({ colors });
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, bsc, polygon, arbitrum, goerli],
+  [
+    mainnet,
+    {
+      ...bsc,
+      iconUrl: bscIcon,
+    },
+    // polygon,
+    arbitrum,
+    goerli,
+  ],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
@@ -48,15 +57,7 @@ const wagmiClient = createClient({
 
 function MyApp({ Component, pageProps }: AppProps) {
   initialize();
-  const [isProviderLoaded, setProviderLoaded] = useState<Boolean>(false);
-  useEffect(() => {
-    const fn = async () => {
-      await loadProviders();
-      setProviderLoaded(true);
-    };
-    fn();
-  }, []);
-
+  const { isProviderLoaded } = useRailgunProvider();
   return (
     <>
       <Head>
