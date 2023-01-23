@@ -111,8 +111,6 @@ const useRailgunTx = () => {
       gasEstimateString!
     );
 
-    console.log(gasDetailsSerialized);
-
     const { serializedTransaction, error } = await populateShieldBaseToken(
       network,
       recipient,
@@ -183,8 +181,6 @@ const useRailgunTx = () => {
     const gasDetailsSerialized = await getGasDetailsSerialized(
       gasEstimateString!
     );
-
-    console.log(gasDetailsSerialized);
 
     const { serializedTransaction, error } = await populateShield(
       network,
