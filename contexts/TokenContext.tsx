@@ -6,7 +6,9 @@ import { BigNumber } from "@ethersproject/bignumber";
 import React, { ReactNode, createContext, useContext } from "react";
 import { useAccount } from "wagmi";
 
-type TokenListContextItem = TokenListItem & { balance: BigNumber | null };
+export type TokenListContextItem = TokenListItem & {
+  balance: BigNumber | null;
+};
 
 export type TokenContextType = {
   tokenList: TokenListContextItem[];

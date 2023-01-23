@@ -1,4 +1,5 @@
 import ReviewTransactionModal from "@/components/ReviewTransactionModal";
+import TokenInput from "@/components/TokenInput";
 import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
 import { ethAddress } from "@/utils/constants";
@@ -68,6 +69,7 @@ export const TxForm = () => {
       </FormControl>
       <FormControl>
         <FormLabel>Token</FormLabel>
+<<<<<<< HEAD
         <Select
           size="lg"
           height="4rem"
@@ -90,6 +92,9 @@ export const TxForm = () => {
             );
           })}
         </Select>
+=======
+        <TokenInput />
+>>>>>>> 6715644 (Made some progress)
       </FormControl>
       <FormControl>
         <FormLabel>Amount</FormLabel>
@@ -146,3 +151,23 @@ export const TxForm = () => {
     </Box>
   );
 };
+
+//        <Select
+//          size="lg"
+//          height="4rem"
+//          mb=".75rem"
+//          onChange={(e) => {
+//            const { address, decimals } = tokenList[+e.target.value];
+//            setTokenAddress(address);
+//            setTokenDecimals(decimals);
+//          }}
+//        >
+//          <option></option>
+//          {tokenList.map((item, i) => {
+//            return (
+//              <option key={item.name} value={i}>
+//                {item.name}
+//              </option>
+//            );
+//          })}
+//        </Select>

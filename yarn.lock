@@ -644,6 +644,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@chakra-ui/icons@npm:^2.0.17":
+  version: 2.0.17
+  resolution: "@chakra-ui/icons@npm:2.0.17"
+  dependencies:
+    "@chakra-ui/icon": 3.0.16
+  peerDependencies:
+    "@chakra-ui/system": ">=2.0.0"
+    react: ">=18"
+  checksum: cb0d6f431d162f7d8d50ee33b887bb64f490109cc077bf176bea17ddca32c926b0caaab1013f05186be52ee42f261ff9d4e7af50744a03d51de356b4470e0ee2
+  languageName: node
+  linkType: hard
+
 "@chakra-ui/image@npm:2.0.15":
   version: 2.0.15
   resolution: "@chakra-ui/image@npm:2.0.15"
@@ -9312,6 +9324,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "railgun-shielder@workspace:."
   dependencies:
+    "@chakra-ui/icons": ^2.0.17
     "@chakra-ui/react": ^2.4.6
     "@emotion/react": ^11
     "@emotion/styled": ^11

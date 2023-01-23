@@ -11,6 +11,7 @@
     "format": "yarn prettier --write ."
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.17",
     "@chakra-ui/react": "^2.4.6",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
