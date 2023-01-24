@@ -1,6 +1,6 @@
+import { assertValidRailgunAddress } from "@railgun-community/quickstart";
+
 export const shortenAddress = (address: string) => {
-  if (address.length < 9) {
-    return address;
-  }
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  assertValidRailgunAddress(address); // Will throw error on incorrect value
+  return `${address.slice(0, 7)}...${address.slice(-4)}`;
 };
