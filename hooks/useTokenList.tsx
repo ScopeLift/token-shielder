@@ -23,7 +23,7 @@ export const useTokenList = () => {
   const { isLoading, error, data } = useSWR(
     `userTokenList-${chainId}`,
     async () => {
-      const resp = await fetch(network.tokenListUrl);
+      const resp = await fetch("tokenlist.json");
       const json = (await resp.json()) as TokenListJson;
       const tokenList = json.tokens.filter(
         (token) => token.chainId === chainId
