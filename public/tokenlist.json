@@ -1,11 +1,12 @@
 {
-  "name": "Uniswap Labs Default",
+  "name": "Railgun Shielder",
   "timestamp": "2023-01-18T14:45:36.473Z",
   "version": {
-    "major": 7,
+    "major": 1,
     "minor": 0,
     "patch": 0
   },
+  "description": "A combination of uniswap lab's token list version 7 and pancakeswap's token list version 2.16.13",
   "tokens": [
     {
       "chainId": 1,
