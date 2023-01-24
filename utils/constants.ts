@@ -1,5 +1,5 @@
 import { getAddress } from "@ethersproject/address";
-import { ethers, constants, BigNumber } from "ethers";
+import { BigNumber } from "ethers";
 
 export const ethAddress = getAddress(`0x${"e".repeat(40)}`);
 

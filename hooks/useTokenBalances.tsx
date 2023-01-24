@@ -20,7 +20,6 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
     address,
   });
 
-  const eth = tokenList.find((token) => token.address === ethAddress);
   const chainId = chain?.id || 1; // default to mainnet if no chain id
   const { isLoading, error, data } = useSWR(
     `userTokenList-${chainId}-${tokenList.length}`,
