@@ -22,8 +22,8 @@ export const loadProviders = async () => {
 const db = new BrowserLevel("");
 
 const setLogging = () => {
-  const logMessage: (msg: any) => void = console.log;
-  const logError: (err: any) => void = console.error;
+  const logMessage = console.log;
+  const logError = console.error;
 
   setLoggers(logMessage, logError);
 };

@@ -1,14 +1,7 @@
 import { getEtherscanUrl } from "@/utils/networks";
-import { Box, Link } from "@chakra-ui/layout";
+import { Link } from "@chakra-ui/layout";
 import { AlertStatus } from "@chakra-ui/react";
-import {
-  useToast,
-  ToastId,
-  ToastPosition,
-  Toast,
-  ToastProps,
-  CreateToastFnReturn,
-} from "@chakra-ui/toast";
+import { useToast, ToastId, ToastPosition } from "@chakra-ui/toast";
 import { useRef } from "react";
 import { useProvider } from "wagmi";
 
@@ -19,7 +12,6 @@ const toastDefaultArgs = {
 };
 
 const useNotifications = () => {
-  const defaultTimeout = 5000;
   const provider = useProvider();
   const toast = useToast();
   const toastIdRef = useRef<ToastId>();

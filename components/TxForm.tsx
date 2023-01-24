@@ -1,12 +1,13 @@
+import ReviewTransactionModal from "@/components/ReviewTransactionModal";
 import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
-import useRailgunTx from "@/hooks/useRailgunTx";
 import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
+import { useDisclosure } from "@chakra-ui/react";
 import { Select } from "@chakra-ui/select";
 import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
 import { erc20ABI } from "@wagmi/core";
@@ -19,10 +20,17 @@ export const TxForm = () => {
   const { tokenList, tokenAllowances } = useToken();
   const { chain } = useNetwork();
   const network = networks[chain?.id || 1];
-  const { txNotify, notifyUser } = useNotifications();
+  const { notifyUser } = useNotifications();
+  const {
+    isOpen: isReviewOpen,
+    onOpen: onReviewOpen,
+    onClose: onReviewClose,
+  } = useDisclosure();
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenAmount, setTokenAmount] = useState<string>("");
   const [tokenDecimals, setTokenDecimals] = useState<number>();
+  const [tokenSymbol, setTokenSymbol] = useState<string>("");
+  const [tokenName, setTokenName] = useState<string>("");
   const { config } = usePrepareContractWrite({
     address: tokenAddress,
     abi: erc20ABI,
@@ -37,26 +45,11 @@ export const TxForm = () => {
   const [recipient, setRecipient] = useState<string>(
     "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
   );
-  const { shield } = useRailgunTx();
-
   const needsApproval =
     tokenAddress !== ethAddress &&
     ethers.utils
       .parseUnits(tokenAmount || "0", tokenDecimals)
       .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
-
-  const doSubmit: React.FormEventHandler = async (e) => {
-    // TODO: Form validation
-    if (!tokenAddress || !tokenAmount || !tokenDecimals || !recipient)
-      throw new Error("bad form");
-    const tx = await shield({
-      tokenAddress,
-      tokenAmount,
-      tokenDecimals,
-      recipient,
-    });
-    txNotify(tx!.hash);
-  };
 
   return (
     <Box width="24rem">
@@ -80,9 +73,12 @@ export const TxForm = () => {
           height="4rem"
           mb=".75rem"
           onChange={(e) => {
-            const { address, decimals } = tokenList[+e.target.value];
+            const { address, decimals, symbol, name } =
+              tokenList[+e.target.value];
             setTokenAddress(address);
             setTokenDecimals(decimals);
+            setTokenSymbol(symbol);
+            setTokenName(name);
           }}
         >
           <option></option>
@@ -133,10 +129,20 @@ export const TxForm = () => {
           Approve
         </Button>
       ) : (
-        <Button size="lg" mt="1rem" width="100%" onClick={doSubmit}>
+        <Button size="lg" mt="1rem" width="100%" onClick={onReviewOpen}>
           Shield
         </Button>
       )}
+      <ReviewTransactionModal
+        isOpen={isReviewOpen}
+        onClose={onReviewClose}
+        recipient={recipient}
+        tokenAmount={tokenAmount}
+        tokenDecimals={tokenDecimals}
+        tokenAddress={tokenAddress}
+        tokenSymbol={tokenSymbol}
+        tokenName={tokenName}
+      />
     </Box>
   );
 };
