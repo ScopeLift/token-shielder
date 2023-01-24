@@ -1,9 +1,12 @@
 import { useToken } from "@/contexts/TokenContext";
 import { TokenListContextItem } from "@/contexts/TokenContext";
+import { ipfsDomain } from "@/utils/constants";
+import { parseIPFSUri } from "@/utils/ipfs";
+import { Avatar } from "@chakra-ui/avatar";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Image } from "@chakra-ui/image";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Text, Circle } from "@chakra-ui/layout";
 import {
   Modal,
   ModalOverlay,
@@ -13,8 +16,8 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/modal";
-import { BigNumber } from "ethers";
-import { parseUnits } from "ethers/lib/utils.js";
+import { BigNumber, FixedNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils.js";
 import Fuse from "fuse.js";
 import { useState } from "react";
 
@@ -30,22 +33,35 @@ type TokenSelectionItemProps = {
 const TokenSelectionItem = ({ token }: TokenSelectionItemProps) => {
   const tokenBalance = token?.balance || BigNumber.from(0);
   return (
-    <Flex>
+    <Flex justify="space-between" paddingY=".35rem">
       <Image
-        boxSize="2.5rem"
-        src={token.logoURI}
+        boxSize="2rem"
+        src={
+          token.logoURI.slice(0, 4) == "ipfs"
+            ? `${ipfsDomain}${parseIPFSUri(token.logoURI)}`
+            : `${token.logoURI}`
+        }
         alt={`${token.name}'s token logo`}
+        fallback={
+          <Circle size="2rem" bg="lightgrey">
+            <Text fontSize="xs">{token.symbol.slice(0, 3)}</Text>
+          </Circle>
+        }
       />
-      <Flex direction="column">
-        <Text size="md">{token.name}</Text>
-        <Text size="md">{token.symbol}</Text>
+      <Flex direction="column" w="100%" paddingLeft="1.5rem">
+        <Text fontSize="md">{token.name}</Text>
+        <Text fontSize="xs">{token.symbol}</Text>
       </Flex>
       <Flex>
         <Text size="md">
-          {parseUnits(
-            tokenBalance.toString() || "0",
-            token?.decimals || 0
-          ).toString() || 0}
+          {FixedNumber.from(
+            formatUnits(
+              tokenBalance.toString() || "0",
+              token?.decimals || 0
+            ).toString()
+          )
+            .round(4)
+            .toString() || 0}
         </Text>
       </Flex>
     </Flex>
@@ -57,14 +73,12 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const options = {
     includeScore: false,
-    // Search in `author` and in `tags` array
     keys: ["address", "name"],
   };
 
   const fuse = new Fuse(tokenList, options);
 
   const result = fuse.search(searchTerm);
-  console.log(result);
 
   return (
     <Modal onClose={props.onClose} isOpen={props.isOpen} isCentered>
@@ -85,10 +99,14 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
               />
             </InputGroup>
           </Flex>
-          <Flex direction="column">
-            {result.map((item, i) => {
-              return <TokenSelectionItem token={item.item} key={i} />;
-            })}
+          <Flex direction="column" paddingTop="1rem">
+            {searchTerm === ""
+              ? tokenList.slice(0, 5).map((item, i) => {
+                  return <TokenSelectionItem token={item} key={i} />;
+                })
+              : result.slice(0, 5).map((item, i) => {
+                  return <TokenSelectionItem token={item.item} key={i} />;
+                })}
           </Flex>
         </ModalBody>
       </ModalContent>
