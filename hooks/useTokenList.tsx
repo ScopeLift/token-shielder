@@ -1,7 +1,6 @@
 import tokenListJson from "@/public/tokenlist.json";
 import { ethAddress } from "@/utils/constants";
 import { networks } from "@/utils/networks";
-import useSWRImmutable from "swr/immutable";
 import { useNetwork } from "wagmi";
 
 export interface TokenListItem {
@@ -11,10 +10,6 @@ export interface TokenListItem {
   decimals: number;
   name: string;
   logoURI: string;
-}
-
-interface TokenListJson {
-  tokens: TokenListItem[];
 }
 
 export const useTokenList = () => {
