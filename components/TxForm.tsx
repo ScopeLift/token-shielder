@@ -69,32 +69,7 @@ export const TxForm = () => {
       </FormControl>
       <FormControl>
         <FormLabel>Token</FormLabel>
-<<<<<<< HEAD
-        <Select
-          size="lg"
-          height="4rem"
-          mb=".75rem"
-          onChange={(e) => {
-            const { address, decimals, symbol, name } =
-              tokenList[+e.target.value];
-            setTokenAddress(address);
-            setTokenDecimals(decimals);
-            setTokenSymbol(symbol);
-            setTokenName(name);
-          }}
-        >
-          <option></option>
-          {tokenList.map((item, i) => {
-            return (
-              <option key={item.name} value={i}>
-                {item.name}
-              </option>
-            );
-          })}
-        </Select>
-=======
         <TokenInput />
->>>>>>> 6715644 (Made some progress)
       </FormControl>
       <FormControl>
         <FormLabel>Amount</FormLabel>
