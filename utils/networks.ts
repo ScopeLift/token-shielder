@@ -119,28 +119,6 @@ export const networks = {
       ],
     },
   },
-  [arbitrum.id]: {
-    blockExplorerUrl: "https://arbiscan.io/",
-    railgunNetworkName: NetworkName.ArbitrumGoerli, // TODO: Regular arbitrum is missing from railgun-community
-    chainId: arbitrum.id,
-    wethAddress: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-    evmGasType: EVMGasType.Type2,
-    baseToken: {
-      symbol: "ETH",
-      name: "Ether",
-      logoURI: "",
-    },
-    fallbackProviders: {
-      chainId: arbitrum.id,
-      providers: [
-        {
-          provider: "https://arb1.arbitrum.io/rpc",
-          priority: 1,
-          weight: 1,
-        },
-      ],
-    },
-  },
 } as { [key: number]: NetworkConfig };
 
 export const getEtherscanUrl = (txHashOrAddress: string, chainId: number) => {
