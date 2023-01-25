@@ -3,11 +3,10 @@ import { NetworkName } from "@railgun-community/shared-models";
 import { EVMGasType } from "@railgun-community/shared-models";
 import { FallbackProviderJsonConfig } from "@railgun-community/shared-models";
 import { mainnet, goerli } from "wagmi";
-import { bsc, polygon, arbitrum } from "wagmi/chains";
+import { bsc, polygon } from "wagmi/chains";
 
 export type NetworkConfig = {
   blockExplorerUrl: string;
-  tokenListUrl: string;
   railgunNetworkName: NetworkName;
   chainId: number;
   wethAddress: string;
@@ -19,7 +18,6 @@ export type NetworkConfig = {
 export const networks = {
   [mainnet.id]: {
     blockExplorerUrl: "https://etherscan.io/",
-    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
     railgunNetworkName: NetworkName.Ethereum,
     chainId: mainnet.id,
     wethAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -47,7 +45,6 @@ export const networks = {
   },
   [goerli.id]: {
     blockExplorerUrl: "https://goerli.etherscan.io/",
-    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
     railgunNetworkName: NetworkName.EthereumGoerli,
     chainId: goerli.id,
     wethAddress: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
@@ -75,7 +72,6 @@ export const networks = {
   },
   [bsc.id]: {
     blockExplorerUrl: "https://bscscan.com/",
-    tokenListUrl: "pancakeswap-top-100.json",
     railgunNetworkName: NetworkName.BNBChain,
     chainId: bsc.id,
     wethAddress: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -98,7 +94,6 @@ export const networks = {
   },
   [polygon.id]: {
     blockExplorerUrl: "https://polygonscan.com/",
-    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
     railgunNetworkName: NetworkName.Polygon,
     chainId: polygon.id,
     wethAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
@@ -118,29 +113,6 @@ export const networks = {
         },
         {
           provider: "https://rpc-mainnet.maticvigil.com",
-          priority: 1,
-          weight: 1,
-        },
-      ],
-    },
-  },
-  [arbitrum.id]: {
-    blockExplorerUrl: "https://arbiscan.io/",
-    tokenListUrl: "https://gateway.ipfs.io/ipns/tokens.uniswap.org",
-    railgunNetworkName: NetworkName.ArbitrumGoerli, // TODO: Regular arbitrum is missing from railgun-community
-    chainId: arbitrum.id,
-    wethAddress: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
-    evmGasType: EVMGasType.Type2,
-    baseToken: {
-      symbol: "ETH",
-      name: "Ether",
-      logoURI: "",
-    },
-    fallbackProviders: {
-      chainId: arbitrum.id,
-      providers: [
-        {
-          provider: "https://arb1.arbitrum.io/rpc",
           priority: 1,
           weight: 1,
         },

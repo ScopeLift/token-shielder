@@ -23,7 +23,7 @@ const TokenContext = createContext<TokenContextType>(initialContext);
 
 export const TokenListProvider = ({ children }: { children: ReactNode }) => {
   const { notifyUser } = useNotifications();
-  const { isLoading, error, tokenList } = useTokenList();
+  const { tokenList } = useTokenList();
   const { isConnected } = useAccount();
   const {
     isLoading: balanceIsLoading,
@@ -36,13 +36,6 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     data: allowances,
   } = useTokenAllowances({ tokenList: tokenList || [] });
 
-  if (error) {
-    console.error(error);
-    notifyUser({
-      alertType: "error",
-      message: "Something went wrong fetching the token list",
-    });
-  }
   if (balanceError && isConnected) {
     console.error(balanceError);
     notifyUser({
@@ -61,7 +54,7 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
     <TokenContext.Provider
       value={{
         tokenList: data || [],
-        isLoading: isLoading || balanceIsLoading || allowanceIsLoading,
+        isLoading: balanceIsLoading || allowanceIsLoading,
         tokenAllowances: allowances || new Map(),
       }}
     >
