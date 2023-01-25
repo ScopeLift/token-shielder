@@ -2611,9 +2611,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@railgun-community/quickstart@npm:^3.8.3":
-  version: 3.8.4
-  resolution: "@railgun-community/quickstart@npm:3.8.4"
+"@railgun-community/quickstart@npm:3.8.3":
+  version: 3.8.3
+  resolution: "@railgun-community/quickstart@npm:3.8.3"
   dependencies:
     "@noble/ed25519": ^1.7.1
     "@railgun-community/engine": ~3.10.0
@@ -2627,11 +2627,24 @@ __metadata:
     "@ethersproject/hdnode": ^5.7.0
     "@ethersproject/providers": ^5.7.2
     "@ethersproject/wallet": ^5.7.0
-  checksum: a0c06294a630d4b6061c5ee08500eca6497f14892c74f5d167032fc1533e6d63287b4c04243389c1ec1be3ad8990cde8e8bd1508f0b2166cebb356859e22f03d
+  checksum: 11066fd892acaa8a7ade463a6515e128197b01d0b8763ce9966e362e9ea961a554d2b7f179c0dbb0c82c95ae2647cce62641e0260ae724d8a8801c7618b349df
   languageName: node
   linkType: hard
 
-"@railgun-community/shared-models@npm:^3.6.3, @railgun-community/shared-models@npm:~3.7.1":
+"@railgun-community/shared-models@npm:3.6.3":
+  version: 3.6.3
+  resolution: "@railgun-community/shared-models@npm:3.6.3"
+  dependencies:
+    "@ethersproject/contracts": ^5.7.0
+    "@ethersproject/transactions": ^5.7.0
+  peerDependencies:
+    "@ethersproject/bignumber": ^5.7.0
+    "@ethersproject/providers": ^5.7.1
+  checksum: 9ab8b9be45fab3b28bcad5c019db12ad53257c6ab03b23aa1498f3748de50c9d245234a24a5641cd6ec51f5573332615280c0649eaad8889294ea82f662c3828
+  languageName: node
+  linkType: hard
+
+"@railgun-community/shared-models@npm:~3.7.1":
   version: 3.7.1
   resolution: "@railgun-community/shared-models@npm:3.7.1"
   dependencies:
@@ -9328,8 +9341,8 @@ __metadata:
     "@chakra-ui/react": ^2.4.6
     "@emotion/react": ^11
     "@emotion/styled": ^11
-    "@railgun-community/quickstart": ^3.8.3
-    "@railgun-community/shared-models": ^3.6.3
+    "@railgun-community/quickstart": 3.8.3
+    "@railgun-community/shared-models": 3.6.3
     "@rainbow-me/rainbowkit": ^0.8.1
     "@trivago/prettier-plugin-sort-imports": ^4.0.0
     "@types/level-js": ^4.0.2
