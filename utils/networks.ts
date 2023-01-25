@@ -3,7 +3,7 @@ import { NetworkName } from "@railgun-community/shared-models";
 import { EVMGasType } from "@railgun-community/shared-models";
 import { FallbackProviderJsonConfig } from "@railgun-community/shared-models";
 import { mainnet, goerli } from "wagmi";
-import { bsc, polygon, arbitrum } from "wagmi/chains";
+import { bsc, polygon } from "wagmi/chains";
 
 export type NetworkConfig = {
   blockExplorerUrl: string;
