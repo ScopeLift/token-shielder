@@ -22,12 +22,12 @@ import { useState } from "react";
 type TokenSelectionModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
+  onSelect: (arg0: TokenListContextItem) => void;
 };
 
 type TokenSelectionItemProps = {
   token: TokenListContextItem;
-  onClick: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
+  onClick: (arg0: TokenListContextItem) => void;
 };
 
 const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {

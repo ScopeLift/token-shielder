@@ -7,7 +7,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 
 type TokenInputProps = {
-  onSelect: (token: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
+  onSelect: (token: TokenListContextItem) => void;
 };
 
 const TokenInput = ({ onSelect }: TokenInputProps) => {
