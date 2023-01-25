@@ -82,8 +82,9 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
   const { tokenList } = useToken();
   const [searchTerm, setSearchTerm] = useState("");
   const options = {
-    includeScore: false,
-    keys: ["address", "name"],
+    includeScore: true,
+    keys: ["address", "name", "symbol"],
+    threshold: 0.2,
   };
 
   const fuse = new Fuse(tokenList, options);
@@ -94,7 +95,7 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
     <Modal onClose={props.onClose} isOpen={props.isOpen} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Confirm Shield</ModalHeader>
+        <ModalHeader>Select Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Flex direction="column">
