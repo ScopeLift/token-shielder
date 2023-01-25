@@ -9,7 +9,6 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/select";
 import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
 import { erc20ABI } from "@wagmi/core";
 import { ethers, constants, BigNumber } from "ethers";
@@ -18,7 +17,7 @@ import { usePrepareContractWrite, useContractWrite, useNetwork } from "wagmi";
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenList, tokenAllowances } = useToken();
+  const { tokenAllowances } = useToken();
   const { chain } = useNetwork();
   const network = networks[chain?.id || 1];
   const { notifyUser } = useNotifications();
@@ -69,7 +68,15 @@ export const TxForm = () => {
       </FormControl>
       <FormControl>
         <FormLabel>Token</FormLabel>
-        <TokenInput />
+        <TokenInput
+          onSelect={(token) => {
+            const { address, decimals, symbol, name } = token;
+            setTokenAddress(address);
+            setTokenDecimals(decimals);
+            setTokenSymbol(symbol);
+            setTokenName(name);
+          }}
+        />
       </FormControl>
       <FormControl>
         <FormLabel>Amount</FormLabel>

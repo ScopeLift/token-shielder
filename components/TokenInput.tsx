@@ -1,14 +1,27 @@
 import TokenSelectionModal from "@/components/TokenSelectionModal";
+import { useToken } from "@/contexts/TokenContext";
+import { TokenListContextItem } from "@/contexts/TokenContext";
 import { Input } from "@chakra-ui/input";
 import { useDisclosure } from "@chakra-ui/react";
+import { useState } from "react";
 
-// TODO: Higher component passes in callback
-const TokenInput = () => {
+type TokenInputProps = {
+  onSelect: (token: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
+};
+
+const TokenInput = ({ onSelect }: TokenInputProps) => {
+  const { tokenList } = useToken();
+  const [token, setToken] = useState(tokenList[0]); // Select native token
   const {
     isOpen: isTokenSelectionOpen,
     onOpen: onTokenSelectionOpen,
     onClose: onTokenSelectionClose,
   } = useDisclosure();
+  const localOnSelect = (token: TokenListContextItem) => {
+    onSelect(token);
+    onTokenSelectionClose();
+    setToken(token);
+  };
   return (
     <>
       <Input
@@ -17,10 +30,12 @@ const TokenInput = () => {
         size="lg"
         height="4rem"
         onClick={() => onTokenSelectionOpen()}
+        value={token?.name || ""}
       />
       <TokenSelectionModal
         isOpen={isTokenSelectionOpen}
         onClose={onTokenSelectionClose}
+        onSelect={localOnSelect}
       />
     </>
   );

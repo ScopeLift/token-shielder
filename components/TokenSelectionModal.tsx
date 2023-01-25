@@ -2,17 +2,15 @@ import { useToken } from "@/contexts/TokenContext";
 import { TokenListContextItem } from "@/contexts/TokenContext";
 import { ipfsDomain } from "@/utils/constants";
 import { parseIPFSUri } from "@/utils/ipfs";
-import { Avatar } from "@chakra-ui/avatar";
 import { SearchIcon } from "@chakra-ui/icons";
 import { Image } from "@chakra-ui/image";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
-import { Box, Flex, Text, Circle } from "@chakra-ui/layout";
+import { Flex, Text, Circle } from "@chakra-ui/layout";
 import {
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/modal";
@@ -24,35 +22,47 @@ import { useState } from "react";
 type TokenSelectionModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  onSelect: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
 };
 
 type TokenSelectionItemProps = {
   token: TokenListContextItem;
+  onClick: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
 };
 
-const TokenSelectionItem = ({ token }: TokenSelectionItemProps) => {
+const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
   const tokenBalance = token?.balance || BigNumber.from(0);
   return (
-    <Flex justify="space-between" paddingY=".35rem">
-      <Image
-        boxSize="2rem"
-        src={
-          token.logoURI.slice(0, 4) == "ipfs"
-            ? `${ipfsDomain}${parseIPFSUri(token.logoURI)}`
-            : `${token.logoURI}`
-        }
-        alt={`${token.name}'s token logo`}
-        fallback={
-          <Circle size="2rem" bg="lightgrey">
-            <Text fontSize="xs">{token.symbol.slice(0, 3)}</Text>
-          </Circle>
-        }
-      />
+    <Flex
+      justify="space-between"
+      paddingY=".35rem"
+      _hover={{ backgroundColor: "rgba(184, 192, 220, 0.08)" }}
+      borderRadius=".5rem"
+      padding=".5rem"
+      cursor="pointer"
+      onClick={() => onClick(token)}
+    >
+      <Flex direction="column" justify="center" w="2rem">
+        <Image
+          boxSize="1.55rem"
+          src={
+            token.logoURI.slice(0, 4) == "ipfs"
+              ? `${ipfsDomain}${parseIPFSUri(token.logoURI)}`
+              : `${token.logoURI}`
+          }
+          alt={`${token.name}'s token logo`}
+          fallback={
+            <Circle size="1.55rem" bg="lightgrey">
+              <Text fontSize=".5rem">{token.symbol.slice(0, 3)}</Text>
+            </Circle>
+          }
+        />
+      </Flex>
       <Flex direction="column" w="100%" paddingLeft="1.5rem">
         <Text fontSize="md">{token.name}</Text>
         <Text fontSize="xs">{token.symbol}</Text>
       </Flex>
-      <Flex>
+      <Flex direction="column" justify="center">
         <Text size="md">
           {FixedNumber.from(
             formatUnits(
@@ -102,10 +112,22 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
           <Flex direction="column" paddingTop="1rem">
             {searchTerm === ""
               ? tokenList.slice(0, 5).map((item, i) => {
-                  return <TokenSelectionItem token={item} key={i} />;
+                  return (
+                    <TokenSelectionItem
+                      token={item}
+                      key={i}
+                      onClick={props.onSelect}
+                    />
+                  );
                 })
               : result.slice(0, 5).map((item, i) => {
-                  return <TokenSelectionItem token={item.item} key={i} />;
+                  return (
+                    <TokenSelectionItem
+                      token={item.item}
+                      key={i}
+                      onClick={props.onSelect}
+                    />
+                  );
                 })}
           </Flex>
         </ModalBody>
