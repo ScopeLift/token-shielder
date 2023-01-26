@@ -1,23 +1,23 @@
-import { useToken } from "@/contexts/TokenContext";
-import { TokenListContextItem } from "@/contexts/TokenContext";
-import { ipfsDomain } from "@/utils/constants";
-import { parseIPFSUri } from "@/utils/ipfs";
-import { SearchIcon } from "@chakra-ui/icons";
-import { Image } from "@chakra-ui/image";
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
-import { Flex, Text, Circle } from "@chakra-ui/layout";
+import { useState } from 'react';
+import { SearchIcon } from '@chakra-ui/icons';
+import { Image } from '@chakra-ui/image';
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
+import { Circle, Flex, Text } from '@chakra-ui/layout';
 import {
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
   ModalBody,
   ModalCloseButton,
-} from "@chakra-ui/modal";
-import { BigNumber, FixedNumber } from "ethers";
-import { formatUnits } from "ethers/lib/utils.js";
-import Fuse from "fuse.js";
-import { useState } from "react";
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/modal';
+import { BigNumber, FixedNumber } from 'ethers';
+import { formatUnits } from 'ethers/lib/utils.js';
+import Fuse from 'fuse.js';
+import { useToken } from '@/contexts/TokenContext';
+import { TokenListContextItem } from '@/contexts/TokenContext';
+import { ipfsDomain } from '@/utils/constants';
+import { parseIPFSUri } from '@/utils/ipfs';
 
 type TokenSelectionModalProps = {
   isOpen: boolean;
@@ -36,7 +36,7 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
     <Flex
       justify="space-between"
       paddingY=".35rem"
-      _hover={{ backgroundColor: "rgba(184, 192, 220, 0.08)" }}
+      _hover={{ backgroundColor: 'rgba(184, 192, 220, 0.08)' }}
       borderRadius=".5rem"
       padding=".5rem"
       cursor="pointer"
@@ -46,7 +46,7 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
         <Image
           boxSize="1.55rem"
           src={
-            token.logoURI.slice(0, 4) == "ipfs"
+            token.logoURI.slice(0, 4) == 'ipfs'
               ? `${ipfsDomain}${parseIPFSUri(token.logoURI)}`
               : `${token.logoURI}`
           }
@@ -65,10 +65,7 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
       <Flex direction="column" justify="center">
         <Text size="md">
           {FixedNumber.from(
-            formatUnits(
-              tokenBalance.toString() || "0",
-              token?.decimals || 0
-            ).toString()
+            formatUnits(tokenBalance.toString() || '0', token?.decimals || 0).toString()
           )
             .round(4)
             .toString() || 0}
@@ -80,10 +77,10 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
 
 const TokenSelectionModal = (props: TokenSelectionModalProps) => {
   const { tokenList } = useToken();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const options = {
     includeScore: true,
-    keys: ["address", "name", "symbol"],
+    keys: ['address', 'name', 'symbol'],
     threshold: 0.2,
   };
 
@@ -103,32 +100,16 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
               <InputLeftElement pointerEvents="none" height="100%">
                 <SearchIcon color="gray.300" />
               </InputLeftElement>
-              <Input
-                size="lg"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <Input size="lg" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </InputGroup>
           </Flex>
           <Flex direction="column" paddingTop="1rem">
-            {searchTerm === ""
+            {searchTerm === ''
               ? tokenList.slice(0, 5).map((item, i) => {
-                  return (
-                    <TokenSelectionItem
-                      token={item}
-                      key={i}
-                      onClick={props.onSelect}
-                    />
-                  );
+                  return <TokenSelectionItem token={item} key={i} onClick={props.onSelect} />;
                 })
               : result.slice(0, 5).map((item, i) => {
-                  return (
-                    <TokenSelectionItem
-                      token={item.item}
-                      key={i}
-                      onClick={props.onSelect}
-                    />
-                  );
+                  return <TokenSelectionItem token={item.item} key={i} onClick={props.onSelect} />;
                 })}
           </Flex>
         </ModalBody>

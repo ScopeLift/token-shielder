@@ -1,4 +1,4 @@
-import { assertValidRailgunAddress } from "@railgun-community/quickstart";
+import { assertValidRailgunAddress } from '@railgun-community/quickstart';
 
 export const shortenAddress = (address: string) => {
   assertValidRailgunAddress(address); // Will throw error on incorrect value

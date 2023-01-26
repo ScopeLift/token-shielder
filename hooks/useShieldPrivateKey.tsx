@@ -1,8 +1,8 @@
-import { getShieldPrivateKeySignatureMessage } from "@railgun-community/quickstart";
-import { Signer } from "ethers";
-import { keccak256 } from "ethers/lib/utils.js";
-import { useEffect, useState } from "react";
-import { useAccount, useSigner } from "wagmi";
+import { useEffect, useState } from 'react';
+import { getShieldPrivateKeySignatureMessage } from '@railgun-community/quickstart';
+import { Signer } from 'ethers';
+import { keccak256 } from 'ethers/lib/utils.js';
+import { useAccount, useSigner } from 'wagmi';
 
 const useShieldPrivateKey = () => {
   const { data: signer } = useSigner();
@@ -16,9 +16,7 @@ const useShieldPrivateKey = () => {
   const getShieldPrivateKey = async () => {
     if (shieldPrivateKey) return shieldPrivateKey;
     const spk = keccak256(
-      await (signer as Signer).signMessage(
-        getShieldPrivateKeySignatureMessage()
-      )
+      await (signer as Signer).signMessage(getShieldPrivateKeySignatureMessage())
     );
     setShieldPrivateKey(spk);
     return spk;

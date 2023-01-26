@@ -1,12 +1,12 @@
-import { networks } from "./networks";
 import {
-  startRailgunEngine,
-  loadProvider,
   ArtifactStore,
+  loadProvider,
   setLoggers,
-} from "@railgun-community/quickstart";
-import { BrowserLevel } from "browser-level";
-import localforage from "localforage";
+  startRailgunEngine,
+} from '@railgun-community/quickstart';
+import { BrowserLevel } from 'browser-level';
+import localforage from 'localforage';
+import { networks } from './networks';
 
 export const loadProviders = async () => {
   // Whether to forward debug logs from Fallback Provider.
@@ -19,7 +19,7 @@ export const loadProviders = async () => {
 };
 
 // LevelDOWN compatible database for storing encrypted wallets.
-const db = new BrowserLevel("");
+const db = new BrowserLevel('');
 
 const setLogging = () => {
   const logMessage = console.log;
@@ -42,7 +42,7 @@ export const initialize = () => {
   // Name for your wallet implementation.
   // Encrypted and viewable in private transaction history.
   // Maximum of 16 characters, lowercase.
-  const walletSource = "hi";
+  const walletSource = 'hi';
 
   // Persistent store for downloading large artifact files.
   // See Quickstart Developer Guide for platform implementations.

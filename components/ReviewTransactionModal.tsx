@@ -1,20 +1,20 @@
-import useNotifications from "@/hooks/useNotifications";
-import useRailgunTx from "@/hooks/useRailgunTx";
-import { shortenAddress } from "@/utils/address";
-import { Button } from "@chakra-ui/button";
-import { Heading, Flex, Text } from "@chakra-ui/layout";
+import React from 'react';
+import { Button } from '@chakra-ui/button';
+import { Flex, Heading, Text } from '@chakra-ui/layout';
 import {
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
   ModalBody,
   ModalCloseButton,
-} from "@chakra-ui/modal";
-import { Tooltip } from "@chakra-ui/tooltip";
-import { ethers } from "ethers";
-import { parseUnits } from "ethers/lib/utils.js";
-import React from "react";
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from '@chakra-ui/modal';
+import { Tooltip } from '@chakra-ui/tooltip';
+import { ethers } from 'ethers';
+import { parseUnits } from 'ethers/lib/utils.js';
+import useNotifications from '@/hooks/useNotifications';
+import useRailgunTx from '@/hooks/useRailgunTx';
+import { shortenAddress } from '@/utils/address';
 
 type ReviewTransactionModalProps = {
   isOpen: boolean;
@@ -39,13 +39,12 @@ const ReviewTransactionModal = ({
 }: ReviewTransactionModalProps) => {
   const { txNotify } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
-  const bigNumberAmount = parseUnits(tokenAmount! || "0", tokenDecimals);
-  const feeAmount = parseUnits(tokenAmount! || "0", tokenDecimals).div("400");
+  const bigNumberAmount = parseUnits(tokenAmount! || '0', tokenDecimals);
+  const feeAmount = parseUnits(tokenAmount! || '0', tokenDecimals).div('400');
 
   const doSubmit: React.FormEventHandler = async () => {
     // TODO: Form validation
-    if (!tokenAddress || !tokenAmount || !tokenDecimals || !recipient)
-      throw new Error("bad form");
+    if (!tokenAddress || !tokenAmount || !tokenDecimals || !recipient) throw new Error('bad form');
     const tx = await shield({
       tokenAddress,
       tokenAmount,
@@ -64,12 +63,7 @@ const ReviewTransactionModal = ({
         <ModalCloseButton />
         <ModalBody>
           <Flex direction="column">
-            <Flex
-              direction="column"
-              borderRadius="1.5rem"
-              border="1px solid black"
-              padding="1rem"
-            >
+            <Flex direction="column" borderRadius="1.5rem" border="1px solid black" padding="1rem">
               <Flex align="center" justify="space-between">
                 <Heading size="xs" paddingX={2}>
                   Recipient
@@ -91,8 +85,7 @@ const ReviewTransactionModal = ({
                   Amount
                 </Heading>
                 <Text size="sm">
-                  {ethers.utils.formatUnits(bigNumberAmount, tokenDecimals)}{" "}
-                  {tokenSymbol}
+                  {ethers.utils.formatUnits(bigNumberAmount, tokenDecimals)} {tokenSymbol}
                 </Text>
               </Flex>
               <Flex align="center" justify="space-between">
@@ -100,8 +93,7 @@ const ReviewTransactionModal = ({
                   Shielding fee
                 </Heading>
                 <Text size="sm">
-                  {ethers.utils.formatUnits(feeAmount, tokenDecimals)}{" "}
-                  {tokenSymbol}
+                  {ethers.utils.formatUnits(feeAmount, tokenDecimals)} {tokenSymbol}
                 </Text>
               </Flex>
             </Flex>

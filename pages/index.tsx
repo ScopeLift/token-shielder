@@ -1,7 +1,7 @@
-import HowTo from "@/components/HowTo";
-import { TxForm } from "@/components/TxForm";
-import { Flex, Heading } from "@chakra-ui/layout";
-import type { NextPage } from "next";
+import { Flex, Heading } from '@chakra-ui/layout';
+import type { NextPage } from 'next';
+import HowTo from '@/components/HowTo';
+import { TxForm } from '@/components/TxForm';
 
 const Home: NextPage = () => {
   return (

@@ -1,13 +1,11 @@
-import { TokenListItem } from "@/hooks/useTokenList";
-import { ethAddress } from "@/utils/constants";
-import { BigNumber } from "@ethersproject/bignumber";
-import { readContracts } from "@wagmi/core";
-import useSWR from "swr";
-import { useAccount, useNetwork, useBalance } from "wagmi";
+import { BigNumber } from '@ethersproject/bignumber';
+import { readContracts } from '@wagmi/core';
+import useSWR from 'swr';
+import { useAccount, useBalance, useNetwork } from 'wagmi';
+import { TokenListItem } from '@/hooks/useTokenList';
+import { ethAddress } from '@/utils/constants';
 
-export const ERC20_ABI = [
-  "function balanceOf(address owner) view returns (uint256 balance)",
-];
+export const ERC20_ABI = ['function balanceOf(address owner) view returns (uint256 balance)'];
 
 const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { chain } = useNetwork();
@@ -32,7 +30,7 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
         .map((token) => {
           return {
             abi: ERC20_ABI,
-            functionName: "balanceOf",
+            functionName: 'balanceOf',
             address: token.address,
             args: [address],
           };

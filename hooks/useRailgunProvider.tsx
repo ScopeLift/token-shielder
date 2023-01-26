@@ -1,8 +1,8 @@
-import { networks } from "@/utils/networks";
-import { loadProviders } from "@/utils/railgun";
-import { setProviderForNetwork } from "@railgun-community/quickstart";
-import { useState, useEffect } from "react";
-import { useNetwork, useProvider } from "wagmi";
+import { useEffect, useState } from 'react';
+import { setProviderForNetwork } from '@railgun-community/quickstart';
+import { useNetwork, useProvider } from 'wagmi';
+import { networks } from '@/utils/networks';
+import { loadProviders } from '@/utils/railgun';
 
 export const useRailgunProvider = () => {
   const [isProviderLoaded, setProviderLoaded] = useState<Boolean>(false);
