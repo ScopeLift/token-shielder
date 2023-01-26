@@ -1,4 +1,5 @@
 import ReviewTransactionModal from "@/components/ReviewTransactionModal";
+import TokenInput from "@/components/TokenInput";
 import { useToken } from "@/contexts/TokenContext";
 import useNotifications from "@/hooks/useNotifications";
 import { ethAddress } from "@/utils/constants";
@@ -8,7 +9,6 @@ import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Flex } from "@chakra-ui/layout";
 import { useDisclosure } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/select";
 import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
 import { erc20ABI } from "@wagmi/core";
 import { ethers, constants, BigNumber } from "ethers";
@@ -17,7 +17,7 @@ import { usePrepareContractWrite, useContractWrite, useNetwork } from "wagmi";
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenList, tokenAllowances } = useToken();
+  const { tokenAllowances } = useToken();
   const { chain } = useNetwork();
   const network = networks[chain?.id || 1];
   const { notifyUser } = useNotifications();
@@ -68,28 +68,15 @@ export const TxForm = () => {
       </FormControl>
       <FormControl>
         <FormLabel>Token</FormLabel>
-        <Select
-          size="lg"
-          height="4rem"
-          mb=".75rem"
-          onChange={(e) => {
-            const { address, decimals, symbol, name } =
-              tokenList[+e.target.value];
+        <TokenInput
+          onSelect={(token) => {
+            const { address, decimals, symbol, name } = token;
             setTokenAddress(address);
             setTokenDecimals(decimals);
             setTokenSymbol(symbol);
             setTokenName(name);
           }}
-        >
-          <option></option>
-          {tokenList.map((item, i) => {
-            return (
-              <option key={item.name} value={i}>
-                {item.name}
-              </option>
-            );
-          })}
-        </Select>
+        />
       </FormControl>
       <FormControl>
         <FormLabel>Amount</FormLabel>
