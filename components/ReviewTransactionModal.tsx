@@ -37,7 +37,7 @@ const ReviewTransactionModal = ({
   tokenSymbol,
   tokenName,
 }: ReviewTransactionModalProps) => {
-  const { txNotify } = useNotifications();
+  const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
   const bigNumberAmount = parseUnits(tokenAmount! || '0', tokenDecimals);
   const feeAmount = parseUnits(tokenAmount! || '0', tokenDecimals).div('400');
@@ -51,7 +51,14 @@ const ReviewTransactionModal = ({
       tokenDecimals,
       recipient,
     });
-    txNotify(tx!.hash);
+    if (tx) {
+      txNotify(tx.hash);
+    } else {
+      notifyUser({
+        alertType: "error",
+        message: "Failed to create a shield transaction",
+      });
+    }
     onClose();
   };
 

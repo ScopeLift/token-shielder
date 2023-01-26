@@ -2587,15 +2587,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@railgun-community/engine@npm:~3.10.0":
-  version: 3.10.1
-  resolution: "@railgun-community/engine@npm:3.10.1"
+"@railgun-community/curve25519-scalarmult-wasm@npm:0.1.4":
+  version: 0.1.4
+  resolution: "@railgun-community/curve25519-scalarmult-wasm@npm:0.1.4"
+  checksum: bbdfccd73589631bfb07327241f40f7c835d9d01ecf2bb7a83cdc15d7beec1df1895d38d98ede5e1468434e729db9b124741639c71d376f5eafb36547a920110
+  languageName: node
+  linkType: hard
+
+"@railgun-community/engine@npm:3.11.3":
+  version: 3.11.3
+  resolution: "@railgun-community/engine@npm:3.11.3"
   dependencies:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/abstract-provider": ^5.7.0
     "@ethersproject/hdnode": ^5.7.0
     "@noble/ed25519": ^1.7.1
     "@noble/hashes": ^1.1.3
+    "@railgun-community/curve25519-scalarmult-wasm": 0.1.4
     "@scure/base": ^1.1.1
     abstract-leveldown: ^7.2.0
     bn.js: ^5.2.1
@@ -2607,17 +2615,17 @@ __metadata:
     ethers: ^5.7.1
     levelup: ^5.1.1
     msgpack-lite: ^0.1.26
-  checksum: 06c9e3e8c4337397138c69456a96cc22826441fc5a00bb5903326abcd65293014fc29bf6c6e7d72afced7d08ca7a90876fadefcf9520bb8a7ffe79d88b6b5d43
+  checksum: 7451ceb0118873a974080343aed4f9e0efaf2b0f4b15af7f93b85c741214d0f129dac410abeb75cc9f603cf84ea08b5efe42bf5a0e22bcfb25d3fdc414072395
   languageName: node
   linkType: hard
 
-"@railgun-community/quickstart@npm:3.8.3":
-  version: 3.8.3
-  resolution: "@railgun-community/quickstart@npm:3.8.3"
+"@railgun-community/quickstart@npm:3.9.2":
+  version: 3.9.2
+  resolution: "@railgun-community/quickstart@npm:3.9.2"
   dependencies:
     "@noble/ed25519": ^1.7.1
-    "@railgun-community/engine": ~3.10.0
-    "@railgun-community/shared-models": ~3.7.1
+    "@railgun-community/engine": 3.11.3
+    "@railgun-community/shared-models": 3.7.5
     axios: 0.27.2
     brotli: ^1.3.3
   peerDependencies:
@@ -2627,33 +2635,20 @@ __metadata:
     "@ethersproject/hdnode": ^5.7.0
     "@ethersproject/providers": ^5.7.2
     "@ethersproject/wallet": ^5.7.0
-  checksum: 11066fd892acaa8a7ade463a6515e128197b01d0b8763ce9966e362e9ea961a554d2b7f179c0dbb0c82c95ae2647cce62641e0260ae724d8a8801c7618b349df
+  checksum: 9ff94476532ebc8923573e4eca5c471e8da46bcb6211d477df60bc5f0a839e93f9268ce458bde7687765239c270aa0df6df865b356650d057a4ae2cc9356d907
   languageName: node
   linkType: hard
 
-"@railgun-community/shared-models@npm:3.6.3":
-  version: 3.6.3
-  resolution: "@railgun-community/shared-models@npm:3.6.3"
+"@railgun-community/shared-models@npm:3.7.5":
+  version: 3.7.5
+  resolution: "@railgun-community/shared-models@npm:3.7.5"
   dependencies:
     "@ethersproject/contracts": ^5.7.0
     "@ethersproject/transactions": ^5.7.0
   peerDependencies:
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/providers": ^5.7.1
-  checksum: 9ab8b9be45fab3b28bcad5c019db12ad53257c6ab03b23aa1498f3748de50c9d245234a24a5641cd6ec51f5573332615280c0649eaad8889294ea82f662c3828
-  languageName: node
-  linkType: hard
-
-"@railgun-community/shared-models@npm:~3.7.1":
-  version: 3.7.1
-  resolution: "@railgun-community/shared-models@npm:3.7.1"
-  dependencies:
-    "@ethersproject/contracts": ^5.7.0
-    "@ethersproject/transactions": ^5.7.0
-  peerDependencies:
-    "@ethersproject/bignumber": ^5.7.0
-    "@ethersproject/providers": ^5.7.1
-  checksum: 9199a41c9e2719a47b67f1a8bcd06e4ebd24bee8791496beef3d68d71d6342e51039f6b72c6915a4a232c6e767928601cc2155175a46955cacb544fba2b9f79b
+  checksum: 3e9d843945133c9ba7bfccef94b9b7809cd2d72388fcfdb6418fc409cdf389630792ba8355529f36f334882096cde6cd9e4f28f86bd3c212c298d27bb74af65f
   languageName: node
   linkType: hard
 
@@ -9482,8 +9477,8 @@ __metadata:
     "@chakra-ui/react": ^2.4.6
     "@emotion/react": ^11
     "@emotion/styled": ^11
-    "@railgun-community/quickstart": 3.8.3
-    "@railgun-community/shared-models": 3.6.3
+    "@railgun-community/quickstart": 3.9.2
+    "@railgun-community/shared-models": 3.7.5
     "@rainbow-me/rainbowkit": ^0.8.1
     "@trivago/prettier-plugin-sort-imports": ^4.0.0
     "@types/level-js": ^4.0.2
