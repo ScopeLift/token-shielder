@@ -1,11 +1,4 @@
-import {
-  Flex,
-  Heading,
-  OrderedList,
-  ListItem,
-  Text,
-  Link,
-} from "@chakra-ui/layout";
+import { Flex, Heading, Link, ListItem, OrderedList, Text } from '@chakra-ui/layout';
 
 // TODO: Copy is a placeholder and pulled from their docs
 const HowTo = () => {
@@ -27,7 +20,7 @@ const HowTo = () => {
       </Heading>
       <OrderedList marginTop="1rem">
         <ListItem>
-          Create a Railgun wallet on{" "}
+          Create a Railgun wallet on{' '}
           <Link href="https://app.railway.xyz/" isExternal>
             Railway
           </Link>
@@ -38,12 +31,11 @@ const HowTo = () => {
         What happens to shielded funds?
       </Heading>
       <Text marginTop="1rem" textAlign="justify">
-        Shield transactions are executed publicly, using a public wallet. Under
-        the hood, the shield action sends ERC-20 tokens into the RAILGUN
-        contract, where they are associated with a RAILGUN Wallet and a private
-        balance. Shielding actions incur 0.25% fees, based on the amount of
-        tokens shielded. This fee rate is subject to change by RAILGUN DAO.
-        After tokens are shielded, private transfers incur no fees.
+        Shield transactions are executed publicly, using a public wallet. Under the hood, the shield
+        action sends ERC-20 tokens into the RAILGUN contract, where they are associated with a
+        RAILGUN Wallet and a private balance. Shielding actions incur 0.25% fees, based on the
+        amount of tokens shielded. This fee rate is subject to change by RAILGUN DAO. After tokens
+        are shielded, private transfers incur no fees.
       </Text>
     </Flex>
   );

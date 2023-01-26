@@ -1,10 +1,10 @@
-import useNotifications from "@/hooks/useNotifications";
-import useTokenAllowances from "@/hooks/useTokenAllowances";
-import useTokenBalances from "@/hooks/useTokenBalances";
-import { useTokenList, TokenListItem } from "@/hooks/useTokenList";
-import { BigNumber } from "@ethersproject/bignumber";
-import React, { ReactNode, createContext, useContext } from "react";
-import { useAccount } from "wagmi";
+import React, { ReactNode, createContext, useContext } from 'react';
+import { BigNumber } from '@ethersproject/bignumber';
+import { useAccount } from 'wagmi';
+import useNotifications from '@/hooks/useNotifications';
+import useTokenAllowances from '@/hooks/useTokenAllowances';
+import useTokenBalances from '@/hooks/useTokenBalances';
+import { TokenListItem, useTokenList } from '@/hooks/useTokenList';
 
 export type TokenListContextItem = TokenListItem & {
   balance: BigNumber | null;
@@ -41,15 +41,15 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
   if (balanceError && isConnected) {
     console.error(balanceError);
     notifyUser({
-      alertType: "error",
-      message: "Something went wrong fetching the token balances",
+      alertType: 'error',
+      message: 'Something went wrong fetching the token balances',
     });
   }
   if (allowanceError && isConnected) {
     console.error(allowanceError);
     notifyUser({
-      alertType: "error",
-      message: "Something went wrong fetching the token allowances",
+      alertType: 'error',
+      message: 'Something went wrong fetching the token allowances',
     });
   }
   return (

@@ -1,12 +1,12 @@
-import { getEtherscanUrl } from "@/utils/networks";
-import { Link } from "@chakra-ui/layout";
-import { AlertStatus } from "@chakra-ui/react";
-import { useToast, ToastId, ToastPosition } from "@chakra-ui/toast";
-import { useRef } from "react";
-import { useProvider } from "wagmi";
+import { useRef } from 'react';
+import { Link } from '@chakra-ui/layout';
+import { AlertStatus } from '@chakra-ui/react';
+import { ToastId, ToastPosition, useToast } from '@chakra-ui/toast';
+import { useProvider } from 'wagmi';
+import { getEtherscanUrl } from '@/utils/networks';
 
 const toastDefaultArgs = {
-  position: "bottom-right" as ToastPosition,
+  position: 'bottom-right' as ToastPosition,
   duration: 5000,
   isClosable: true,
 };
@@ -47,7 +47,7 @@ const useNotifications = () => {
       ),
 
       duration: null,
-      status: "loading",
+      status: 'loading',
     });
 
     const { status } = await provider.waitForTransaction(txHash);
@@ -62,7 +62,7 @@ const useNotifications = () => {
           Transaction failed
         </Link>
       ),
-      status: status ? "success" : "error",
+      status: status ? 'success' : 'error',
     });
   };
 

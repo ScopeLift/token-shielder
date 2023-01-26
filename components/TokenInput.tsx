@@ -1,10 +1,10 @@
-import TokenSelectionModal from "@/components/TokenSelectionModal";
-import { useToken } from "@/contexts/TokenContext";
-import { TokenListContextItem } from "@/contexts/TokenContext";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState } from 'react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
+import { useDisclosure } from '@chakra-ui/react';
+import TokenSelectionModal from '@/components/TokenSelectionModal';
+import { useToken } from '@/contexts/TokenContext';
+import { TokenListContextItem } from '@/contexts/TokenContext';
 
 type TokenInputProps = {
   onSelect: (token: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
@@ -31,7 +31,7 @@ const TokenInput = ({ onSelect }: TokenInputProps) => {
           pr="4.5rem"
           size="lg"
           height="4rem"
-          value={token?.name || tokenList[0]?.name || ""} // Default to native which is assumed at the top of the token list
+          value={token?.name || tokenList[0]?.name || ''} // Default to native which is assumed at the top of the token list
         />
         <InputRightElement alignItems="center" height="100%" width="3rem">
           <ChevronDownIcon boxSize="1.75rem" />

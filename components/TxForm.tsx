@@ -1,19 +1,19 @@
-import ReviewTransactionModal from "@/components/ReviewTransactionModal";
-import TokenInput from "@/components/TokenInput";
-import { useToken } from "@/contexts/TokenContext";
-import useNotifications from "@/hooks/useNotifications";
-import { ethAddress } from "@/utils/constants";
-import { networks } from "@/utils/networks";
-import { Button } from "@chakra-ui/button";
-import { FormControl, FormLabel } from "@chakra-ui/form-control";
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
-import { Box, Flex } from "@chakra-ui/layout";
-import { useDisclosure } from "@chakra-ui/react";
-import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
-import { erc20ABI } from "@wagmi/core";
-import { ethers, constants, BigNumber } from "ethers";
-import React, { useState } from "react";
-import { usePrepareContractWrite, useContractWrite, useNetwork } from "wagmi";
+import React, { useState } from 'react';
+import { Button } from '@chakra-ui/button';
+import { FormControl, FormLabel } from '@chakra-ui/form-control';
+import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
+import { Box, Flex } from '@chakra-ui/layout';
+import { useDisclosure } from '@chakra-ui/react';
+import { getRailgunSmartWalletContractForNetwork } from '@railgun-community/quickstart';
+import { erc20ABI } from '@wagmi/core';
+import { BigNumber, constants, ethers } from 'ethers';
+import { useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
+import ReviewTransactionModal from '@/components/ReviewTransactionModal';
+import TokenInput from '@/components/TokenInput';
+import { useToken } from '@/contexts/TokenContext';
+import useNotifications from '@/hooks/useNotifications';
+import { ethAddress } from '@/utils/constants';
+import { networks } from '@/utils/networks';
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
@@ -21,35 +21,30 @@ export const TxForm = () => {
   const { chain } = useNetwork();
   const network = networks[chain?.id || 1];
   const { notifyUser } = useNotifications();
-  const {
-    isOpen: isReviewOpen,
-    onOpen: onReviewOpen,
-    onClose: onReviewClose,
-  } = useDisclosure();
+  const { isOpen: isReviewOpen, onOpen: onReviewOpen, onClose: onReviewClose } = useDisclosure();
   const [tokenAddress, setTokenAddress] = useState<string>();
-  const [tokenAmount, setTokenAmount] = useState<string>("");
+  const [tokenAmount, setTokenAmount] = useState<string>('');
   const [tokenDecimals, setTokenDecimals] = useState<number>();
-  const [tokenSymbol, setTokenSymbol] = useState<string>("");
-  const [tokenName, setTokenName] = useState<string>("");
+  const [tokenSymbol, setTokenSymbol] = useState<string>('');
+  const [tokenName, setTokenName] = useState<string>('');
   const { config } = usePrepareContractWrite({
     address: tokenAddress,
     abi: erc20ABI,
-    functionName: "approve",
+    functionName: 'approve',
     args: [
-      getRailgunSmartWalletContractForNetwork(network.railgunNetworkName)
-        .address as `0x{string}`,
+      getRailgunSmartWalletContractForNetwork(network.railgunNetworkName).address as `0x{string}`,
       constants.MaxUint256,
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
   const [recipient, setRecipient] = useState<string>(
-    "0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
+    '0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4'
   );
   const needsApproval =
     tokenAddress !== ethAddress &&
     ethers.utils
-      .parseUnits(tokenAmount || "0", tokenDecimals)
-      .gt(tokenAllowances.get(tokenAddress || "") || BigNumber.from(0));
+      .parseUnits(tokenAmount || '0', tokenDecimals)
+      .gt(tokenAllowances.get(tokenAddress || '') || BigNumber.from(0));
 
   return (
     <Box width="24rem">
@@ -104,9 +99,9 @@ export const TxForm = () => {
           onClick={async () => {
             if (!doErc20Approval) {
               notifyUser({
-                alertType: "error",
+                alertType: 'error',
                 message:
-                  "Page is not prepared for ERC20 approval. Please try again in a few seconds",
+                  'Page is not prepared for ERC20 approval. Please try again in a few seconds',
               });
               return;
             }

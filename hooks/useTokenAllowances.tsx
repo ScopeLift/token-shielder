@@ -1,10 +1,10 @@
-import { TokenListItem } from "@/hooks/useTokenList";
-import { ethAddress } from "@/utils/constants";
-import { networks } from "@/utils/networks";
-import { getRailgunSmartWalletContractForNetwork } from "@railgun-community/quickstart";
-import { readContracts } from "@wagmi/core";
-import useSWR from "swr";
-import { useAccount, useNetwork, erc20ABI } from "wagmi";
+import { getRailgunSmartWalletContractForNetwork } from '@railgun-community/quickstart';
+import { readContracts } from '@wagmi/core';
+import useSWR from 'swr';
+import { erc20ABI, useAccount, useNetwork } from 'wagmi';
+import { TokenListItem } from '@/hooks/useTokenList';
+import { ethAddress } from '@/utils/constants';
+import { networks } from '@/utils/networks';
 
 const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
   const { chain } = useNetwork();
@@ -18,9 +18,7 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       if (!tokenList || tokenList.length === 0) {
         return new Map();
       }
-      const filteredTokenList = tokenList.filter(
-        (token) => token.address !== ethAddress
-      );
+      const filteredTokenList = tokenList.filter((token) => token.address !== ethAddress);
 
       const contractAddress = getRailgunSmartWalletContractForNetwork(
         network.railgunNetworkName
@@ -28,7 +26,7 @@ const useTokenAllowances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const readContractsArgs = filteredTokenList.map((token) => {
         return {
           abi: erc20ABI,
-          functionName: "allowance",
+          functionName: 'allowance',
           address: token.address,
           args: [address, contractAddress],
         };
