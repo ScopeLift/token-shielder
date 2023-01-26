@@ -30,6 +30,8 @@ type TokenSelectionItemProps = {
   onClick: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
 };
 
+// 1. If a valid token address, populate the custom token
+// 2. Fetch token info to populate item
 const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
   const tokenBalance = token?.balance || BigNumber.from(0);
   return (
