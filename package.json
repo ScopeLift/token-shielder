@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "checkFormat": "yarn prettier --max-warnings=0 --check . ",
+    "checkFormat": "yarn prettier --check . ",
     "format": "yarn prettier --write ."
   },
   "dependencies": {
