@@ -6,7 +6,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 const Header = () => {
   return (
     <Flex align="center" justify="space-between" h="100%">
-      <Image boxSize="2.5rem" src="protect-icon.svg" alt="Railgun shield logo" />
+      <Image boxSize="2.5rem" src="/protect-icon.svg" alt="Railgun shield logo" />
       <ConnectButton />
     </Flex>
   );

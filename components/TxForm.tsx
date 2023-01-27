@@ -15,7 +15,7 @@ import useNotifications from '@/hooks/useNotifications';
 import { ethAddress } from '@/utils/constants';
 import { networks } from '@/utils/networks';
 
-export const TxForm = () => {
+export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   // TODO: Placeholder notification for shielding
   const { tokenAllowances } = useToken();
   const { chain } = useNetwork();
@@ -37,9 +37,7 @@ export const TxForm = () => {
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
-  const [recipient, setRecipient] = useState<string>(
-    '0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4'
-  );
+  const [recipient, setRecipient] = useState<string>(recipientAddress || '');
   const needsApproval =
     tokenAddress !== ethAddress &&
     ethers.utils
