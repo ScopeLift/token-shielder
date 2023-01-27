@@ -2,16 +2,19 @@ import { isHexString } from '@ethersproject/bytes';
 import { NetworkName } from '@railgun-community/shared-models';
 import { EVMGasType } from '@railgun-community/shared-models';
 import { FallbackProviderJsonConfig } from '@railgun-community/shared-models';
+import { BigNumber } from 'ethers';
 import { goerli, mainnet } from 'wagmi';
 import { bsc, polygon } from 'wagmi/chains';
+import { ethAddress } from '@/utils/constants';
 
+type BaseToken = { symbol: string; name: string; logoURI: string };
 export type NetworkConfig = {
   blockExplorerUrl: string;
   railgunNetworkName: NetworkName;
   chainId: number;
   wethAddress: string;
   evmGasType: EVMGasType;
-  baseToken: { symbol: string; name: string; logoURI: string };
+  baseToken: BaseToken;
   fallbackProviders: FallbackProviderJsonConfig;
   tokenBlacklist: Map<string, string>;
 };
@@ -141,4 +144,16 @@ export const getEtherscanUrl = (txHashOrAddress: string, chainId: number) => {
   } else {
     return `${networkPrefix}/${group}/${txHashOrAddress}`;
   }
+};
+
+export const buildBaseToken = (baseToken: BaseToken, chainId: number) => {
+  return {
+    chainId,
+    symbol: baseToken.symbol,
+    address: ethAddress,
+    decimals: 18,
+    name: baseToken.name,
+    logoURI: baseToken.logoURI,
+    balance: BigNumber.from(0), // TODO: Add balance fetch
+  };
 };

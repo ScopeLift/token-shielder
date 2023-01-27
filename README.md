@@ -5,7 +5,7 @@ This is a [RainbowKit](https://rainbowkit.com) + [wagmi](https://wagmi.sh) + [Ne
 First, run the development server and add missing environment variables:
 
 ```bash
-// Fill in missing values
+# Fill in missing values
 cp $(pwd)/env.sample $(pwd)/.env
 ```
 
