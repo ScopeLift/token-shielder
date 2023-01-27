@@ -12,6 +12,7 @@ import ReviewTransactionModal from '@/components/ReviewTransactionModal';
 import TokenInput from '@/components/TokenInput';
 import { useToken } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
+import useTokenAllowance from '@/hooks/useTokenAllowance';
 import { ethAddress } from '@/utils/constants';
 import { networks } from '@/utils/networks';
 
@@ -20,7 +21,7 @@ export const TxForm = () => {
   const { tokenAllowances } = useToken();
   const { chain } = useNetwork();
   const network = networks[chain?.id || 1];
-  const { notifyUser } = useNotifications();
+  const { notifyUser, txNotify } = useNotifications();
   const { isOpen: isReviewOpen, onOpen: onReviewOpen, onClose: onReviewClose } = useDisclosure();
   const [tokenAddress, setTokenAddress] = useState<string>();
   const [tokenAmount, setTokenAmount] = useState<string>('');
@@ -37,14 +38,14 @@ export const TxForm = () => {
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
+  const { data } = useTokenAllowance({ address: tokenAddress || '' });
+  const tokenAllowance = tokenAllowances.get(tokenAddress || '') || data || BigNumber.from(0);
   const [recipient, setRecipient] = useState<string>(
     '0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4'
   );
   const needsApproval =
     tokenAddress !== ethAddress &&
-    ethers.utils
-      .parseUnits(tokenAmount || '0', tokenDecimals)
-      .gt(tokenAllowances.get(tokenAddress || '') || BigNumber.from(0));
+    ethers.utils.parseUnits(tokenAmount || '0', tokenDecimals).gt(tokenAllowance);
 
   return (
     <Box width="24rem">
@@ -105,7 +106,8 @@ export const TxForm = () => {
               });
               return;
             }
-            await doErc20Approval();
+            const tx = await doErc20Approval();
+            txNotify(tx!.hash);
           }}
         >
           Approve

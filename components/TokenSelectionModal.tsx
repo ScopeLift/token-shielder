@@ -1,11 +1,9 @@
-import { useToken } from "@/contexts/TokenContext";
-import { TokenListContextItem } from "@/contexts/TokenContext";
-import { ipfsDomain } from "@/utils/constants";
-import { parseIPFSUri } from "@/utils/ipfs";
-import { SearchIcon } from "@chakra-ui/icons";
-import { Image } from "@chakra-ui/image";
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
-import { Circle, Flex, Text } from "@chakra-ui/layout";
+import { useState } from 'react';
+import { SearchIcon } from '@chakra-ui/icons';
+import { CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons';
+import { Image } from '@chakra-ui/image';
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
+import { Circle, Flex, Link, Text } from '@chakra-ui/layout';
 import {
   Modal,
   ModalBody,
@@ -13,11 +11,21 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-} from "@chakra-ui/modal";
-import { BigNumber, FixedNumber } from "ethers";
-import { formatUnits, isAddress } from "ethers/lib/utils.js";
-import Fuse from "fuse.js";
-import { useState } from "react";
+} from '@chakra-ui/modal';
+import { useDisclosure } from '@chakra-ui/react';
+import { Spinner } from '@chakra-ui/spinner';
+import { Address } from 'abitype';
+import { BigNumber, FixedNumber, ethers } from 'ethers';
+import { formatUnits, isAddress } from 'ethers/lib/utils.js';
+import Fuse from 'fuse.js';
+import { useAccount, useBalance, useNetwork, useToken as useWagmiToken } from 'wagmi';
+import AlertModal from '@/components/AlertModal';
+import { useToken } from '@/contexts/TokenContext';
+import { TokenListContextItem } from '@/contexts/TokenContext';
+import useNotifications from '@/hooks/useNotifications';
+import { ipfsDomain } from '@/utils/constants';
+import { parseIPFSUri } from '@/utils/ipfs';
+import { networks } from '@/utils/networks';
 
 type TokenSelectionModalProps = {
   isOpen: boolean;
@@ -28,17 +36,22 @@ type TokenSelectionModalProps = {
 type TokenSelectionItemProps = {
   token: TokenListContextItem;
   onClick: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
+  isBalanceLoading?: boolean;
 };
 
-// 1. If a valid token address, populate the custom token
-// 2. Fetch token info to populate item
-const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
+type CustomTokenSelectionItemProps = {
+  onSelect: (arg0: TokenListContextItem) => void; // eslint-disable-line no-unused-vars
+  key: number;
+  tokenAddress: Address;
+};
+
+const TokenSelectionItem = ({ token, onClick, isBalanceLoading }: TokenSelectionItemProps) => {
   const tokenBalance = token?.balance || BigNumber.from(0);
   return (
     <Flex
       justify="space-between"
       paddingY=".35rem"
-      _hover={{ backgroundColor: "rgba(184, 192, 220, 0.08)" }}
+      _hover={{ backgroundColor: 'rgba(184, 192, 220, 0.08)' }}
       borderRadius=".5rem"
       padding=".5rem"
       cursor="pointer"
@@ -48,7 +61,7 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
         <Image
           boxSize="1.55rem"
           src={
-            token.logoURI.slice(0, 4) == "ipfs"
+            token.logoURI.slice(0, 4) == 'ipfs'
               ? `${ipfsDomain}${parseIPFSUri(token.logoURI)}`
               : `${token.logoURI}`
           }
@@ -65,17 +78,34 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
         <Text fontSize="xs">{token.symbol}</Text>
       </Flex>
       <Flex direction="column" justify="center">
-        <Text size="md">
-          {FixedNumber.from(
-            formatUnits(
-              tokenBalance.toString() || "0",
-              token?.decimals || 0
-            ).toString()
-          )
-            .round(4)
-            .toString() || 0}
-        </Text>
+        {isBalanceLoading ? (
+          <Spinner />
+        ) : (
+          <Text size="md">
+            {FixedNumber.from(
+              formatUnits(tokenBalance.toString() || '0', token?.decimals || 0).toString()
+            )
+              .round(4)
+              .toString() || 0}
+          </Text>
+        )}
       </Flex>
+    </Flex>
+  );
+};
+
+const EmptyTokenItem = () => {
+  return (
+    <Flex
+      justify="center"
+      align="center"
+      w="100%"
+      paddingY=".35rem"
+      _hover={{ backgroundColor: 'rgba(184, 192, 220, 0.08)' }}
+      borderRadius=".5rem"
+      padding=".5rem"
+    >
+      <Text fontSize="md">No results</Text>
     </Flex>
   );
 };
@@ -83,21 +113,125 @@ const TokenSelectionItem = ({ token, onClick }: TokenSelectionItemProps) => {
 const CustomTokenSelectionItem = ({
   onSelect,
   key,
-}: {
-  onSelect: (arg0: TokenListContextItem) => void;
-  key: number;
-  address: string;
-}) => {
-  // fetch token info
-  return <TokenSelectionItem token={item} key={key} onClick={onSelect} />;
+  tokenAddress,
+}: CustomTokenSelectionItemProps) => {
+  const { notifyUser } = useNotifications();
+  const { chain } = useNetwork();
+  const { isOpen: isCustomOpen, onOpen: onCustomOpen, onClose: onCustomClose } = useDisclosure();
+  const {
+    isOpen: isBlacklistOpen,
+    onOpen: onBlacklistOpen,
+    onClose: onBlacklistClose,
+  } = useDisclosure();
+  const network = networks[chain?.id || 1];
+  const tokenLink = `${network.blockExplorerUrl}token/${tokenAddress}`;
+  const { data, isError, isLoading } = useWagmiToken({ address: tokenAddress });
+  const { address } = useAccount();
+  const {
+    data: balanceData,
+    isError: isBalanceError,
+    isLoading: isBalanceLoading,
+  } = useBalance({
+    address,
+    token: tokenAddress,
+    chainId: chain?.id,
+  });
+  const isBlacklisted = network.tokenBlacklist.get(tokenAddress);
+  const openModal = isBlacklisted ? onBlacklistOpen : onCustomOpen;
+  const onCopy = () => {
+    navigator.clipboard.writeText(tokenLink);
+    notifyUser({
+      alertType: 'success',
+      message: 'Added link to clipboard',
+    });
+  };
+
+  if (isError) {
+    notifyUser({
+      alertType: 'warning',
+      message: 'Failed to fetch custom token',
+    });
+  }
+
+  if (isBalanceError) {
+    notifyUser({
+      alertType: 'error',
+      message: 'Failed to fetch custom token balance',
+    });
+  }
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (data) {
+    const token = { ...data, logoURI: '', chainId: chain!.id, balance: balanceData?.value || null };
+    return (
+      <>
+        <TokenSelectionItem
+          token={token}
+          key={key}
+          onClick={openModal}
+          isBalanceLoading={isBalanceLoading}
+        />
+        <AlertModal
+          isOpen={isCustomOpen}
+          onClose={onCustomClose}
+          onClick={() => {
+            onSelect(token);
+            onCustomClose();
+          }}
+          address={tokenAddress}
+          description={`This token isn't included in the railgun token list. Always conduct your own research before shielding.`}
+        >
+          <Flex my=".75rem" justify="center">
+            <Flex
+              alignItems="center"
+              gap=".30rem"
+              padding=".50rem"
+              bg="gray.100"
+              borderRadius="1rem"
+              _hover={{ backgroundColor: 'rgba(184, 192, 220, 0.15)' }}
+            >
+              <Link href={tokenLink} _hover={{ textDecoration: 'none' }} isExternal maxW="18rem">
+                <Text
+                  cursor="pointer"
+                  maxW="20rem"
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                  whiteSpace="nowrap"
+                >
+                  {tokenLink}
+                </Text>
+              </Link>
+              <CopyIcon cursor="pointer" onClick={onCopy} />
+              <Link href={tokenLink} isExternal>
+                <ExternalLinkIcon />
+              </Link>
+            </Flex>
+          </Flex>
+        </AlertModal>
+        <AlertModal
+          isOpen={isBlacklistOpen}
+          onClose={onBlacklistClose}
+          onClick={() => {
+            onBlacklistClose();
+          }}
+          address={tokenAddress}
+          description={'This token is blacklisted and cannot be shielded!'}
+        />
+      </>
+    );
+  }
+  return <EmptyTokenItem />;
 };
 
 const TokenSelectionModal = (props: TokenSelectionModalProps) => {
   const { tokenList } = useToken();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const options = {
     includeScore: true,
-    keys: ["address", "name", "symbol"],
+    keys: ['address', 'name', 'symbol'],
     threshold: 0.2,
   };
 
@@ -105,10 +239,10 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
 
   const results = fuse.search(searchTerm);
   let allResults = [] as TokenListContextItem[];
-  if (searchTerm === "") {
+  if (searchTerm === '') {
     allResults = tokenList.slice(0, 5);
   } else {
-    allResults = results.slice(0, 5);
+    allResults = results.slice(0, 5).map((item) => item.item);
   }
 
   return (
@@ -123,25 +257,21 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
               <InputLeftElement pointerEvents="none" height="100%">
                 <SearchIcon color="gray.300" />
               </InputLeftElement>
-              <Input
-                size="lg"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <Input size="lg" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             </InputGroup>
           </Flex>
           <Flex direction="column" paddingTop="1rem">
-            {searchTerm === "" && isAddress(searchTerm) ? (
-              <CustomTokenSelectionItem />
+            {results.length === 0 && isAddress(searchTerm) ? (
+              <CustomTokenSelectionItem
+                tokenAddress={ethers.utils.getAddress(searchTerm)}
+                key={1}
+                onSelect={props.onSelect}
+              />
+            ) : allResults.length === 0 ? (
+              <EmptyTokenItem />
             ) : (
               allResults.map((item, i) => {
-                return (
-                  <TokenSelectionItem
-                    token={item}
-                    key={i}
-                    onClick={props.onSelect}
-                  />
-                );
+                return <TokenSelectionItem token={item} key={i} onClick={props.onSelect} />;
               })
             )}
           </Flex>
