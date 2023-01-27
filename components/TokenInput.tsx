@@ -32,6 +32,7 @@ const TokenInput = ({ onSelect }: TokenInputProps) => {
           size="lg"
           height="4rem"
           value={token?.name || tokenList[0]?.name || ''} // Default to native which is assumed at the top of the token list
+          mb=".75rem"
         />
         <InputRightElement alignItems="center" height="100%" width="3rem">
           <ChevronDownIcon boxSize="1.75rem" />

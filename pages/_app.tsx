@@ -6,7 +6,7 @@ import { extendTheme } from '@chakra-ui/theme-utils';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { WagmiConfig, configureChains, createClient } from 'wagmi';
-import { bsc, goerli, mainnet } from 'wagmi/chains';
+import { bsc, goerli, mainnet, polygon } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import Header from '@/components/Header';
@@ -31,7 +31,7 @@ const { chains, provider, webSocketProvider } = configureChains(
       ...bsc,
       iconUrl: bscIcon,
     },
-    // polygon,
+    polygon,
     goerli,
   ],
   [
