@@ -80,8 +80,6 @@ const useRailgunTx = () => {
 
     // Public wallet to shield from.
     transactionRequest.from = address;
-    transactionRequest.gasPrice = undefined;
-    transactionRequest.gasLimit = undefined;
 
     return signer?.sendTransaction(transactionRequest);
   };
@@ -130,8 +128,6 @@ const useRailgunTx = () => {
 
     // Public wallet to shield from.
     transactionRequest.from = address;
-    transactionRequest.gasPrice = undefined;
-    transactionRequest.gasLimit = undefined;
 
     return signer?.sendTransaction(transactionRequest);
   };
