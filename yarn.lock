@@ -2587,23 +2587,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@railgun-community/curve25519-scalarmult-wasm@npm:0.1.4":
-  version: 0.1.4
-  resolution: "@railgun-community/curve25519-scalarmult-wasm@npm:0.1.4"
-  checksum: bbdfccd73589631bfb07327241f40f7c835d9d01ecf2bb7a83cdc15d7beec1df1895d38d98ede5e1468434e729db9b124741639c71d376f5eafb36547a920110
-  languageName: node
-  linkType: hard
-
-"@railgun-community/engine@npm:3.11.3":
-  version: 3.11.3
-  resolution: "@railgun-community/engine@npm:3.11.3"
+"@railgun-community/engine@npm:3.10.3":
+  version: 3.10.3
+  resolution: "@railgun-community/engine@npm:3.10.3"
   dependencies:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/abstract-provider": ^5.7.0
     "@ethersproject/hdnode": ^5.7.0
     "@noble/ed25519": ^1.7.1
     "@noble/hashes": ^1.1.3
-    "@railgun-community/curve25519-scalarmult-wasm": 0.1.4
     "@scure/base": ^1.1.1
     abstract-leveldown: ^7.2.0
     bn.js: ^5.2.1
@@ -2615,17 +2607,17 @@ __metadata:
     ethers: ^5.7.1
     levelup: ^5.1.1
     msgpack-lite: ^0.1.26
-  checksum: 7451ceb0118873a974080343aed4f9e0efaf2b0f4b15af7f93b85c741214d0f129dac410abeb75cc9f603cf84ea08b5efe42bf5a0e22bcfb25d3fdc414072395
+  checksum: c4139897515a693d1774a8407d25688d892a890fe3816459c0bfe3811f88689a9eb0a8436527358a0c6069a42f2a404a79dc599237316193c35271747e17d5b1
   languageName: node
   linkType: hard
 
-"@railgun-community/quickstart@npm:3.9.2":
-  version: 3.9.2
-  resolution: "@railgun-community/quickstart@npm:3.9.2"
+"@railgun-community/quickstart@npm:3.8.12":
+  version: 3.8.12
+  resolution: "@railgun-community/quickstart@npm:3.8.12"
   dependencies:
     "@noble/ed25519": ^1.7.1
-    "@railgun-community/engine": 3.11.3
-    "@railgun-community/shared-models": 3.7.5
+    "@railgun-community/engine": 3.10.3
+    "@railgun-community/shared-models": 3.7.6
     axios: 0.27.2
     brotli: ^1.3.3
   peerDependencies:
@@ -2635,20 +2627,20 @@ __metadata:
     "@ethersproject/hdnode": ^5.7.0
     "@ethersproject/providers": ^5.7.2
     "@ethersproject/wallet": ^5.7.0
-  checksum: 9ff94476532ebc8923573e4eca5c471e8da46bcb6211d477df60bc5f0a839e93f9268ce458bde7687765239c270aa0df6df865b356650d057a4ae2cc9356d907
+  checksum: 36107c795cfa7cc3388da1b9fb0d24fb6c6df7f1a9452892956d897947074f893c9b0769bfa8c3ab30980215fdb4f168add7c894629b74277469dca0fb84a078
   languageName: node
   linkType: hard
 
-"@railgun-community/shared-models@npm:3.7.5":
-  version: 3.7.5
-  resolution: "@railgun-community/shared-models@npm:3.7.5"
+"@railgun-community/shared-models@npm:3.7.6":
+  version: 3.7.6
+  resolution: "@railgun-community/shared-models@npm:3.7.6"
   dependencies:
     "@ethersproject/contracts": ^5.7.0
     "@ethersproject/transactions": ^5.7.0
   peerDependencies:
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/providers": ^5.7.1
-  checksum: 3e9d843945133c9ba7bfccef94b9b7809cd2d72388fcfdb6418fc409cdf389630792ba8355529f36f334882096cde6cd9e4f28f86bd3c212c298d27bb74af65f
+  checksum: 39f58526ac4fb50fe442746b46f5a42980bf1c5435f810cf39bd1ceee92dd2ead1f992121335e45d69af5533b2a0c57180474437728172cb472ee53dc54546a6
   languageName: node
   linkType: hard
 
@@ -9477,8 +9469,8 @@ __metadata:
     "@chakra-ui/react": ^2.4.6
     "@emotion/react": ^11
     "@emotion/styled": ^11
-    "@railgun-community/quickstart": 3.9.2
-    "@railgun-community/shared-models": 3.7.5
+    "@railgun-community/quickstart": 3.8.12
+    "@railgun-community/shared-models": 3.7.6
     "@rainbow-me/rainbowkit": ^0.8.1
     "@trivago/prettier-plugin-sort-imports": ^4.0.0
     "@types/level-js": ^4.0.2
