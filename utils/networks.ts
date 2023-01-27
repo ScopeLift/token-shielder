@@ -73,7 +73,7 @@ export const networks = {
     },
     tokenBlacklist: new Map([
       ['0xc94dd466416A7dFE166aB2cF916D3875C049EBB7', '0xc94dd466416A7dFE166aB2cF916D3875C049EBB7'],
-    ]),
+    ]), // TODO this is temporary, see https://github.com/ScopeLift/railgun-shielder/issues/71
   },
   [bsc.id]: {
     blockExplorerUrl: 'https://bscscan.com/',

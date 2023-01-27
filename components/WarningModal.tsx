@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/modal';
 import { Address } from 'abitype';
 
-type AlertModalProps = {
+type WarningModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onClick: () => void;
@@ -21,7 +21,7 @@ type AlertModalProps = {
   children?: React.ReactNode;
 };
 
-const AlertModal = (props: AlertModalProps) => {
+const WarningModal = (props: WarningModalProps) => {
   return (
     <Modal blockScrollOnMount={false} isOpen={props.isOpen} onClose={props.onClose} isCentered>
       <ModalOverlay />
@@ -30,8 +30,14 @@ const AlertModal = (props: AlertModalProps) => {
         <ModalCloseButton />
         <ModalBody>
           <Flex direction="column">
-            <Flex justify="center" mb="1rem" color="red.500">
-              <Flex bg="red.100" px=".50rem" py=".25rem" alignItems="center" borderRadius=".75rem">
+            <Flex justify="center" mb="1rem" color="yellow.500">
+              <Flex
+                bg="yellow.100"
+                px=".50rem"
+                py=".25rem"
+                alignItems="center"
+                borderRadius=".75rem"
+              >
                 <Text fontSize="md" mr=".5rem" fontWeight="600">
                   Warning
                 </Text>
@@ -48,13 +54,10 @@ const AlertModal = (props: AlertModalProps) => {
           <Button colorScheme="blue" mr={3} onClick={props.onClick}>
             I understand
           </Button>
-          <Button variant="ghost" onClick={props.onClose}>
-            Close
-          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
   );
 };
 
-export default AlertModal;
+export default WarningModal;

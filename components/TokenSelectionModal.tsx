@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SearchIcon } from '@chakra-ui/icons';
-import { CopyIcon, ExternalLinkIcon } from '@chakra-ui/icons';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/image';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Circle, Flex, Link, Text } from '@chakra-ui/layout';
@@ -19,8 +19,7 @@ import { BigNumber, FixedNumber, ethers } from 'ethers';
 import { formatUnits, isAddress } from 'ethers/lib/utils.js';
 import Fuse from 'fuse.js';
 import { useAccount, useBalance, useNetwork, useToken as useWagmiToken } from 'wagmi';
-import AlertModal from '@/components/AlertModal';
-import Copy from '@/components/Copy';
+import WarningModal from '@/components/WarningModal';
 import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
@@ -168,7 +167,7 @@ const CustomTokenSelectionItem = ({
           onClick={openModal}
           isBalanceLoading={isBalanceLoading}
         />
-        <AlertModal
+        <WarningModal
           isOpen={isCustomOpen}
           onClose={onCustomClose}
           onClick={() => {
@@ -198,16 +197,13 @@ const CustomTokenSelectionItem = ({
                   {tokenLink}
                 </Text>
               </Link>
-              <Copy text={tokenLink}>
-                <CopyIcon cursor="pointer" />
-              </Copy>
               <Link href={tokenLink} isExternal>
                 <ExternalLinkIcon />
               </Link>
             </Flex>
           </Flex>
-        </AlertModal>
-        <AlertModal
+        </WarningModal>
+        <WarningModal
           isOpen={isBlacklistOpen}
           onClose={onBlacklistClose}
           onClick={() => {
