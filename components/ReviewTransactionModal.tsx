@@ -55,8 +55,8 @@ const ReviewTransactionModal = ({
       txNotify(tx.hash);
     } else {
       notifyUser({
-        alertType: "error",
-        message: "Failed to create a shield transaction",
+        alertType: 'error',
+        message: 'Failed to create a shield transaction',
       });
     }
     onClose();
