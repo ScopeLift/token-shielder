@@ -23,6 +23,7 @@ type ReviewTransactionModalProps = {
   isOpen: boolean;
   onClose: () => void;
   recipient: string;
+  displayName: string;
   token: TokenListContextItem;
   amount: string;
   onSubmitClick: () => void;
@@ -33,6 +34,7 @@ const ReviewTransactionModal = ({
   onClose,
   recipient,
   amount,
+  displayName,
   token,
   onSubmitClick,
 }: ReviewTransactionModalProps) => {
@@ -84,7 +86,7 @@ const ReviewTransactionModal = ({
                 </Heading>
                 <Tooltip label={recipient}>
                   <Text size="sm" textOverflow="ellipsis">
-                    {shortenAddress(recipient)}
+                    {displayName === recipient ? shortenAddress(displayName) : displayName}
                   </Text>
                 </Tooltip>
               </Flex>

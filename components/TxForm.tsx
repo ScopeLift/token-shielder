@@ -17,6 +17,7 @@ import TokenInput from '@/components/TokenInput';
 import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
+import useResolveUnstoppableDomainAddress from '@/hooks/useResolveUnstoppableDomainAddress';
 import useTokenAllowance from '@/hooks/useTokenAllowance';
 import { VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
 import { buildBaseToken, networks } from '@/utils/networks';
@@ -39,6 +40,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     reset,
     formState: { errors },
   } = useForm<TxFormValues>({
+    reValidateMode: 'onSubmit',
     defaultValues: {
       token: network.baseToken.name,
       recipient: recipientAddress,
@@ -61,11 +63,17 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const tokenAllowance =
     tokenAllowances.get(selectedToken?.address || '') || data || BigNumber.from(0);
   const [recipient, setRecipient] = useState<string>(recipientAddress || '');
+  const [recipientDisplayName, setRecipientDisplayName] = useState<string>(recipientAddress || '');
+  const { data: resolvedUnstoppableDomain, isLoading: unstoppableDomainResolutionIsLoading } =
+    useResolveUnstoppableDomainAddress({
+      name: recipientDisplayName,
+    });
   const needsApproval =
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
   const onSubmit = handleSubmit(async (values) => {
-    setRecipient(values.recipient);
+    setRecipient(resolvedUnstoppableDomain || values.recipient);
+    setRecipientDisplayName(values.recipient);
     setTokenAmount(values.amount);
     openReview();
   });
@@ -75,7 +83,10 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
       if (net && net?.chain) {
         const chain = networks[net.chain.id];
         const token = buildBaseToken(chain.baseToken, net.chain.id);
+        setRecipient('');
+        setRecipientDisplayName('');
         setSelectedToken(token);
+        setValue('recipient', '');
         setValue('token', chain.baseToken.name);
       }
     },
@@ -106,7 +117,16 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             mb=".25rem"
             {...register('recipient', {
               required: 'This is required',
-              validate: (value) => validateRailgunAddress(value) || 'Invalid railgun address',
+              onChange: (e) => {
+                setRecipientDisplayName(e.target.value);
+              },
+              validate: (value) => {
+                const validRailgunAddress = validateRailgunAddress(value);
+                if (validRailgunAddress || resolvedUnstoppableDomain) {
+                  return true;
+                }
+                return 'Invalid railgun address or unstoppable domain does not resolve to a railgun address';
+              },
             })}
           />
           <FormErrorMessage my=".25rem">
@@ -181,7 +201,13 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             Approve
           </Button>
         ) : (
-          <Button type="submit" size="lg" mt=".75rem" width="100%">
+          <Button
+            type="submit"
+            size="lg"
+            mt=".75rem"
+            width="100%"
+            disabled={!unstoppableDomainResolutionIsLoading}
+          >
             Shield
           </Button>
         )}
@@ -190,9 +216,14 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             isOpen={isReviewOpen}
             onClose={closeReview}
             recipient={recipient}
+            displayName={recipientDisplayName}
             token={selectedToken}
             amount={tokenAmount}
-            onSubmitClick={() => reset()}
+            onSubmitClick={() => {
+              reset();
+              setRecipientDisplayName('');
+              setRecipient('');
+            }}
           />
         )}
       </form>
