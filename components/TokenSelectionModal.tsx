@@ -20,6 +20,7 @@ import { formatUnits, isAddress } from 'ethers/lib/utils.js';
 import Fuse from 'fuse.js';
 import { useAccount, useBalance, useNetwork, useToken as useWagmiToken } from 'wagmi';
 import AlertModal from '@/components/AlertModal';
+import Copy from '@/components/Copy';
 import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
@@ -138,13 +139,6 @@ const CustomTokenSelectionItem = ({
   });
   const isBlacklisted = network.tokenBlacklist.get(tokenAddress);
   const openModal = isBlacklisted ? onBlacklistOpen : onCustomOpen;
-  const onCopy = () => {
-    navigator.clipboard.writeText(tokenLink);
-    notifyUser({
-      alertType: 'success',
-      message: 'Added link to clipboard',
-    });
-  };
 
   if (isError) {
     notifyUser({
@@ -204,7 +198,9 @@ const CustomTokenSelectionItem = ({
                   {tokenLink}
                 </Text>
               </Link>
-              <CopyIcon cursor="pointer" onClick={onCopy} />
+              <Copy text={tokenLink}>
+                <CopyIcon cursor="pointer" />
+              </Copy>
               <Link href={tokenLink} isExternal>
                 <ExternalLinkIcon />
               </Link>
