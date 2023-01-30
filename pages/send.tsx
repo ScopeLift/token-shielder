@@ -1,13 +1,12 @@
-'use client';
-
 import { notFound } from 'next/navigation';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import Home from '@/pages/index';
 
 const Send = () => {
-  const router = useRouter();
-  const { zkAddress } = router.query;
-  if (Array.isArray(zkAddress)) {
+  const searchParams = useSearchParams();
+  const zkAddress = searchParams.get('address');
+
+  if (!zkAddress) {
     return notFound();
   }
   return <Home recipientAddress={zkAddress} />;
