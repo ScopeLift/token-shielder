@@ -48,7 +48,7 @@ export const TxForm = () => {
     ethers.utils.parseUnits(tokenAmount || '0', tokenDecimals).gt(tokenAllowance);
 
   return (
-    <Box width="24rem">
+    <Box width="24rem" className="container">
       <FormControl>
         <FormLabel>Recipient address</FormLabel>
         <Input

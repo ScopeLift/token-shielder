@@ -1,0 +1,11 @@
+body {
+  background-image: radial-gradient(circle at center, #decba488, #2bb0ed66) !important;
+}
+
+.container {
+  background-color: #faf9f7dd;
+  border-radius: 1rem;
+  border: 1px solid #2bb0edcc;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
