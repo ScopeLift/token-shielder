@@ -1,3 +1,5 @@
+'use client';
+
 import { notFound } from 'next/navigation';
 import { useRouter } from 'next/router';
 import Home from '@/pages/index';
