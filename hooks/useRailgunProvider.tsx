@@ -29,13 +29,15 @@ export const useRailgunProvider = () => {
       setProviderLoaded(false);
       const res = await loadProviders();
 
-      // Set the shield fees for each network. For convenience, we just update the
-      // `initialShieldFees` object then set it.
-      res.forEach((r) => {
-        const newFee = r.providerInfo.feesSerialized?.shield;
-        initialShieldFees[r.chainId] = BigNumber.from(newFee || initialShieldFees[r.chainId]);
-      });
-      setShieldFees(initialShieldFees);
+      // Set the shield fees for each network.
+      const shieldFeesFromNetwork = res.reduce((acc, response) => {
+        const newFee = response.providerInfo.feesSerialized?.shield;
+        return {
+          ...acc,
+          [response.chainId]: BigNumber.from(newFee || initialShieldFees[response.chainId]),
+        };
+      }, {});
+      setShieldFees(shieldFeesFromNetwork);
 
       // Provider is done loading.
       setProviderLoaded(true);
