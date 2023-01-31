@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@chakra-ui/button';
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Input, InputGroup, InputRightElement } from '@chakra-ui/input';
@@ -18,7 +18,7 @@ import { networks } from '@/utils/networks';
 
 export const TxForm = () => {
   // TODO: Placeholder notification for shielding
-  const { tokenAllowances } = useToken();
+  const { tokenAllowances, tokenList } = useToken();
   const { chain } = useNetwork();
   const network = networks[chain?.id || 1];
   const { notifyUser, txNotify } = useNotifications();
@@ -46,6 +46,16 @@ export const TxForm = () => {
   const needsApproval =
     tokenAddress !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', tokenDecimals).gt(tokenAllowance);
+
+  useEffect(() => {
+    const token = tokenList[0];
+    if (!tokenAddress && token) {
+      setTokenAddress(token.address);
+      setTokenDecimals(token.decimals);
+      setTokenSymbol(token.symbol);
+      setTokenName(token.name);
+    }
+  }, [tokenAddress, tokenList]);
 
   return (
     <Box width="24rem">
