@@ -154,6 +154,6 @@ export const buildBaseToken = (baseToken: BaseToken, chainId: number) => {
     decimals: 18,
     name: baseToken.name,
     logoURI: baseToken.logoURI,
-    balance: BigNumber.from(0), // TODO: Add balance fetch
+    balance: BigNumber.from(0),
   };
 };

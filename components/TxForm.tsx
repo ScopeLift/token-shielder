@@ -44,7 +44,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
       recipient: recipientAddress,
     },
   });
-  const { isOpen: isReviewOpen, onOpen: onReviewOpen, onClose: onReviewClose } = useDisclosure();
+  const { isOpen: isReviewOpen, onOpen: openReview, onClose: closeReview } = useDisclosure();
   const [selectedToken, setSelectedToken] = useState<TokenListContextItem>(tokenList[0]);
   const [tokenAmount, setTokenAmount] = useState<string>('');
   const { config } = usePrepareContractWrite({
@@ -67,7 +67,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const onSubmit = handleSubmit(async (values) => {
     setRecipient(values.recipient);
     setTokenAmount(values.amount);
-    onReviewOpen();
+    openReview();
   });
 
   const updateOnNetworkChange = useCallback(
@@ -142,8 +142,9 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
                   try {
                     return (
                       Boolean(
-                        parseUnits(value || '0', selectedToken?.decimals).gte(BigNumber.from('0'))
-                      ) || 'Number is too low'
+                        !isNaN(parseFloat(value)) &&
+                          parseUnits(value || '0', selectedToken?.decimals).gt(BigNumber.from('0'))
+                      ) || 'Amount must be greater than 0'
                     );
                   } catch (e) {
                     return 'Not a valid number';
@@ -181,11 +182,11 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
         {selectedToken && (
           <ReviewTransactionModal
             isOpen={isReviewOpen}
-            onClose={onReviewClose}
+            onClose={closeReview}
             recipient={recipient}
             token={selectedToken}
             amount={tokenAmount}
-            onClick={() => reset()}
+            onSubmitClick={() => reset()}
           />
         )}
       </form>

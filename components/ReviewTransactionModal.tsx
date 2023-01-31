@@ -23,7 +23,7 @@ type ReviewTransactionModalProps = {
   recipient: string;
   token: TokenListContextItem;
   amount: string;
-  onClick: () => void;
+  onSubmitClick: () => void;
 };
 
 const ReviewTransactionModal = ({
@@ -32,7 +32,7 @@ const ReviewTransactionModal = ({
   recipient,
   amount,
   token,
-  onClick,
+  onSubmitClick,
 }: ReviewTransactionModalProps) => {
   const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
@@ -56,7 +56,7 @@ const ReviewTransactionModal = ({
       });
     }
     onClose();
-    onClick();
+    onSubmitClick();
   };
 
   return (

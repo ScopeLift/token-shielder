@@ -23,7 +23,7 @@ const TokenInput = React.forwardRef(
     };
     return (
       <>
-        <InputGroup cursor="pointer" onClick={() => onTokenSelectionOpen()}>
+        <InputGroup cursor="pointer" onClick={onTokenSelectionOpen}>
           <Input
             type="button"
             pr="4.5rem"
@@ -33,7 +33,7 @@ const TokenInput = React.forwardRef(
             {...rest}
             ref={ref}
           />
-          <InputRightElement alignItems="center" height="100%" width="3rem">
+          <InputRightElement alignItems="center" height="4rem" width="3rem">
             <ChevronDownIcon boxSize="1.75rem" />
           </InputRightElement>
         </InputGroup>
