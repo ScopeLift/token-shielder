@@ -4,10 +4,8 @@ import { Flex, Heading, Link, ListItem, OrderedList, Text } from '@chakra-ui/lay
 const HowTo = () => {
   return (
     <Flex
+      className="container"
       direction="column"
-      border="1px solid"
-      borderRadius="0.3rem"
-      padding="2rem"
       maxWidth="40rem"
       marginTop="3rem"
       marginBottom="3rem"

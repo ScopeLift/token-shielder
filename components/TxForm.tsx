@@ -58,7 +58,7 @@ export const TxForm = () => {
   }, [tokenAddress, tokenList]);
 
   return (
-    <Box width="24rem">
+    <Box width="24rem" className="container">
       <FormControl>
         <FormLabel>Recipient address</FormLabel>
         <Input

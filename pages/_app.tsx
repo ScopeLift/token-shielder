@@ -12,6 +12,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import Header from '@/components/Header';
 import { TokenListProvider } from '@/contexts/TokenContext';
 import { useRailgunProvider } from '@/hooks/useRailgunProvider';
+import '@/styles/globals.css';
 import { bscIcon } from '@/utils/constants';
 import { initialize } from '@/utils/railgun';
 
