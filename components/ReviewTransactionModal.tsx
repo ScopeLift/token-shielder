@@ -38,13 +38,14 @@ const ReviewTransactionModal = ({
 }: ReviewTransactionModalProps) => {
   const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
-  const { shieldFees } = useRailgunProvider();
+  const { shieldingFees } = useRailgunProvider();
   const { chain } = useNetwork();
   const tokenAmount = amount;
   const tokenDecimals = token?.decimals;
-  const bigNumberAmount = parseUnits(tokenAmount || '0', tokenDecimals);
-  const shieldFee = shieldFees[chain?.id || 1];
-  const feeAmount = parseUnits(tokenAmount || '0', tokenDecimals)
+
+  const bigNumberAmount = parseUnits(tokenAmount! || '0', tokenDecimals);
+  const shieldFee = shieldingFees[chain?.id || 1];
+  const feeAmount = parseUnits(tokenAmount! || '0', tokenDecimals)
     .mul(shieldFee)
     .div(10000);
 
