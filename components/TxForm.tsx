@@ -134,16 +134,22 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               {...register('amount', {
                 required: 'This is required',
                 onChange: (e) => {
-                  if (e.target.value && VALID_AMOUNT_REGEX.test(e.target.value)) {
+                  if (
+                    e.target.value &&
+                    !isNaN(e.target.value) &&
+                    VALID_AMOUNT_REGEX.test(e.target.value)
+                  ) {
                     setTokenAmount(e.target.value);
                   }
                 },
                 validate: (value) => {
                   try {
+                    if (!VALID_AMOUNT_REGEX.test(value) && isNaN(parseFloat(value))) {
+                      return 'Not a valid number';
+                    }
                     return (
                       Boolean(
-                        VALID_AMOUNT_REGEX.test(value) &&
-                          parseUnits(value || '0', selectedToken?.decimals).gt(BigNumber.from('0'))
+                        parseUnits(value || '0', selectedToken?.decimals).gt(BigNumber.from('0'))
                       ) || 'Amount must be greater than 0'
                     );
                   } catch (e) {
