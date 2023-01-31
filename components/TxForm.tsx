@@ -18,7 +18,7 @@ import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useTokenAllowance from '@/hooks/useTokenAllowance';
-import { ethAddress } from '@/utils/constants';
+import { VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
 import { buildBaseToken, networks } from '@/utils/networks';
 
 type TxFormValues = {
@@ -134,7 +134,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               {...register('amount', {
                 required: 'This is required',
                 onChange: (e) => {
-                  if (e.target.value && !isNaN(e.target.value)) {
+                  if (e.target.value && VALID_AMOUNT_REGEX.test(e.target.value)) {
                     setTokenAmount(e.target.value);
                   }
                 },
@@ -142,7 +142,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
                   try {
                     return (
                       Boolean(
-                        !isNaN(parseFloat(value)) &&
+                        VALID_AMOUNT_REGEX.test(value) &&
                           parseUnits(value || '0', selectedToken?.decimals).gt(BigNumber.from('0'))
                       ) || 'Amount must be greater than 0'
                     );
