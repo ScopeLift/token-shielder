@@ -16,7 +16,7 @@ import '@/styles/globals.css';
 import { bscIcon } from '@/utils/constants';
 import { initialize } from '@/utils/railgun';
 
-const APP_TITLE = 'Railgun Shielder';
+const APP_TITLE = 'Token Shielder';
 const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
 
 const colors = {
@@ -47,7 +47,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'Railgun Shielder App',
+  appName: APP_TITLE,
   chains,
 });
 
@@ -75,7 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           property="og:image"
           content="https://raw.githubusercontent.com/ScopeLift/railgun-shielder/9d8b5dda5826c8121a9934da484a29645de161e6/public/home.png"
         />
-        <meta property="og:image:alt" content="Railgun Shielder site preview" />
+        <meta property="og:image:alt" content={`${APP_TITLE} site preview`} />
         <meta property="og:description" content={APP_DESCRIPTION} />
       </Head>
       <WagmiConfig client={wagmiClient}>
