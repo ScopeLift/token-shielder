@@ -12,8 +12,7 @@ interface ShieldFee {
 
 const fallbackShieldingFees: ShieldFee = {};
 Object.keys(networks).forEach((chainId) => {
-  // Current fees are 0.25% everywhere, so we initialize with that as a default -- If something goes
-  // wrong fetching fees, better to show a higher fee than a zero default fee.
+  // Current fees are 0.25% everywhere, so we initialize with that
   fallbackShieldingFees[Number(chainId)] = BigNumber.from('25');
 });
 
