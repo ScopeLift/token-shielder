@@ -16,6 +16,9 @@ import '@/styles/globals.css';
 import { bscIcon } from '@/utils/constants';
 import { initialize } from '@/utils/railgun';
 
+const APP_TITLE = 'Railgun Shielder';
+const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
+
 const colors = {
   brand: {
     900: '#1a365d',
@@ -61,9 +64,16 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Railgun Shielder App</title>
-        <meta name="description" content="An app to shield funds into railgun" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>{APP_TITLE}</title>
+        <meta name='description' content={APP_DESCRIPTION} />
+        <link rel='icon' href='/favicon.ico' />
+
+        <meta property='og:title' content={APP_TITLE} />
+        <meta property='og:type' content='website' />
+        <meta property='og:url' content='https://tokenshielder.com' />
+        <meta property='og:image' content='home.png' />
+        <meta property='og:image:alt' content='Railgun Shielder site preview' />
+        <meta property='og:description' content={APP_DESCRIPTION} />
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
@@ -75,8 +85,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                   ". body ."`}
                   gridTemplateRows={'4.8rem 100vh'}
                   gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
-                  gap="1"
-                  marginX="1rem"
+                  gap='1'
+                  marginX='1rem'
                 >
                   <GridItem area={'header'}>
                     <Header />
