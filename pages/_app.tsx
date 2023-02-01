@@ -65,18 +65,18 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>{APP_TITLE}</title>
-        <meta name='description' content={APP_DESCRIPTION} />
-        <link rel='icon' href='protect-icon.svg' />
+        <meta name="description" content={APP_DESCRIPTION} />
+        <link rel="icon" href="protect-icon.svg" />
 
-        <meta property='og:title' content={APP_TITLE} />
-        <meta property='og:type' content='website' />
-        <meta property='og:url' content='https://tokenshielder.com' />
+        <meta property="og:title" content={APP_TITLE} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tokenshielder.com" />
         <meta
-          property='og:image'
-          content='https://raw.githubusercontent.com/ScopeLift/railgun-shielder/9d8b5dda5826c8121a9934da484a29645de161e6/public/home.png'
+          property="og:image"
+          content="https://raw.githubusercontent.com/ScopeLift/railgun-shielder/9d8b5dda5826c8121a9934da484a29645de161e6/public/home.png"
         />
-        <meta property='og:image:alt' content='Railgun Shielder site preview' />
-        <meta property='og:description' content={APP_DESCRIPTION} />
+        <meta property="og:image:alt" content="Railgun Shielder site preview" />
+        <meta property="og:description" content={APP_DESCRIPTION} />
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
@@ -88,8 +88,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                   ". body ."`}
                   gridTemplateRows={'4.8rem 100vh'}
                   gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
-                  gap='1'
-                  marginX='1rem'
+                  gap="1"
+                  marginX="1rem"
                 >
                   <GridItem area={'header'}>
                     <Header />
