@@ -94,7 +94,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   }, [selectedToken, tokenList]);
 
   return (
-    <Box width="24rem">
+    <Box width="24rem" className="container">
       <form onSubmit={onSubmit}>
         <FormControl isInvalid={Boolean(errors.recipient?.message)}>
           <FormLabel>Recipient address</FormLabel>
