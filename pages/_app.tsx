@@ -16,6 +16,9 @@ import '@/styles/globals.css';
 import { bscIcon } from '@/utils/constants';
 import { initialize } from '@/utils/railgun';
 
+const APP_TITLE = 'Railgun Shielder';
+const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
+
 const colors = {
   brand: {
     900: '#1a365d',
@@ -61,9 +64,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>Railgun Shielder App</title>
-        <meta name="description" content="An app to shield funds into railgun" />
-        <link rel="icon" href="/favicon.ico" />
+        <title>{APP_TITLE}</title>
+        <meta name="description" content={APP_DESCRIPTION} />
+        <link rel="icon" href="protect-icon.svg" />
+
+        <meta property="og:title" content={APP_TITLE} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://tokenshielder.com" />
+        <meta
+          property="og:image"
+          content="https://raw.githubusercontent.com/ScopeLift/railgun-shielder/9d8b5dda5826c8121a9934da484a29645de161e6/public/home.png"
+        />
+        <meta property="og:image:alt" content="Railgun Shielder site preview" />
+        <meta property="og:description" content={APP_DESCRIPTION} />
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
