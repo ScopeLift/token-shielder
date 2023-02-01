@@ -1,7 +1,6 @@
 import { useNetwork } from 'wagmi';
 import tokenListJson from '@/public/tokenlist.json';
-import { ethAddress } from '@/utils/constants';
-import { networks } from '@/utils/networks';
+import { buildBaseToken, networks } from '@/utils/networks';
 
 export interface TokenListItem {
   chainId: number;
@@ -17,13 +16,6 @@ export const useTokenList = () => {
   const chainId = chain?.id || 1; // default to mainnet if no chain id
   const network = networks[chainId];
   const tokenList = tokenListJson.tokens.filter((token) => token.chainId === chainId);
-  const baseToken: TokenListItem = {
-    chainId,
-    symbol: network.baseToken.symbol,
-    address: ethAddress,
-    decimals: 18,
-    name: network.baseToken.name,
-    logoURI: network.baseToken.logoURI,
-  };
+  const baseToken = buildBaseToken(network.baseToken, chain?.id || 1);
   return { tokenList: [baseToken, ...tokenList] };
 };

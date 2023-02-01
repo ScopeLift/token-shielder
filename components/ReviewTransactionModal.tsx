@@ -12,6 +12,7 @@ import {
 import { Tooltip } from '@chakra-ui/tooltip';
 import { ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
+import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useRailgunTx from '@/hooks/useRailgunTx';
 import { shortenAddress } from '@/utils/address';
@@ -19,36 +20,31 @@ import { shortenAddress } from '@/utils/address';
 type ReviewTransactionModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  tokenAddress?: string;
   recipient: string;
-  tokenAmount?: string;
-  tokenDecimals?: number;
-  tokenSymbol: string;
-  tokenName: string;
+  token: TokenListContextItem;
+  amount: string;
+  onSubmitClick: () => void;
 };
 
 const ReviewTransactionModal = ({
   isOpen,
   onClose,
-  tokenAddress,
   recipient,
-  tokenAmount,
-  tokenDecimals,
-  tokenSymbol,
-  tokenName,
+  amount,
+  token,
+  onSubmitClick,
 }: ReviewTransactionModalProps) => {
   const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
-  const bigNumberAmount = parseUnits(tokenAmount! || '0', tokenDecimals);
-  const feeAmount = parseUnits(tokenAmount! || '0', tokenDecimals).div('400');
+  const bigNumberAmount = parseUnits(amount! || '0', token?.decimals);
+  const feeAmount = parseUnits(amount! || '0', token?.decimals).div('400');
 
   const doSubmit: React.FormEventHandler = async () => {
-    // TODO: Form validation
-    if (!tokenAddress || !tokenAmount || !tokenDecimals || !recipient) throw new Error('bad form');
+    if (!token.address || !amount || !token?.decimals || !recipient) throw new Error('bad form');
     const tx = await shield({
-      tokenAddress,
-      tokenAmount,
-      tokenDecimals,
+      tokenAddress: token.address,
+      tokenAmount: amount,
+      tokenDecimals: token?.decimals,
       recipient,
     });
     if (tx) {
@@ -60,6 +56,7 @@ const ReviewTransactionModal = ({
       });
     }
     onClose();
+    onSubmitClick();
   };
 
   return (
@@ -85,14 +82,14 @@ const ReviewTransactionModal = ({
                 <Heading size="xs" paddingX={2}>
                   Token name
                 </Heading>
-                <Text size="sm">{tokenName}</Text>
+                <Text size="sm">{token?.name}</Text>
               </Flex>
               <Flex align="center" justify="space-between">
                 <Heading size="xs" paddingX={2}>
                   Amount
                 </Heading>
                 <Text size="sm">
-                  {ethers.utils.formatUnits(bigNumberAmount, tokenDecimals)} {tokenSymbol}
+                  {ethers.utils.formatUnits(bigNumberAmount, token?.decimals)} {token?.symbol}
                 </Text>
               </Flex>
               <Flex align="center" justify="space-between">
@@ -100,7 +97,7 @@ const ReviewTransactionModal = ({
                   Shielding fee
                 </Heading>
                 <Text size="sm">
-                  {ethers.utils.formatUnits(feeAmount, tokenDecimals)} {tokenSymbol}
+                  {ethers.utils.formatUnits(feeAmount, token?.decimals)} {token?.symbol}
                 </Text>
               </Flex>
             </Flex>
