@@ -18,7 +18,7 @@ const HowTo = () => {
       </Heading>
       <OrderedList marginTop="1rem">
         <ListItem>
-          Create a Railgun wallet on{' '}
+          Create a RAILGUN wallet on{' '}
           <Link href="https://app.railway.xyz/" isExternal>
             Railway
           </Link>
