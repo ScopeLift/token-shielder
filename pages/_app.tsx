@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>{APP_TITLE}</title>
         <meta name='description' content={APP_DESCRIPTION} />
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='protect-icon.svg' />
 
         <meta property='og:title' content={APP_TITLE} />
         <meta property='og:type' content='website' />
