@@ -3,12 +3,12 @@ import { readContract } from '@wagmi/core';
 import useSWR from 'swr';
 import { erc20ABI, useAccount, useNetwork } from 'wagmi';
 import { ethAddress } from '@/utils/constants';
-import { networks } from '@/utils/networks';
+import { getNetwork } from '@/utils/networks';
 
 const useTokenAllowance = (props: { address: string }) => {
   const { chain } = useNetwork();
   const { address } = useAccount();
-  const network = networks[chain?.id || 1];
+  const network = getNetwork(chain?.id);
 
   const chainId = network.chainId;
   const { isLoading, error, data } = useSWR(

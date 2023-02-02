@@ -137,7 +137,7 @@ export const getEtherscanUrl = (txHashOrAddress: string, chainId: number) => {
       ? 'address'
       : 'tx'
     : 'ens';
-  const chain = networks[chainId];
+  const chain = getNetwork(chainId);
   const networkPrefix = chain?.blockExplorerUrl ? chain?.blockExplorerUrl : 'https://etherscan.io';
   if (group === 'ens') {
     return `${networkPrefix}`;
@@ -156,4 +156,8 @@ export const buildBaseToken = (baseToken: BaseToken, chainId: number) => {
     logoURI: baseToken.logoURI,
     balance: BigNumber.from(0),
   };
+};
+
+export const getNetwork = (chainId: number | undefined) => {
+  return networks[chainId || 1] || networks[1];
 };

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { setProviderForNetwork } from '@railgun-community/quickstart';
 import { BigNumber } from 'ethers';
 import { useNetwork, useProvider } from 'wagmi';
-import { networks } from '@/utils/networks';
+import { getNetwork, networks } from '@/utils/networks';
 import { loadProviders } from '@/utils/railgun';
 
 // Fee is in bips, e.g. a value of 25 is a 0.25% fee.
@@ -20,7 +20,7 @@ export const useRailgunProvider = () => {
   const [isProviderLoaded, setProviderLoaded] = useState<Boolean>(false);
   const [shieldingFees, setShieldingFees] = useState<ShieldFee>(fallbackShieldingFees);
   const { chain } = useNetwork();
-  const network = networks[chain?.id || 1];
+  const network = getNetwork(chain?.id);
   const provider = useProvider();
 
   useEffect(() => {

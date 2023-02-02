@@ -21,7 +21,7 @@ import useNotifications from '@/hooks/useNotifications';
 import useResolveUnstoppableDomainAddress from '@/hooks/useResolveUnstoppableDomainAddress';
 import useTokenAllowance from '@/hooks/useTokenAllowance';
 import { VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
-import { buildBaseToken, networks } from '@/utils/networks';
+import { buildBaseToken, getNetwork } from '@/utils/networks';
 
 type TxFormValues = {
   recipient: string;
@@ -32,7 +32,7 @@ type TxFormValues = {
 export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const { tokenAllowances, tokenList } = useToken();
   const { chain } = useNetwork();
-  const network = networks[chain?.id || 1];
+  const network = getNetwork(chain?.id);
   const { notifyUser } = useNotifications();
   const {
     handleSubmit,
@@ -89,7 +89,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const updateOnNetworkChange = useCallback(
     (net: GetNetworkResult) => {
       if (net && net?.chain) {
-        const chain = networks[net.chain.id];
+        const chain = getNetwork(net?.chain.id);
         const token = buildBaseToken(chain.baseToken, net.chain.id);
         setRecipient('');
         setRecipientDisplayName('');
@@ -207,6 +207,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             size="lg"
             mt=".75rem"
             width="100%"
+            isDisabled={chain?.unsupported}
             onClick={async () => {
               if (!doErc20Approval) {
                 notifyUser({
@@ -223,11 +224,11 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           </Button>
         ) : (
           <Button
+            isDisabled={chain?.unsupported || !unstoppableDomainResolutionIsLoading}
             type="submit"
             size="lg"
             mt=".75rem"
             width="100%"
-            disabled={!unstoppableDomainResolutionIsLoading}
           >
             Shield
           </Button>
