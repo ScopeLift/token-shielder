@@ -97,7 +97,6 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     const unwatch = watchNetwork(updateOnNetworkChange);
     return unwatch;
   }, [updateOnNetworkChange]);
-  console.log(chain);
 
   useEffect(() => {
     if (!selectedToken) {
