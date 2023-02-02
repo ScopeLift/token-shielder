@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import { useNetwork } from 'wagmi';
 
 // Comes from fields here:
-/// https://docs.unstoppabledomains.com/developer-toolkit/resolution-integration-methods/resolution-service/endpoints/get-records-for-a-domain/
+// https://docs.unstoppabledomains.com/developer-toolkit/resolution-integration-methods/resolution-service/endpoints/get-records-for-a-domain/
 type UnstoppableData = {
   records: { [path in string]: string | null }; // eslint-disable-line no-unused-vars
 };
