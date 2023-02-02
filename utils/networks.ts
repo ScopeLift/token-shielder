@@ -16,7 +16,6 @@ export type NetworkConfig = {
   evmGasType: EVMGasType;
   baseToken: BaseToken;
   fallbackProviders: FallbackProviderJsonConfig;
-  tokenBlacklist: Map<string, string>;
 };
 
 export const networks = {
@@ -46,7 +45,6 @@ export const networks = {
         },
       ],
     },
-    tokenBlacklist: new Map(),
   },
   [goerli.id]: {
     blockExplorerUrl: 'https://goerli.etherscan.io/',
@@ -74,9 +72,6 @@ export const networks = {
         },
       ],
     },
-    tokenBlacklist: new Map([
-      ['0xc94dd466416A7dFE166aB2cF916D3875C049EBB7', '0xc94dd466416A7dFE166aB2cF916D3875C049EBB7'],
-    ]), // TODO this is temporary, see https://github.com/ScopeLift/railgun-shielder/issues/71
   },
   [bsc.id]: {
     blockExplorerUrl: 'https://bscscan.com/',
@@ -99,7 +94,6 @@ export const networks = {
         },
       ],
     },
-    tokenBlacklist: new Map(),
   },
   [polygon.id]: {
     blockExplorerUrl: 'https://polygonscan.com/',
@@ -127,7 +121,6 @@ export const networks = {
         },
       ],
     },
-    tokenBlacklist: new Map(),
   },
 } as { [key: number]: NetworkConfig };
 

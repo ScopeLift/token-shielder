@@ -3,7 +3,6 @@ import { BigNumber } from 'ethers';
 
 export const ethAddress = getAddress(`0x${'e'.repeat(40)}`);
 export const ipfsDomain = 'https://gateway.ipfs.io/ipfs/';
-export const feePercent = BigNumber.from('15').div('100'); // TODO: Fee changes per network
 export const VALID_AMOUNT_REGEX = /^[\d\\.]+$/;
 
 export const bscIcon =

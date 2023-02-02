@@ -23,6 +23,7 @@ import WarningModal from '@/components/WarningModal';
 import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
+import blacklistJson from '@/public/blacklist.json';
 import { ipfsDomain } from '@/utils/constants';
 import { parseIPFSUri } from '@/utils/ipfs';
 import { networks } from '@/utils/networks';
@@ -136,7 +137,9 @@ const CustomTokenSelectionItem = ({
     token: tokenAddress,
     chainId: chain?.id,
   });
-  const isBlacklisted = network.tokenBlacklist.get(tokenAddress);
+  const isBlacklisted = blacklistJson.find(
+    (address) => tokenAddress.toLowerCase() === address.toLowerCase()
+  );
   const openModal = isBlacklisted ? onBlacklistOpen : onCustomOpen;
 
   if (isError) {
