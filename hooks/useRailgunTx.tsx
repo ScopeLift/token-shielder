@@ -12,7 +12,7 @@ import { useAccount, useSigner } from 'wagmi';
 import { useNetwork } from 'wagmi';
 import useShieldPrivateKey from '@/hooks/useShieldPrivateKey';
 import { ethAddress } from '@/utils/constants';
-import { networks } from '@/utils/networks';
+import { getNetwork } from '@/utils/networks';
 
 const useRailgunTx = () => {
   const { data: signer } = useSigner();
@@ -20,7 +20,7 @@ const useRailgunTx = () => {
   const { getShieldPrivateKey } = useShieldPrivateKey();
   const { chain } = useNetwork();
   const chainId = chain?.id || 1; // default to mainnet if no chain id
-  const { railgunNetworkName: network, wethAddress } = networks[chainId];
+  const { railgunNetworkName: network, wethAddress } = getNetwork(chainId);
   const [isShielding, setIsShielding] = useState(false);
 
   const shield = async (args: {

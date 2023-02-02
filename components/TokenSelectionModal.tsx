@@ -25,7 +25,7 @@ import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import { ipfsDomain } from '@/utils/constants';
 import { parseIPFSUri } from '@/utils/ipfs';
-import { networks } from '@/utils/networks';
+import { getNetwork } from '@/utils/networks';
 
 type TokenSelectionModalProps = {
   isOpen: boolean;
@@ -123,7 +123,7 @@ const CustomTokenSelectionItem = ({
     onOpen: onBlacklistOpen,
     onClose: onBlacklistClose,
   } = useDisclosure();
-  const network = networks[chain?.id || 1];
+  const network = getNetwork(chain?.id);
   const tokenLink = `${network.blockExplorerUrl}token/${tokenAddress}`;
   const { data, isError, isLoading } = useWagmiToken({ address: tokenAddress });
   const { address } = useAccount();

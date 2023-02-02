@@ -6,7 +6,7 @@ import {
 } from '@railgun-community/quickstart';
 import { BrowserLevel } from 'browser-level';
 import localforage from 'localforage';
-import { networks } from './networks';
+import { getNetwork, networks } from './networks';
 
 export const loadProviders = async () => {
   // Whether to forward debug logs from Fallback Provider.
@@ -14,7 +14,7 @@ export const loadProviders = async () => {
   return Promise.all(
     Object.keys(networks).map(async (chainIdString) => {
       const chainId = Number(chainIdString);
-      const { railgunNetworkName, fallbackProviders } = networks[chainId];
+      const { railgunNetworkName, fallbackProviders } = getNetwork(chainId);
       return {
         chainId,
         providerInfo: await loadProvider(fallbackProviders, railgunNetworkName, shouldDebug),
