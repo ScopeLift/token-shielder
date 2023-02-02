@@ -23,7 +23,7 @@ import WarningModal from '@/components/WarningModal';
 import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
-import { ipfsDomain } from '@/utils/constants';
+import { ipfsDomain, rebaseTokens } from '@/utils/constants';
 import { parseIPFSUri } from '@/utils/ipfs';
 import { getNetwork } from '@/utils/networks';
 
@@ -136,7 +136,9 @@ const CustomTokenSelectionItem = ({
     token: tokenAddress,
     chainId: chain?.id,
   });
-  const isBlacklisted = network.tokenBlacklist.get(tokenAddress);
+  const isBlacklisted = rebaseTokens.find(
+    (address) => tokenAddress.toLowerCase() === address.toLowerCase()
+  );
   const openModal = isBlacklisted ? onBlacklistOpen : onCustomOpen;
 
   if (isError) {
@@ -210,7 +212,7 @@ const CustomTokenSelectionItem = ({
             onBlacklistClose();
           }}
           address={tokenAddress}
-          description={'This token is blacklisted and cannot be shielded!'}
+          description={'This token cannot be shielded because it is a rebase token'}
         />
       </>
     );
