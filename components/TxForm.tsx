@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/form-control';
+import { CopyIcon } from '@chakra-ui/icons';
 import { Input, InputGroup } from '@chakra-ui/input';
-import { Box } from '@chakra-ui/layout';
+import { Box, Flex, Text } from '@chakra-ui/layout';
 import { useDisclosure } from '@chakra-ui/react';
 import { getRailgunSmartWalletContractForNetwork } from '@railgun-community/quickstart';
 import { validateRailgunAddress } from '@railgun-community/quickstart';
@@ -64,6 +65,13 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const needsApproval =
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
+  const onCopy = () => {
+    navigator.clipboard.writeText(`${window.location.host}/send?address=${recipient}`);
+    notifyUser({
+      alertType: 'success',
+      message: 'Shield link copied to clipboard',
+    });
+  };
   const onSubmit = handleSubmit(async (values) => {
     setRecipient(values.recipient);
     setTokenAmount(values.amount);
@@ -97,7 +105,20 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     <Box width="24rem" className="container">
       <form onSubmit={onSubmit}>
         <FormControl isInvalid={Boolean(errors.recipient?.message)}>
-          <FormLabel>Recipient address</FormLabel>
+          <Flex justify="space-between">
+            <FormLabel>Recipient address</FormLabel>
+
+            <Text
+              cursor="pointer"
+              textDecoration="underline"
+              fontSize="xs"
+              textAlign="center"
+              onClick={onCopy}
+            >
+              Copy Shield link
+              <CopyIcon ml=".25rem" />
+            </Text>
+          </Flex>
           <Input
             variant="outline"
             size="lg"
