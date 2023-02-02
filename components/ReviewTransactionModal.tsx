@@ -12,8 +12,10 @@ import {
 import { Tooltip } from '@chakra-ui/tooltip';
 import { ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
+import { useNetwork } from 'wagmi';
 import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
+import { useRailgunProvider } from '@/hooks/useRailgunProvider';
 import useRailgunTx from '@/hooks/useRailgunTx';
 import { shortenAddress } from '@/utils/address';
 
@@ -36,8 +38,16 @@ const ReviewTransactionModal = ({
 }: ReviewTransactionModalProps) => {
   const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
-  const bigNumberAmount = parseUnits(amount! || '0', token?.decimals);
-  const feeAmount = parseUnits(amount! || '0', token?.decimals).div('400');
+  const { shieldingFees } = useRailgunProvider();
+  const { chain } = useNetwork();
+  const tokenAmount = amount;
+  const tokenDecimals = token?.decimals;
+
+  const bigNumberAmount = parseUnits(tokenAmount! || '0', tokenDecimals);
+  const shieldFee = shieldingFees[chain?.id || 1];
+  const feeAmount = parseUnits(tokenAmount! || '0', tokenDecimals)
+    .mul(shieldFee)
+    .div(10000);
 
   const doSubmit: React.FormEventHandler = async () => {
     if (!token.address || !amount || !token?.decimals || !recipient) throw new Error('bad form');
