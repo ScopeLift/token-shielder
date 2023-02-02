@@ -115,7 +115,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               textAlign="center"
               onClick={onCopy}
             >
-              Copy Shield link
+              Copy Shield Link
               <CopyIcon ml=".25rem" />
             </Text>
           </Flex>
