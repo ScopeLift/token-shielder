@@ -1,5 +1,4 @@
 import { getAddress } from '@ethersproject/address';
-import { BigNumber } from 'ethers';
 
 export const ethAddress = getAddress(`0x${'e'.repeat(40)}`);
 export const ipfsDomain = 'https://gateway.ipfs.io/ipfs/';
