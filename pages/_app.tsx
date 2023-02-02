@@ -77,6 +77,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta property="og:image:alt" content={`${APP_TITLE} site preview`} />
         <meta property="og:description" content={APP_DESCRIPTION} />
+        <meta
+          name="keywords"
+          content="privacy, private, shield, railgun, tokens, ethereum, bsc, polygon, arbitrum, goerli"
+        />
       </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider chains={chains}>
