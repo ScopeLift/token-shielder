@@ -113,7 +113,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   }, [selectedToken, tokenList]);
 
   return (
-    <Box width="24rem" className="container">
+    <Box maxWidth="24rem" className="container">
       <form onSubmit={onSubmit}>
         <FormControl isInvalid={Boolean(errors.recipient?.message)}>
           <Flex justify="space-between">
