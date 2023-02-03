@@ -31,7 +31,7 @@ const getRpcUrl = (chainId: number) => {
   const {chains} = provider({ chainId }); // Returns array of all known chains.
   const chain = chains.find((chain) => chain.id === chainId);
   if (!chain) throw new Error(`Chain with id ${chainId} not found`);
-  return chain.rpcUrls.default.http;
+  return chain.rpcUrls.default.http[0];
 }
 
 
@@ -83,7 +83,7 @@ export const networks = {
       chainId: bsc.id,
       providers: [
         {
-          provider: 'https://bsc-dataseed1.binance.org/',
+          provider: getRpcUrl(bsc.id),
           priority: 1,
           weight: 1,
         },
