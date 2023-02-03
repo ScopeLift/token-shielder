@@ -143,13 +143,15 @@ const CustomTokenSelectionItem = ({
 
   if (isError) {
     notifyUser({
-      alertType: 'warning',
+      id: 'custom-token-warning',
+      alertType: 'error',
       message: 'Failed to fetch custom token',
     });
   }
 
   if (isBalanceError) {
     notifyUser({
+      id: 'custom-token-error',
       alertType: 'error',
       message: 'Failed to fetch custom token balance',
     });

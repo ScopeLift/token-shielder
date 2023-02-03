@@ -20,13 +20,19 @@ const useNotifications = () => {
     title,
     alertType,
     message,
+    id,
   }: {
     alertType: AlertStatus;
     message: string;
     title?: string;
+    id?: string;
   }) => {
+    if (id && toast.isActive(id)) {
+      return;
+    }
     toast({
       ...toastDefaultArgs,
+      id,
       description: message,
       title,
       status: alertType,
