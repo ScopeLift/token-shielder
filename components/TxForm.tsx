@@ -221,9 +221,9 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
                 });
                 return;
               }
+              setIsApprovalLoading(true);
               const tx = await doErc20Approval().catch((err) => console.error(err));
               if (tx) {
-                setIsApprovalLoading(true);
                 await txNotify(tx.hash);
                 mutate((key) => typeof key === 'string' && key.startsWith('useTokenAllowance'));
               } else {
