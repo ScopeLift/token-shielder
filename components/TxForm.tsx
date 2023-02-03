@@ -139,6 +139,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             {...register('recipient', {
               required: 'This is required',
               onChange: (e) => {
+                setRecipient(e.target.value);
                 setRecipientDisplayName(e.target.value);
               },
               validate: (value) => {
