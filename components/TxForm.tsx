@@ -12,7 +12,7 @@ import { erc20ABI } from '@wagmi/core';
 import { GetNetworkResult, watchNetwork } from '@wagmi/core';
 import { BigNumber, constants, ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
-import { useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
+import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
 import ReviewTransactionModal from '@/components/ReviewTransactionModal';
 import TokenInput from '@/components/TokenInput';
 import { useToken } from '@/contexts/TokenContext';
@@ -32,6 +32,7 @@ type TxFormValues = {
 export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const { tokenAllowances, tokenList } = useToken();
   const { chain } = useNetwork();
+  const { isConnected } = useAccount();
   const network = getNetwork(chain?.id);
   const { notifyUser } = useNotifications();
   const {
@@ -207,7 +208,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             size="lg"
             mt=".75rem"
             width="100%"
-            isDisabled={chain?.unsupported}
+            isDisabled={!isConnected || chain?.unsupported}
             onClick={async () => {
               if (!doErc20Approval) {
                 notifyUser({
@@ -224,7 +225,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           </Button>
         ) : (
           <Button
-            isDisabled={chain?.unsupported || unstoppableDomainResolutionIsLoading}
+            isDisabled={!isConnected || chain?.unsupported || unstoppableDomainResolutionIsLoading}
             type="submit"
             size="lg"
             mt=".75rem"
