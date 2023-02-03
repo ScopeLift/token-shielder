@@ -5,15 +5,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/theme-utils';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
-import { WagmiConfig, configureChains, createClient } from 'wagmi';
-import { bsc, goerli, mainnet, polygon } from 'wagmi/chains';
-import { alchemyProvider } from 'wagmi/providers/alchemy';
-import { publicProvider } from 'wagmi/providers/public';
+import { WagmiConfig, createClient } from 'wagmi';
 import Header from '@/components/Header';
 import { TokenListProvider } from '@/contexts/TokenContext';
 import { useRailgunProvider } from '@/hooks/useRailgunProvider';
 import '@/styles/globals.css';
-import { bscIcon } from '@/utils/constants';
+import { chains, provider, webSocketProvider } from '@/utils/networks';
 import { initialize } from '@/utils/railgun';
 
 const APP_TITLE = 'Token Shielder';
@@ -27,24 +24,6 @@ const colors = {
   },
 };
 const theme = extendTheme({ colors });
-
-const { chains, provider, webSocketProvider } = configureChains(
-  [
-    mainnet,
-    {
-      ...bsc,
-      iconUrl: bscIcon,
-    },
-    polygon,
-    goerli,
-  ],
-  [
-    alchemyProvider({
-      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!,
-    }),
-    publicProvider(),
-  ]
-);
 
 const { connectors } = getDefaultWallets({
   appName: APP_TITLE,
