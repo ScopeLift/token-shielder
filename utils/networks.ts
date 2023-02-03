@@ -80,13 +80,7 @@ export const networks = {
     },
     fallbackProviders: {
       chainId: bsc.id,
-      providers: [
-        {
-          provider: getRpcUrl(bsc.id),
-          priority: 1,
-          weight: 1,
-        },
-      ],
+      providers: [{ provider: getRpcUrl(bsc.id), priority: 1, weight: 1 }],
     },
   },
   [polygon.id]: {
@@ -102,7 +96,7 @@ export const networks = {
     },
     fallbackProviders: {
       chainId: polygon.id,
-      providers: [{ provider: getRpcUrl(polygon.id), priority: 2, weight: 1 }],
+      providers: [{ provider: getRpcUrl(polygon.id), priority: 1, weight: 1 }],
     },
   },
 } as { [key: number]: NetworkConfig };
