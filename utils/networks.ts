@@ -28,12 +28,11 @@ export type NetworkConfig = {
 };
 
 const getRpcUrl = (chainId: number) => {
-  const {chains} = provider({ chainId }); // Returns array of all known chains.
+  const { chains } = provider({ chainId }); // Returns array of all known chains.
   const chain = chains.find((chain) => chain.id === chainId);
   if (!chain) throw new Error(`Chain with id ${chainId} not found`);
   return chain.rpcUrls.default.http[0];
-}
-
+};
 
 export const networks = {
   [mainnet.id]: {
