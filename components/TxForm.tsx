@@ -208,7 +208,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             size="lg"
             mt=".75rem"
             width="100%"
-            isDisabled={chain?.unsupported}
+            isDisabled={!isConnected && chain?.unsupported}
             onClick={async () => {
               if (!doErc20Approval) {
                 notifyUser({
