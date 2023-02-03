@@ -62,9 +62,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
       constants.MaxUint256,
     ],
   });
-  const { writeAsync: doErc20Approval } = useContractWrite({
-    ...config,
-  });
+  const { writeAsync: doErc20Approval } = useContractWrite(config);
   const [isApprovalLoading, setIsApprovalLoading] = useState(false);
   const { data } = useTokenAllowance({ address: selectedToken?.address || '' });
   const tokenAllowance =
