@@ -144,7 +144,7 @@ const CustomTokenSelectionItem = ({
   if (isError) {
     notifyUser({
       id: 'custom-token-warning',
-      alertType: 'warning',
+      alertType: 'error',
       message: 'Failed to fetch custom token',
     });
   }
