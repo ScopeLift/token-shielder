@@ -3,9 +3,18 @@ import { NetworkName } from '@railgun-community/shared-models';
 import { EVMGasType } from '@railgun-community/shared-models';
 import { FallbackProviderJsonConfig } from '@railgun-community/shared-models';
 import { BigNumber } from 'ethers';
-import { goerli, mainnet } from 'wagmi';
-import { bsc, polygon } from 'wagmi/chains';
+import { configureChains } from 'wagmi';
+import { bsc, goerli, mainnet, polygon } from 'wagmi/chains';
+import { infuraProvider } from 'wagmi/providers/infura';
+import { publicProvider } from 'wagmi/providers/public';
 import { ethAddress } from '@/utils/constants';
+import { bscIcon } from '@/utils/constants';
+
+// Configure supported networks.
+export const { chains, provider, webSocketProvider } = configureChains(
+  [mainnet, { ...bsc, iconUrl: bscIcon }, polygon, goerli],
+  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }), publicProvider()]
+);
 
 type BaseToken = { symbol: string; name: string; logoURI: string };
 export type NetworkConfig = {
@@ -16,6 +25,13 @@ export type NetworkConfig = {
   evmGasType: EVMGasType;
   baseToken: BaseToken;
   fallbackProviders: FallbackProviderJsonConfig;
+};
+
+const getRpcUrl = (chainId: number) => {
+  const { chains } = provider({ chainId }); // Returns array of all known chains.
+  const chain = chains.find((chain) => chain.id === chainId);
+  if (!chain) throw new Error(`Chain with id ${chainId} not found`);
+  return chain.rpcUrls.default.http[0];
 };
 
 export const networks = {
@@ -32,18 +48,7 @@ export const networks = {
     },
     fallbackProviders: {
       chainId: mainnet.id,
-      providers: [
-        {
-          provider: 'https://cloudflare-eth.com/',
-          priority: 1,
-          weight: 1,
-        },
-        {
-          provider: 'https://rpc.ankr.com/eth',
-          priority: 2,
-          weight: 1,
-        },
-      ],
+      providers: [{ provider: getRpcUrl(mainnet.id), priority: 1, weight: 1 }],
     },
   },
   [goerli.id]: {
@@ -59,18 +64,7 @@ export const networks = {
     },
     fallbackProviders: {
       chainId: goerli.id,
-      providers: [
-        {
-          provider: 'https://eth-goerli.public.blastapi.io',
-          priority: 2,
-          weight: 1,
-        },
-        {
-          provider: 'https://rpc.ankr.com/eth_goerli',
-          priority: 1,
-          weight: 1,
-        },
-      ],
+      providers: [{ provider: getRpcUrl(goerli.id), priority: 1, weight: 1 }],
     },
   },
   [bsc.id]: {
@@ -86,13 +80,7 @@ export const networks = {
     },
     fallbackProviders: {
       chainId: bsc.id,
-      providers: [
-        {
-          provider: 'https://bsc-dataseed1.binance.org/',
-          priority: 1,
-          weight: 1,
-        },
-      ],
+      providers: [{ provider: getRpcUrl(bsc.id), priority: 1, weight: 1 }],
     },
   },
   [polygon.id]: {
@@ -108,18 +96,7 @@ export const networks = {
     },
     fallbackProviders: {
       chainId: polygon.id,
-      providers: [
-        {
-          provider: 'https://rpc.ankr.com/polygon',
-          priority: 2,
-          weight: 1,
-        },
-        {
-          provider: 'https://rpc-mainnet.maticvigil.com',
-          priority: 1,
-          weight: 1,
-        },
-      ],
+      providers: [{ provider: getRpcUrl(polygon.id), priority: 1, weight: 1 }],
     },
   },
 } as { [key: number]: NetworkConfig };
