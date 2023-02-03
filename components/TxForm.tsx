@@ -73,7 +73,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
   const onCopy = () => {
-    navigator.clipboard.writeText(`${window.location.host}/send?address=${recipient}`);
+    navigator.clipboard.writeText(`${window.location.host}/send?address=${recipientDisplayName}`);
     notifyUser({
       alertType: 'success',
       message: 'Shield link copied to clipboard',
@@ -139,7 +139,6 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             {...register('recipient', {
               required: 'This is required',
               onChange: (e) => {
-                setRecipient(e.target.value);
                 setRecipientDisplayName(e.target.value);
               },
               validate: (value) => {
