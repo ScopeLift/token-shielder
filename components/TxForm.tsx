@@ -12,6 +12,7 @@ import { erc20ABI } from '@wagmi/core';
 import { GetNetworkResult, watchNetwork } from '@wagmi/core';
 import { BigNumber, constants, ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
+import { useSWRConfig } from 'swr';
 import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
 import ReviewTransactionModal from '@/components/ReviewTransactionModal';
 import TokenInput from '@/components/TokenInput';
@@ -31,10 +32,11 @@ type TxFormValues = {
 
 export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const { tokenAllowances, tokenList } = useToken();
+  const { mutate } = useSWRConfig();
   const { chain } = useNetwork();
   const { isConnected } = useAccount();
   const network = getNetwork(chain?.id);
-  const { notifyUser } = useNotifications();
+  const { notifyUser, txNotify } = useNotifications();
   const {
     handleSubmit,
     register,
@@ -60,7 +62,10 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
       constants.MaxUint256,
     ],
   });
-  const { writeAsync: doErc20Approval } = useContractWrite(config);
+  const { writeAsync: doErc20Approval } = useContractWrite({
+    ...config,
+  });
+  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
   const { data } = useTokenAllowance({ address: selectedToken?.address || '' });
   const tokenAllowance =
     tokenAllowances.get(selectedToken?.address || '') || data || BigNumber.from(0);
@@ -70,6 +75,9 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     useResolveUnstoppableDomainAddress({
       name: recipientDisplayName,
     });
+  console.log(tokenAllowance);
+  console.log(selectedToken);
+  console.log(tokenAmount);
   const needsApproval =
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
@@ -208,7 +216,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             size="lg"
             mt=".75rem"
             width="100%"
-            isDisabled={!isConnected || chain?.unsupported}
+            isDisabled={!isConnected || chain?.unsupported || isApprovalLoading}
             onClick={async () => {
               if (!doErc20Approval) {
                 notifyUser({
@@ -218,7 +226,18 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
                 });
                 return;
               }
-              await doErc20Approval();
+              const tx = await doErc20Approval().catch((err) => console.error(err));
+              if (tx) {
+                setIsApprovalLoading(true);
+                await txNotify(tx.hash);
+                mutate((key) => typeof key === 'string' && key.startsWith('useTokenAllowance'));
+              } else {
+                notifyUser({
+                  alertType: 'error',
+                  message: 'Failed to approve token',
+                });
+              }
+              setIsApprovalLoading(false);
             }}
           >
             Approve
