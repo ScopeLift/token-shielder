@@ -75,9 +75,6 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     useResolveUnstoppableDomainAddress({
       name: recipientDisplayName,
     });
-  console.log(tokenAllowance);
-  console.log(selectedToken);
-  console.log(tokenAmount);
   const needsApproval =
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
