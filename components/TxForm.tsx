@@ -224,7 +224,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           </Button>
         ) : (
           <Button
-            isDisabled={chain?.unsupported || !unstoppableDomainResolutionIsLoading}
+            isDisabled={chain?.unsupported || unstoppableDomainResolutionIsLoading}
             type="submit"
             size="lg"
             mt=".75rem"
