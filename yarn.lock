@@ -2587,9 +2587,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@railgun-community/engine@npm:3.10.3":
-  version: 3.10.3
-  resolution: "@railgun-community/engine@npm:3.10.3"
+"@railgun-community/engine@npm:3.10.7":
+  version: 3.10.7
+  resolution: "@railgun-community/engine@npm:3.10.7"
   dependencies:
     "@ethersproject/abi": ^5.7.0
     "@ethersproject/abstract-provider": ^5.7.0
@@ -2607,17 +2607,17 @@ __metadata:
     ethers: ^5.7.1
     levelup: ^5.1.1
     msgpack-lite: ^0.1.26
-  checksum: c4139897515a693d1774a8407d25688d892a890fe3816459c0bfe3811f88689a9eb0a8436527358a0c6069a42f2a404a79dc599237316193c35271747e17d5b1
+  checksum: 9bf71c6edca9db8ee9f5d9019b49ebc40b10e1e640c1b00cc502ccdd917695472f837d5ecb4ffde25a684fce42426e646f2e209e01d8edf030b6ccfe254fa42f
   languageName: node
   linkType: hard
 
-"@railgun-community/quickstart@npm:3.8.12":
-  version: 3.8.12
-  resolution: "@railgun-community/quickstart@npm:3.8.12"
+"@railgun-community/quickstart@npm:3.11.4":
+  version: 3.11.4
+  resolution: "@railgun-community/quickstart@npm:3.11.4"
   dependencies:
     "@noble/ed25519": ^1.7.1
-    "@railgun-community/engine": 3.10.3
-    "@railgun-community/shared-models": 3.7.6
+    "@railgun-community/engine": 3.10.7
+    "@railgun-community/shared-models": 3.9.3
     axios: 0.27.2
     brotli: ^1.3.3
   peerDependencies:
@@ -2627,20 +2627,20 @@ __metadata:
     "@ethersproject/hdnode": ^5.7.0
     "@ethersproject/providers": ^5.7.2
     "@ethersproject/wallet": ^5.7.0
-  checksum: 36107c795cfa7cc3388da1b9fb0d24fb6c6df7f1a9452892956d897947074f893c9b0769bfa8c3ab30980215fdb4f168add7c894629b74277469dca0fb84a078
+  checksum: 59d71b65bc008771d838f3e8e7f80f70aadf1e6352e382856def1aa44e6c43ba279dc6f3d84d5268f236a02fd2ca6b667605c2355e43dcd83ccaa61cd7b9623c
   languageName: node
   linkType: hard
 
-"@railgun-community/shared-models@npm:3.7.6":
-  version: 3.7.6
-  resolution: "@railgun-community/shared-models@npm:3.7.6"
+"@railgun-community/shared-models@npm:3.9.3":
+  version: 3.9.3
+  resolution: "@railgun-community/shared-models@npm:3.9.3"
   dependencies:
     "@ethersproject/contracts": ^5.7.0
     "@ethersproject/transactions": ^5.7.0
   peerDependencies:
     "@ethersproject/bignumber": ^5.7.0
     "@ethersproject/providers": ^5.7.1
-  checksum: 39f58526ac4fb50fe442746b46f5a42980bf1c5435f810cf39bd1ceee92dd2ead1f992121335e45d69af5533b2a0c57180474437728172cb472ee53dc54546a6
+  checksum: 365ebbefc13f5fb19ebe73e6ff6147b63eb10e00b70cdb4e154e5d49d906b76bd531b0b3e4eaa34060b07e01e46fafb6e7cf42a2ca85457b419fe735619c0b53
   languageName: node
   linkType: hard
 
@@ -9469,8 +9469,8 @@ __metadata:
     "@chakra-ui/react": ^2.4.6
     "@emotion/react": ^11
     "@emotion/styled": ^11
-    "@railgun-community/quickstart": 3.8.12
-    "@railgun-community/shared-models": 3.7.6
+    "@railgun-community/quickstart": 3.11.4
+    "@railgun-community/shared-models": 3.9.3
     "@rainbow-me/rainbowkit": ^0.8.1
     "@trivago/prettier-plugin-sort-imports": ^4.0.0
     "@types/level-js": ^4.0.2

@@ -4,7 +4,7 @@ import { EVMGasType } from '@railgun-community/shared-models';
 import { FallbackProviderJsonConfig } from '@railgun-community/shared-models';
 import { BigNumber } from 'ethers';
 import { configureChains } from 'wagmi';
-import { bsc, goerli, mainnet, polygon } from 'wagmi/chains';
+import { arbitrum, bsc, goerli, mainnet, polygon } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { ethAddress } from '@/utils/constants';
@@ -12,7 +12,7 @@ import { bscIcon } from '@/utils/constants';
 
 // Configure supported networks.
 export const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, { ...bsc, iconUrl: bscIcon }, polygon, goerli],
+  [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli],
   [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }), publicProvider()]
 );
 
@@ -97,6 +97,21 @@ export const networks = {
     fallbackProviders: {
       chainId: polygon.id,
       providers: [{ provider: getRpcUrl(polygon.id), priority: 1, weight: 1 }],
+    },
+  },
+  [arbitrum.id]: {
+    blockExplorerUrl: 'https://arbiscan.io/',
+    railgunNetworkName: NetworkName.Arbitrum,
+    chainId: arbitrum.id,
+    wethAddress: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+    baseToken: {
+      symbol: 'AETH',
+      name: 'Ether',
+      logoURI: '',
+    },
+    fallbackProviders: {
+      chainId: arbitrum.id,
+      providers: [{ provider: getRpcUrl(arbitrum.id), priority: 1, weight: 1 }],
     },
   },
 } as { [key: number]: NetworkConfig };
