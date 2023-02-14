@@ -48,6 +48,7 @@ export const initialize = () => {
   // Encrypted and viewable in private transaction history.
   // Maximum of 16 characters, lowercase.
   const walletSource = 'hi';
+  console.log('Call initialize');
 
   // Persistent store for downloading large artifact files.
   // See Quickstart Developer Guide for platform implementations.
