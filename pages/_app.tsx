@@ -40,7 +40,7 @@ const wagmiClient = createClient({
 
 function MyApp({ Component, pageProps }: AppProps) {
   useMemo(initialize, []);
-  const { isProviderLoaded } = useRailgunProvider();
+  const { isProviderLoaded, shieldingFees } = useRailgunProvider();
   return (
     <>
       <Head>
@@ -66,7 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <ChakraProvider theme={theme}>
             {isProviderLoaded && (
-              <TokenListProvider>
+              <TokenListProvider shieldingFees={shieldingFees}>
                 <Grid
                   templateAreas={`". header ."
                   ". body ."`}

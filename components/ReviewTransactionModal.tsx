@@ -13,9 +13,8 @@ import { Tooltip } from '@chakra-ui/tooltip';
 import { ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { useNetwork } from 'wagmi';
-import { TokenListContextItem } from '@/contexts/TokenContext';
+import { TokenListContextItem, useToken } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
-import { useRailgunProvider } from '@/hooks/useRailgunProvider';
 import useRailgunTx from '@/hooks/useRailgunTx';
 import { shortenAddress } from '@/utils/address';
 
@@ -38,9 +37,9 @@ const ReviewTransactionModal = ({
   token,
   onSubmitClick,
 }: ReviewTransactionModalProps) => {
+  const { shieldingFees } = useToken();
   const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
-  const { shieldingFees } = useRailgunProvider();
   const { chain } = useNetwork();
   const tokenAmount = amount;
   const tokenDecimals = token?.decimals;
