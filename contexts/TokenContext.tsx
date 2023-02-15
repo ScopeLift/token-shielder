@@ -1,5 +1,5 @@
 import React, { ReactNode, createContext, useContext } from 'react';
-import { BigNumber } from '@ethersproject/bignumber';
+import { BigNumber } from 'ethers';
 import { useAccount } from 'wagmi';
 import useNotifications from '@/hooks/useNotifications';
 import useTokenAllowances from '@/hooks/useTokenAllowances';
@@ -14,16 +14,24 @@ export type TokenContextType = {
   tokenList: TokenListContextItem[];
   isLoading: boolean;
   tokenAllowances: Map<string, BigNumber>;
+  shieldingFees: { [key: number]: BigNumber };
 };
 const initialContext = {
   isLoading: false,
   tokenList: [],
   tokenAllowances: new Map(),
+  shieldingFees: {},
 };
 
 const TokenContext = createContext<TokenContextType>(initialContext);
 
-export const TokenListProvider = ({ children }: { children: ReactNode }) => {
+export const TokenListProvider = ({
+  children,
+  shieldingFees,
+}: {
+  children: ReactNode;
+  shieldingFees: { [key: number]: BigNumber };
+}) => {
   const { notifyUser } = useNotifications();
   const { tokenList } = useTokenList();
   const { isConnected } = useAccount();
@@ -58,6 +66,7 @@ export const TokenListProvider = ({ children }: { children: ReactNode }) => {
         tokenList: data || [],
         isLoading: balanceIsLoading || allowanceIsLoading,
         tokenAllowances: allowances || new Map(),
+        shieldingFees,
       }}
     >
       {children}

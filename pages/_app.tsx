@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Grid, GridItem } from '@chakra-ui/layout';
@@ -38,8 +39,8 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  initialize();
-  const { isProviderLoaded } = useRailgunProvider();
+  useMemo(initialize, []);
+  const { isProviderLoaded, shieldingFees } = useRailgunProvider();
   return (
     <>
       <Head>
@@ -65,7 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <ChakraProvider theme={theme}>
             {isProviderLoaded && (
-              <TokenListProvider>
+              <TokenListProvider shieldingFees={shieldingFees}>
                 <Grid
                   templateAreas={`". header ."
                   ". body ."`}
