@@ -65,3 +65,16 @@ export const rebaseTokens = [
   '0x8fba8c1f92210f24fb277b588541ac1952e1aac8',
   '0x39912d83acb4a373321387300f4fbe88aa5d6f14',
 ];
+
+export const UNSTOPPABLE_DOMAIN_SUFFIXES = [
+  '.crypto',
+  '.nft',
+  '.blockchain',
+  '.bitcoin',
+  '.coin',
+  '.wallet',
+  '.888',
+  '.dao',
+  '.x',
+  '.zil',
+];
