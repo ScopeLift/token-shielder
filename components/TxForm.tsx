@@ -42,9 +42,11 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     register,
     setValue,
     reset,
+    clearErrors,
+    setError,
     formState: { errors },
   } = useForm<TxFormValues>({
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
     defaultValues: {
       token: network.baseToken.name,
       recipient: recipientAddress,
@@ -52,6 +54,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   });
   const { isOpen: isReviewOpen, onOpen: openReview, onClose: closeReview } = useDisclosure();
   const [selectedToken, setSelectedToken] = useState<TokenListContextItem>(tokenList[0]);
+  const [validAddress, setValidAddress] = useState(false);
   const [tokenAmount, setTokenAmount] = useState<string>('');
   const { config } = usePrepareContractWrite({
     address: selectedToken?.address,
@@ -73,6 +76,21 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     useResolveUnstoppableDomainAddress({
       name: recipientDisplayName,
     });
+  if (resolvedUnstoppableDomain && errors.recipient) {
+    clearErrors('recipient');
+    setValidAddress(false);
+  }
+  if (
+    !resolvedUnstoppableDomain &&
+    !errors.recipient &&
+    recipientDisplayName &&
+    !validateRailgunAddress(recipientDisplayName)
+  ) {
+    setError('recipient', {
+      message:
+        'Invalid railgun address or unstoppable domain does not resolve to a railgun address',
+    });
+  }
   const needsApproval =
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
@@ -123,16 +141,18 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           <Flex justify="space-between">
             <FormLabel>Recipient address</FormLabel>
 
-            <Text
-              cursor="pointer"
-              textDecoration="underline"
-              fontSize="xs"
-              textAlign="center"
-              onClick={onCopy}
-            >
-              Copy Shield Link
-              <CopyIcon ml=".25rem" />
-            </Text>
+            {validAddress && (
+              <Text
+                cursor="pointer"
+                textDecoration="underline"
+                fontSize="xs"
+                textAlign="center"
+                onClick={onCopy}
+              >
+                Copy Shield Link
+                <CopyIcon ml=".25rem" />
+              </Text>
+            )}
           </Flex>
           <Input
             variant="outline"
@@ -148,8 +168,10 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               validate: (value) => {
                 const validRailgunAddress = validateRailgunAddress(value);
                 if (validRailgunAddress || resolvedUnstoppableDomain) {
+                  setValidAddress(true);
                   return true;
                 }
+                setValidAddress(false);
                 return 'Invalid railgun address or unstoppable domain does not resolve to a railgun address';
               },
             })}
