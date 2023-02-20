@@ -16,7 +16,7 @@ export const HowItWorks = () => {
       marginBottom="3rem"
     >
       <Heading as="h1" size="lg" alignSelf="center">
-        Tutorial
+        Tutorial & FAQs
       </Heading>
       <Heading as="h4" size="sm" marginTop="1rem">
         How it works?
