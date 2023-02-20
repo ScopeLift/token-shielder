@@ -7,7 +7,6 @@ import { getEtherscanUrl } from '@/utils/networks';
 
 const toastDefaultArgs = {
   position: 'bottom-right' as ToastPosition,
-  duration: 5000,
   isClosable: true,
 };
 
