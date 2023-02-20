@@ -59,7 +59,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     functionName: 'approve',
     args: [
       getRailgunSmartWalletContractForNetwork(network.railgunNetworkName).address as `0x{string}`,
-      constants.MaxUint256,
+      ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals),
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
