@@ -253,7 +253,12 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
               <InputLeftElement pointerEvents="none" height="100%">
                 <SearchIcon color="gray.300" />
               </InputLeftElement>
-              <Input size="lg" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <Input
+                placeholder="Search by token name or address"
+                size="lg"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </InputGroup>
           </Flex>
           <Flex direction="column" paddingTop="1rem">

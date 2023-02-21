@@ -137,9 +137,9 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           <Input
             variant="outline"
             size="lg"
-            pr="4.5rem"
             height="4rem"
             mb=".25rem"
+            placeholder="0zk1qyn0qa5rgk7z2l8wyncpynmy..."
             {...register('recipient', {
               required: 'This is required',
               onChange: (e) => {
@@ -176,6 +176,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               size="lg"
               pr="4.5rem"
               height="100%"
+              placeholder="0.1"
               {...register('amount', {
                 required: 'This is required',
                 onChange: (e) => {
