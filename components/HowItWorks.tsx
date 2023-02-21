@@ -19,7 +19,7 @@ export const HowItWorks = () => {
         Tutorial & FAQs
       </Heading>
       <Heading as="h4" size="sm" marginTop="1rem">
-        How it works?
+        How does it work?
       </Heading>
       <OrderedList marginTop="1rem" fontSize="sm">
         <ListItem>Connect a wallet</ListItem>

@@ -73,9 +73,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                                   ". body ."
 									                ". footer ."
 										`}
-                  gridTemplateRows={'4.8rem 90vh 4.8rem'}
+                  gridTemplateRows={'4.8rem 1fr 4.8rem'}
                   gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
                   gap="1"
+                  h="100vh"
                   marginX="1rem"
                 >
                   <GridItem area={'header'}>

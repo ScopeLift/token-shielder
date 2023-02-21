@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <Flex h="100%" paddingLeft="4rem" gap="1rem" align="center">
       <Text size="sm" cursor="pointer" onClick={onOpen}>
-        How it works?
+        How does it work?
       </Text>
       <Link href="https://github.com/ScopeLift/token-shielder" isExternal>
         <Flex align="center">
