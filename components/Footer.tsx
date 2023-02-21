@@ -1,15 +1,15 @@
 import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { Flex, Link, Text } from '@chakra-ui/layout';
+import { Flex, Link } from '@chakra-ui/layout';
 import { useDisclosure } from '@chakra-ui/react';
 import { HowItWorksModal } from '@/components/HowItWorks';
 
 const Footer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
-    <Flex h="100%" paddingLeft="4rem" gap="1rem" align="center">
-      <Text size="sm" cursor="pointer" onClick={onOpen}>
+    <Flex h="100%" gap="1rem" align="center">
+      <Link size="sm" cursor="pointer" onClick={onOpen}>
         How does it work?
-      </Text>
+      </Link>
       <Link href="https://github.com/ScopeLift/token-shielder" isExternal>
         <Flex align="center">
           Github <ExternalLinkIcon mx="4px" />
