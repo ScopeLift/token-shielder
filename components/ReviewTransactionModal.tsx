@@ -52,20 +52,20 @@ const ReviewTransactionModal = ({
 
   const doSubmit: React.FormEventHandler = async () => {
     if (!token.address || !amount || !token?.decimals || !recipient) throw new Error('bad form');
-    const tx = await shield({
-      tokenAddress: token.address,
-      tokenAmount: amount,
-      tokenDecimals: token?.decimals,
-      recipient,
-    });
-    if (tx) {
-      txNotify(tx.hash);
-    } else {
-      notifyUser({
-        alertType: 'error',
-        message: 'Failed to create a shield transaction',
-      });
-    }
+    // const tx = await shield({
+    //   tokenAddress: token.address,
+    //   tokenAmount: amount,
+    //   tokenDecimals: token?.decimals,
+    //   recipient,
+    // });
+    // if (tx) {
+    //   txNotify(tx.hash);
+    // } else {
+    //   notifyUser({
+    //     alertType: 'error',
+    //     message: 'Failed to create a shield transaction',
+    //   });
+    // }
     onClose();
     onSubmitClick();
   };

@@ -255,7 +255,9 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             token={selectedToken}
             amount={tokenAmount}
             onSubmitClick={() => {
-              reset();
+              reset({
+                recipient,
+              });
             }}
           />
         )}
