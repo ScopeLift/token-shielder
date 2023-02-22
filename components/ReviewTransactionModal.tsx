@@ -14,7 +14,7 @@ import { ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { useNetwork } from 'wagmi';
 import { TokenListContextItem, useToken } from '@/contexts/TokenContext';
-// import useNotifications from '@/hooks/useNotifications';
+import useNotifications from '@/hooks/useNotifications';
 import useRailgunTx from '@/hooks/useRailgunTx';
 import { shortenAddress } from '@/utils/address';
 
@@ -38,8 +38,8 @@ const ReviewTransactionModal = ({
   onSubmitClick,
 }: ReviewTransactionModalProps) => {
   const { shieldingFees } = useToken();
-  // const { txNotify, notifyUser } = useNotifications();
-  const { isShielding } = useRailgunTx();
+  const { txNotify, notifyUser } = useNotifications();
+  const { shield, isShielding } = useRailgunTx();
   const { chain } = useNetwork();
   const tokenAmount = amount;
   const tokenDecimals = token?.decimals;
@@ -52,20 +52,20 @@ const ReviewTransactionModal = ({
 
   const doSubmit: React.FormEventHandler = async () => {
     if (!token.address || !amount || !token?.decimals || !recipient) throw new Error('bad form');
-    // const tx = await shield({
-    //   tokenAddress: token.address,
-    //   tokenAmount: amount,
-    //   tokenDecimals: token?.decimals,
-    //   recipient,
-    // });
-    // if (tx) {
-    //   txNotify(tx.hash);
-    // } else {
-    //   notifyUser({
-    //     alertType: 'error',
-    //     message: 'Failed to create a shield transaction',
-    //   });
-    // }
+    const tx = await shield({
+      tokenAddress: token.address,
+      tokenAmount: amount,
+      tokenDecimals: token?.decimals,
+      recipient,
+    });
+    if (tx) {
+      txNotify(tx.hash);
+    } else {
+      notifyUser({
+        alertType: 'error',
+        message: 'Failed to create a shield transaction',
+      });
+    }
     onClose();
     onSubmitClick();
   };
