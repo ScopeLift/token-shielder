@@ -21,8 +21,9 @@ import { TokenListContextItem } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useResolveUnstoppableDomainAddress from '@/hooks/useResolveUnstoppableDomainAddress';
 import useTokenAllowance from '@/hooks/useTokenAllowance';
-import { VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
+import { UNSTOPPABLE_DOMAIN_SUFFIXES, VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
 import { buildBaseToken, getNetwork } from '@/utils/networks';
+import { endsWithAny } from '@/utils/string';
 
 type TxFormValues = {
   recipient: string;
@@ -44,7 +45,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     reset,
     formState: { errors },
   } = useForm<TxFormValues>({
-    reValidateMode: 'onSubmit',
+    mode: 'onChange',
     defaultValues: {
       token: network.baseToken.name,
       recipient: recipientAddress,
@@ -52,6 +53,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   });
   const { isOpen: isReviewOpen, onOpen: openReview, onClose: closeReview } = useDisclosure();
   const [selectedToken, setSelectedToken] = useState<TokenListContextItem>(tokenList[0]);
+  const [validAddress, setValidAddress] = useState(false);
   const [tokenAmount, setTokenAmount] = useState<string>('');
   const { config } = usePrepareContractWrite({
     address: selectedToken?.address,
@@ -69,10 +71,8 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     tokenAllowances.get(selectedToken?.address || '') || data || BigNumber.from(0);
   const [recipient, setRecipient] = useState<string>(recipientAddress || '');
   const [recipientDisplayName, setRecipientDisplayName] = useState<string>(recipientAddress || '');
-  const { data: resolvedUnstoppableDomain, isLoading: unstoppableDomainResolutionIsLoading } =
-    useResolveUnstoppableDomainAddress({
-      name: recipientDisplayName,
-    });
+  const { data: resolvedUnstoppableDomain, trigger: resolveDomain } =
+    useResolveUnstoppableDomainAddress();
   const needsApproval =
     selectedToken?.address !== ethAddress &&
     ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
@@ -120,16 +120,18 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           <Flex justify="space-between">
             <FormLabel>Recipient address</FormLabel>
 
-            <Text
-              cursor="pointer"
-              textDecoration="underline"
-              fontSize="xs"
-              textAlign="center"
-              onClick={onCopy}
-            >
-              Copy Shield Link
-              <CopyIcon ml=".25rem" />
-            </Text>
+            {validAddress && (
+              <Text
+                cursor="pointer"
+                textDecoration="underline"
+                fontSize="xs"
+                textAlign="center"
+                onClick={onCopy}
+              >
+                Copy Shield Link
+                <CopyIcon ml=".25rem" />
+              </Text>
+            )}
           </Flex>
           <Input
             variant="outline"
@@ -142,11 +144,23 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               onChange: (e) => {
                 setRecipientDisplayName(e.target.value);
               },
-              validate: (value) => {
+              validate: async (value) => {
                 const validRailgunAddress = validateRailgunAddress(value);
-                if (validRailgunAddress || resolvedUnstoppableDomain) {
+
+                if (validRailgunAddress) {
+                  setValidAddress(true);
                   return true;
                 }
+
+                if (endsWithAny(value, UNSTOPPABLE_DOMAIN_SUFFIXES)) {
+                  const resolvedUnstoppableDomain = await resolveDomain({ name: value });
+
+                  if (resolvedUnstoppableDomain) {
+                    setValidAddress(true);
+                    return true;
+                  }
+                }
+                setValidAddress(false);
                 return 'Invalid railgun address or unstoppable domain does not resolve to a railgun address';
               },
             })}
@@ -237,7 +251,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           </Button>
         ) : (
           <Button
-            isDisabled={!isConnected || chain?.unsupported || unstoppableDomainResolutionIsLoading}
+            isDisabled={!isConnected || chain?.unsupported}
             type="submit"
             size="lg"
             mt=".75rem"

@@ -1,4 +1,4 @@
-import useSWR from 'swr';
+import useSWRMutation from 'swr/mutation';
 import { useNetwork } from 'wagmi';
 
 // Comes from fields here:
@@ -7,12 +7,12 @@ type UnstoppableData = {
   records: { [path in string]: string | null }; // eslint-disable-line no-unused-vars
 };
 
-const useResolveUnstoppableDomainAddress = (props: { name: string }) => {
+const useResolveUnstoppableDomainAddress = () => {
   const { chain } = useNetwork();
-  const { isLoading, error, data } = useSWR(
-    `useResolveUnstoppableDomainAddress-${chain?.id}-${props.name}`,
-    async () => {
-      const url = `https://railwayapi.xyz/unstoppable/domains/resolve/${props.name}`;
+  const { isMutating, error, data, trigger } = useSWRMutation(
+    `useResolveUnstoppableDomainAddress-${chain?.id}`,
+    async (key: string, { arg }: { arg: { name: string } }) => {
+      const url = `https://railwayapi.xyz/unstoppable/domains/resolve/${arg.name}`;
       const resp = await fetch(url);
       const data = (await resp.json()) as UnstoppableData;
 
@@ -23,7 +23,7 @@ const useResolveUnstoppableDomainAddress = (props: { name: string }) => {
       return address;
     }
   );
-  return { isLoading, error, data };
+  return { isMutating, trigger, error, data };
 };
 
 export default useResolveUnstoppableDomainAddress;
