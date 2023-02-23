@@ -95,10 +95,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
       if (net && net?.chain) {
         const chain = getNetwork(net?.chain.id);
         const token = buildBaseToken(chain.baseToken, net.chain.id);
-        setRecipient('');
-        setRecipientDisplayName('');
         setSelectedToken(token);
-        setValue('recipient', '');
         setValue('token', chain.baseToken.name);
       }
     },
@@ -258,9 +255,11 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             token={selectedToken}
             amount={tokenAmount}
             onSubmitClick={() => {
-              reset();
-              setRecipientDisplayName('');
-              setRecipient('');
+              reset((values) => ({
+                ...values,
+                recipient: values.recipient,
+                amount: '',
+              }));
             }}
           />
         )}
