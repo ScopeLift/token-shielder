@@ -1,5 +1,5 @@
 body {
-  background-image: radial-gradient(farthest-corner at 15% 15%, #decba488, #2bb0ed66) !important;
+  background: no-repeat fixed radial-gradient(farthest-corner at 15% 15%, #decba488, #2bb0ed66) !important;
 }
 
 .container {
