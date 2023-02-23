@@ -21,7 +21,7 @@ const useShieldPrivateKey = () => {
     setShieldPrivateKey(spk);
     return spk;
   };
-  return { getShieldPrivateKey };
+  return { shieldPrivateKey, getShieldPrivateKey };
 };
 
 export default useShieldPrivateKey;

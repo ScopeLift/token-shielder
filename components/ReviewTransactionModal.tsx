@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@chakra-ui/button';
-import { Flex, Heading, Text } from '@chakra-ui/layout';
+import { Code, Flex, Heading, Text } from '@chakra-ui/layout';
 import {
   Modal,
   ModalBody,
@@ -9,13 +9,16 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/modal';
+import { Alert, AlertIcon } from '@chakra-ui/react';
 import { Tooltip } from '@chakra-ui/tooltip';
+import { getShieldPrivateKeySignatureMessage } from '@railgun-community/quickstart';
 import { ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { useNetwork } from 'wagmi';
 import { TokenListContextItem, useToken } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useRailgunTx from '@/hooks/useRailgunTx';
+import useShieldPrivateKey from '@/hooks/useShieldPrivateKey';
 import { shortenAddress } from '@/utils/address';
 
 type ReviewTransactionModalProps = {
@@ -40,6 +43,7 @@ const ReviewTransactionModal = ({
   const { shieldingFees } = useToken();
   const { txNotify, notifyUser } = useNotifications();
   const { shield, isShielding } = useRailgunTx();
+  const { shieldPrivateKey } = useShieldPrivateKey();
   const { chain } = useNetwork();
   const tokenAmount = amount;
   const tokenDecimals = token?.decimals;
@@ -113,12 +117,22 @@ const ReviewTransactionModal = ({
               </Flex>
             </Flex>
           </Flex>
+          {!shieldPrivateKey && (
+            <Alert status="info" mt=".5rem">
+              <AlertIcon />
+              <div>
+                You will first be prompted to sign the message{' '}
+                <Code>{getShieldPrivateKeySignatureMessage()}</Code>, enabling you to decrypt the
+                receiving address in the future.
+              </div>
+            </Alert>
+          )}
           <Button
             isDisabled={isShielding}
             isLoading={isShielding}
             onClick={doSubmit}
             w="100%"
-            mt="1.5rem"
+            mt=".5rem"
             mb="1rem"
           >
             Shield
