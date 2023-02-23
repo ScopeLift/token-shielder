@@ -10,7 +10,7 @@ import { getRailgunSmartWalletContractForNetwork } from '@railgun-community/quic
 import { validateRailgunAddress } from '@railgun-community/quickstart';
 import { erc20ABI } from '@wagmi/core';
 import { GetNetworkResult, watchNetwork } from '@wagmi/core';
-import { BigNumber, constants, ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
 import { useSWRConfig } from 'swr';
 import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
@@ -59,7 +59,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
     functionName: 'approve',
     args: [
       getRailgunSmartWalletContractForNetwork(network.railgunNetworkName).address as `0x{string}`,
-      constants.MaxUint256,
+      ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals),
     ],
   });
   const { writeAsync: doErc20Approval } = useContractWrite(config);
