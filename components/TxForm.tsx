@@ -6,6 +6,7 @@ import { CopyIcon } from '@chakra-ui/icons';
 import { Input, InputGroup } from '@chakra-ui/input';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { useDisclosure } from '@chakra-ui/react';
+import { Textarea } from '@chakra-ui/textarea';
 import { getRailgunSmartWalletContractForNetwork } from '@railgun-community/quickstart';
 import { validateRailgunAddress } from '@railgun-community/quickstart';
 import { erc20ABI } from '@wagmi/core';
@@ -133,12 +134,13 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               </Text>
             )}
           </Flex>
-          <Input
+          <Textarea
             variant="outline"
             size="lg"
-            height="4rem"
+            resize="none"
             mb=".25rem"
-            placeholder="0zk1qyn0qa5rgk7z2l8wyncpynmy..."
+            height="9rem"
+            placeholder="0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
             {...register('recipient', {
               required: 'This is required',
               onChange: (e) => {
