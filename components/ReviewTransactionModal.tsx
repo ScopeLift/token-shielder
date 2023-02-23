@@ -18,7 +18,6 @@ import { useNetwork } from 'wagmi';
 import { TokenListContextItem, useToken } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useRailgunTx from '@/hooks/useRailgunTx';
-import useShieldPrivateKey from '@/hooks/useShieldPrivateKey';
 import { shortenAddress } from '@/utils/address';
 
 type ReviewTransactionModalProps = {
@@ -116,7 +115,7 @@ const ReviewTransactionModal = ({
             </Flex>
           </Flex>
           {!shieldPrivateKey && (
-            <Alert status="info" mt=".5rem">
+            <Alert status="info" mt=".5rem" borderRadius="md">
               <AlertIcon />
               <div>
                 You will first be prompted to sign the message{' '}
