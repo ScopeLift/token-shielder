@@ -17,7 +17,7 @@ import { getNetwork } from '@/utils/networks';
 const useRailgunTx = () => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
-  const { getShieldPrivateKey } = useShieldPrivateKey();
+  const { shieldPrivateKey, getShieldPrivateKey } = useShieldPrivateKey();
   const { chain } = useNetwork();
   const chainId = chain?.id || 1; // default to mainnet if no chain id
   const { railgunNetworkName: network, wethAddress } = getNetwork(chainId);
@@ -132,7 +132,7 @@ const useRailgunTx = () => {
     return signer?.sendTransaction(transactionRequest);
   };
 
-  return { shield, isShielding };
+  return { shield, isShielding, shieldPrivateKey };
 };
 
 export default useRailgunTx;

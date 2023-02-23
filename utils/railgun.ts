@@ -9,7 +9,6 @@ import localforage from 'localforage';
 import { getNetwork, networks } from './networks';
 
 export const loadProviders = async () => {
-  console.log('Test');
   // Whether to forward debug logs from Fallback Provider.
   const shouldDebug = true;
   return Promise.all(
