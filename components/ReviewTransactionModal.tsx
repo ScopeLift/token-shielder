@@ -42,8 +42,7 @@ const ReviewTransactionModal = ({
 }: ReviewTransactionModalProps) => {
   const { shieldingFees } = useToken();
   const { txNotify, notifyUser } = useNotifications();
-  const { shield, isShielding } = useRailgunTx();
-  const { shieldPrivateKey } = useShieldPrivateKey();
+  const { shield, isShielding, shieldPrivateKey } = useRailgunTx();
   const { chain } = useNetwork();
   const tokenAmount = amount;
   const tokenDecimals = token?.decimals;
@@ -73,7 +72,6 @@ const ReviewTransactionModal = ({
     onClose();
     onSubmitClick();
   };
-
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
