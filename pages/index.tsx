@@ -9,10 +9,11 @@ const Home = ({ recipientAddress }: { recipientAddress?: string }) => {
         TokenShielder
       </Heading>
       <Image
-        boxSize="10rem"
+        boxSize="7rem"
         src="dwarf.jpg"
         alt="dwarf with shield"
-        borderRadius="8rem"
+        borderRadius="4rem"
+        border="2px solid white"
         mb="1.5rem"
       />
       <Heading as="h4" size="xs" mb="2rem">
