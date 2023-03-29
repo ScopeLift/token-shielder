@@ -48,7 +48,7 @@ export const HowItWorks = () => {
           textDecoration="underline"
           isExternal
         >
-          RAILGUN’s Privacy System
+          the RAILGUN Privacy System
         </Link>{' '}
         encrypts balances and transactions so they’re private to each user. All RAILGUN users have
         0zk addresses, where they can receive tokens that are shielded from public view. Shielding
@@ -61,7 +61,11 @@ export const HowItWorks = () => {
       <Text fontSize="sm" marginTop="1rem" textAlign="justify">
         Shield transactions are executed publicly, using your public wallet. Under the hood, the
         shield action sends ERC-20 tokens into the RAILGUN Smart Contract, where they are associated
-        with a RAILGUN 0zk Wallet.
+        with a RAILGUN 0zk Wallet. To see what you can do after you have Shielded funds, visit{' '}
+        <Link href="https://help.railway.xyz" textDecoration="underline" isExternal>
+          https://help.railway.xyz
+        </Link>
+        .
       </Text>
       <Heading as="h5" size="xs" marginTop="1rem">
         What do I do with shielded tokens?
