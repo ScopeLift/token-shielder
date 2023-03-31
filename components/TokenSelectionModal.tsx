@@ -272,7 +272,16 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
               <EmptyTokenItem />
             ) : (
               allResults.map((item, i) => {
-                return <TokenSelectionItem token={item} key={i} onClick={props.onSelect} />;
+                return (
+                  <TokenSelectionItem
+                    token={item}
+                    key={i}
+                    onClick={(token) => {
+                      props.onSelect(token);
+                      setSearchTerm('');
+                    }}
+                  />
+                );
               })
             )}
           </Flex>
