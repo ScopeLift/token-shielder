@@ -1,7 +1,6 @@
-import { useRef } from 'react';
 import { Link } from '@chakra-ui/layout';
 import { AlertStatus } from '@chakra-ui/react';
-import { ToastId, ToastPosition, useToast } from '@chakra-ui/toast';
+import { ToastPosition, useToast } from '@chakra-ui/toast';
 import { useProvider } from 'wagmi';
 import { getEtherscanUrl } from '@/utils/networks';
 
@@ -13,7 +12,6 @@ const toastDefaultArgs = {
 const useNotifications = () => {
   const provider = useProvider();
   const toast = useToast();
-  const toastIdRef = useRef<ToastId>();
 
   const notifyUser = ({
     title,
@@ -42,7 +40,7 @@ const useNotifications = () => {
   const txNotify = async (txHash: string) => {
     const { chainId } = await provider.getNetwork();
     const href = getEtherscanUrl(txHash, chainId);
-    toastIdRef.current = toast({
+    const toastId = toast({
       ...toastDefaultArgs,
       isClosable: false,
       description: (
@@ -56,7 +54,7 @@ const useNotifications = () => {
     });
 
     const { status } = await provider.waitForTransaction(txHash);
-    toast.update(toastIdRef.current, {
+    toast.update(toastId, {
       ...toastDefaultArgs,
       description: status ? (
         <Link href={href} isExternal>
