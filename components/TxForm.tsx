@@ -25,7 +25,7 @@ import useTokenAllowance from '@/hooks/useTokenAllowance';
 import { UNSTOPPABLE_DOMAIN_SUFFIXES, VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
 import { buildBaseToken, getNetwork } from '@/utils/networks';
 import { endsWithAny } from '@/utils/string';
-import { ethersParsable } from '@/utils/token';
+import { isAmountParsable } from '@/utils/token';
 
 type TxFormValues = {
   recipient: string;
@@ -194,7 +194,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
               {...register('amount', {
                 required: 'This is required',
                 onChange: (e) => {
-                  const isParseable = ethersParsable(e.target.value, selectedToken.decimals);
+                  const isParseable = isAmountParsable(e.target.value, selectedToken.decimals);
                   if (
                     e.target.value &&
                     !isNaN(e.target.value) &&

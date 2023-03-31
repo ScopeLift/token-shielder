@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-export const ethersParsable = (tokenAmount: string, decimals: number) => {
+export const isAmountParsable = (tokenAmount: string, decimals: number) => {
   try {
     ethers.utils.parseUnits(tokenAmount || '0', decimals);
     return true;
