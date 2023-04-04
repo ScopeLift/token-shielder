@@ -38,6 +38,7 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const data = await readContracts({
         contracts: readContractsArgs,
       });
+      console.log('Data', tokenList, data);
       const tokenListWithUserBalance = tokenList.map((token, i) => {
         if (token.address === ethAddress)
           return {
@@ -46,7 +47,7 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
           };
         return {
           ...token,
-          balance: data[i] as BigNumber | null,
+          balance: data[i - 1] as BigNumber | null,
         };
       });
       return tokenListWithUserBalance;
