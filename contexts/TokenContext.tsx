@@ -35,7 +35,6 @@ export const TokenListProvider = ({
   const { notifyUser } = useNotifications();
   const { tokenList } = useTokenList();
   const { isConnected } = useAccount();
-  console.log(tokenList);
   const {
     isLoading: balanceIsLoading,
     error: balanceError,

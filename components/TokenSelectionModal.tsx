@@ -174,7 +174,6 @@ const CustomTokenSelectionItem = ({
           isOpen={isCustomOpen}
           onClose={onCustomClose}
           onClick={async () => {
-            // Add to localforage
             const customTokens =
               (await localforage.getItem<TokenListItem[]>(CUSTOM_TOKEN_ARRAY_PATH)) || [];
             await setItem<TokenListItem[]>({

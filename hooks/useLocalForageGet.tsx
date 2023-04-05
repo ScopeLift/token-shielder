@@ -1,6 +1,5 @@
 import localforage from 'localforage';
 import useSWR from 'swr';
-import { CUSTOM_TOKEN_ARRAY_PATH } from '@/utils/constants';
 
 const useLocalForageGet = <T,>({ itemPath }: { itemPath: string }) => {
   const { isLoading, error, data } = useSWR(`localForageGet-${itemPath}`, async () => {
