@@ -113,11 +113,7 @@ const EmptyTokenItem = () => {
   );
 };
 
-const CustomTokenSelectionItem = ({
-  onSelect,
-  key,
-  tokenAddress,
-}: CustomTokenSelectionItemProps) => {
+const CustomTokenSelectionItem = ({ onSelect, tokenAddress }: CustomTokenSelectionItemProps) => {
   const { notifyUser } = useNotifications();
   const { chain } = useNetwork();
   const { isOpen: isCustomOpen, onOpen: onCustomOpen, onClose: onCustomClose } = useDisclosure();
