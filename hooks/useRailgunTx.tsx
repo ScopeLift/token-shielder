@@ -36,8 +36,8 @@ const useRailgunTx = () => {
       setIsShielding(false);
       return resp;
     } catch (e) {
-      console.error(e);
       setIsShielding(false);
+      throw e;
     }
   };
 
@@ -81,7 +81,7 @@ const useRailgunTx = () => {
     // Public wallet to shield from.
     transactionRequest.from = address;
 
-    return signer?.sendTransaction(transactionRequest);
+    return signer!.sendTransaction(transactionRequest);
   };
 
   const shieldToken = async ({
@@ -129,7 +129,7 @@ const useRailgunTx = () => {
     // Public wallet to shield from.
     transactionRequest.from = address;
 
-    return signer?.sendTransaction(transactionRequest);
+    return signer!.sendTransaction(transactionRequest);
   };
 
   return { shield, isShielding, shieldPrivateKey };
