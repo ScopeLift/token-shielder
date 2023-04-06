@@ -67,12 +67,20 @@ const ReviewTransactionModal = ({
       onClose();
       onSubmitClick();
     } catch (e) {
-      console.error(e);
-      setError((e as Error).message);
+      console.error(JSON.stringify(e));
+      const err = e as Error & { reason?: string };
+      setError(err.reason ? err.reason : err.message);
     }
   };
   return (
-    <Modal onClose={onClose} isOpen={isOpen} isCentered>
+    <Modal
+      onClose={() => {
+        onClose();
+        setError(undefined);
+      }}
+      isOpen={isOpen}
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Confirm Shield</ModalHeader>
@@ -129,7 +137,7 @@ const ReviewTransactionModal = ({
               status="error"
               mt=".5rem"
               borderRadius="md"
-              wordBreak={'break-all'}
+              wordBreak={'break-word'}
               maxH={'3xs'}
               overflowY={'auto'}
               alignItems={'flex-start'}
