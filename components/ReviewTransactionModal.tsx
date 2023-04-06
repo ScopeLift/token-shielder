@@ -67,7 +67,7 @@ const ReviewTransactionModal = ({
       onClose();
       onSubmitClick();
     } catch (e) {
-      console.error(JSON.stringify(e));
+      console.error(e);
       const err = e as Error & { reason?: string };
       setError(err.reason ? err.reason : err.message);
     }
