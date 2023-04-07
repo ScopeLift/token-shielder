@@ -26,7 +26,7 @@ import { TokenListContextItem } from '@/contexts/TokenContext';
 import useLocalForageSet from '@/hooks/useLocalForageSet';
 import useNotifications from '@/hooks/useNotifications';
 import { TokenListItem } from '@/hooks/useTokenList';
-import { CUSTOM_TOKEN_ARRAY_PATH, ipfsDomain, rebaseTokens } from '@/utils/constants';
+import { CUSTOM_TOKENS_STORAGE_KEY, ipfsDomain, rebaseTokens } from '@/utils/constants';
 import { parseIPFSUri } from '@/utils/ipfs';
 import { getNetwork } from '@/utils/networks';
 
@@ -171,10 +171,10 @@ const CustomTokenSelectionItem = ({ onSelect, tokenAddress }: CustomTokenSelecti
           onClose={onCustomClose}
           onClick={async () => {
             const customTokens =
-              (await localforage.getItem<TokenListItem[]>(CUSTOM_TOKEN_ARRAY_PATH)) || [];
+              (await localforage.getItem<TokenListItem[]>(CUSTOM_TOKENS_STORAGE_KEY)) || [];
             await setItem<TokenListItem[]>({
-              key: `localForageGet-${CUSTOM_TOKEN_ARRAY_PATH}`,
-              path: CUSTOM_TOKEN_ARRAY_PATH,
+              key: `localForageGet-${CUSTOM_TOKENS_STORAGE_KEY}`,
+              path: CUSTOM_TOKENS_STORAGE_KEY,
               value: [...customTokens, token],
             });
             onSelect(token);
