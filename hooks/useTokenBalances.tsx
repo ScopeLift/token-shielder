@@ -46,7 +46,7 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
           };
         return {
           ...token,
-          balance: data[i] as BigNumber | null,
+          balance: data[i - 1] as BigNumber | null, // Subtract 1 because the native token is the first token and is handled by the conditional above
         };
       });
       return tokenListWithUserBalance;

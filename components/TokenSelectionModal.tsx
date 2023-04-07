@@ -18,12 +18,15 @@ import { Address } from 'abitype';
 import { BigNumber, FixedNumber, ethers } from 'ethers';
 import { formatUnits, isAddress } from 'ethers/lib/utils.js';
 import Fuse from 'fuse.js';
+import localforage from 'localforage';
 import { useAccount, useBalance, useNetwork, useToken as useWagmiToken } from 'wagmi';
 import WarningModal from '@/components/WarningModal';
 import { useToken } from '@/contexts/TokenContext';
 import { TokenListContextItem } from '@/contexts/TokenContext';
+import useLocalForageSet from '@/hooks/useLocalForageSet';
 import useNotifications from '@/hooks/useNotifications';
-import { ipfsDomain, rebaseTokens } from '@/utils/constants';
+import { TokenListItem } from '@/hooks/useTokenList';
+import { CUSTOM_TOKENS_STORAGE_KEY, ipfsDomain, rebaseTokens } from '@/utils/constants';
 import { parseIPFSUri } from '@/utils/ipfs';
 import { getNetwork } from '@/utils/networks';
 
@@ -110,11 +113,7 @@ const EmptyTokenItem = () => {
   );
 };
 
-const CustomTokenSelectionItem = ({
-  onSelect,
-  key,
-  tokenAddress,
-}: CustomTokenSelectionItemProps) => {
+const CustomTokenSelectionItem = ({ onSelect, tokenAddress }: CustomTokenSelectionItemProps) => {
   const { notifyUser } = useNotifications();
   const { chain } = useNetwork();
   const { isOpen: isCustomOpen, onOpen: onCustomOpen, onClose: onCustomClose } = useDisclosure();
@@ -136,6 +135,7 @@ const CustomTokenSelectionItem = ({
     token: tokenAddress,
     chainId: chain?.id,
   });
+  const { setItem } = useLocalForageSet();
   const isBlacklisted = rebaseTokens.find(
     (address) => tokenAddress.toLowerCase() === address.toLowerCase()
   );
@@ -165,16 +165,18 @@ const CustomTokenSelectionItem = ({
     const token = { ...data, logoURI: '', chainId: chain!.id, balance: balanceData?.value || null };
     return (
       <>
-        <TokenSelectionItem
-          token={token}
-          key={key}
-          onClick={openModal}
-          isBalanceLoading={isBalanceLoading}
-        />
+        <TokenSelectionItem token={token} onClick={openModal} isBalanceLoading={isBalanceLoading} />
         <WarningModal
           isOpen={isCustomOpen}
           onClose={onCustomClose}
-          onClick={() => {
+          onClick={async () => {
+            const customTokens =
+              (await localforage.getItem<TokenListItem[]>(CUSTOM_TOKENS_STORAGE_KEY)) || [];
+            await setItem<TokenListItem[]>({
+              key: `localForageGet-${CUSTOM_TOKENS_STORAGE_KEY}`,
+              path: CUSTOM_TOKENS_STORAGE_KEY,
+              value: [...customTokens, token],
+            });
             onSelect(token);
             onCustomClose();
           }}
