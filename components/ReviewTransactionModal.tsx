@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@chakra-ui/button';
 import { Code, Flex, Heading, Text } from '@chakra-ui/layout';
 import {
@@ -40,8 +40,9 @@ const ReviewTransactionModal = ({
   onSubmitClick,
 }: ReviewTransactionModalProps) => {
   const { shieldingFees } = useToken();
-  const { txNotify, notifyUser } = useNotifications();
+  const { txNotify } = useNotifications();
   const { shield, isShielding, shieldPrivateKey } = useRailgunTx();
+  const [error, setError] = useState<string>();
   const { chain } = useNetwork();
   const tokenAmount = amount;
   const tokenDecimals = token?.decimals;
@@ -54,25 +55,32 @@ const ReviewTransactionModal = ({
 
   const doSubmit: React.FormEventHandler = async () => {
     if (!token.address || !amount || !token?.decimals || !recipient) throw new Error('bad form');
-    const tx = await shield({
-      tokenAddress: token.address,
-      tokenAmount: amount,
-      tokenDecimals: token?.decimals,
-      recipient,
-    });
-    if (tx) {
-      txNotify(tx.hash);
-    } else {
-      notifyUser({
-        alertType: 'error',
-        message: 'Failed to create a shield transaction',
+    try {
+      setError(undefined);
+      const tx = await shield({
+        tokenAddress: token.address,
+        tokenAmount: amount,
+        tokenDecimals: token?.decimals,
+        recipient,
       });
+      txNotify(tx.hash);
+      onClose();
+      onSubmitClick();
+    } catch (e) {
+      console.error(e);
+      const err = e as Error & { reason?: string };
+      setError(err.reason ? err.reason : err.message);
     }
-    onClose();
-    onSubmitClick();
   };
   return (
-    <Modal onClose={onClose} isOpen={isOpen} isCentered>
+    <Modal
+      onClose={() => {
+        onClose();
+        setError(undefined);
+      }}
+      isOpen={isOpen}
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Confirm Shield</ModalHeader>
@@ -122,6 +130,20 @@ const ReviewTransactionModal = ({
                 <Code>{getShieldPrivateKeySignatureMessage()}</Code>, enabling you to decrypt the
                 receiving address in the future.
               </div>
+            </Alert>
+          )}
+          {error && (
+            <Alert
+              status="error"
+              mt=".5rem"
+              borderRadius="md"
+              wordBreak={'break-word'}
+              maxH={'3xs'}
+              overflowY={'auto'}
+              alignItems={'flex-start'}
+            >
+              <AlertIcon />
+              <Flex>{error}</Flex>
             </Alert>
           )}
           <Button
