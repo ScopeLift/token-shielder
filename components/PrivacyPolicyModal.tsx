@@ -15,20 +15,23 @@ export const PrivacyPolicy = () => {
       marginTop="3rem"
       marginBottom="3rem"
     >
-      <Heading as="h1" size="lg" alignSelf="center">
+      <Heading as="h1" size="lg" alignSelf="center" mb="1rem">
         Privacy Policy
       </Heading>
       <Heading as="h4" size="sm" marginTop="1rem">
         What information do we collect?
       </Heading>
       <Text fontSize="sm" marginTop="1rem" textAlign="justify">
-        We do not intentionally collect or store any personally identifiable information. Our
-        current first-party cloud hosting providers are:
+        We do not intentionally collect or store any personally identifiable information.{' '}
       </Text>
       <Text fontSize="sm" marginTop="1rem" textAlign="justify">
         When using our site, our cloud hosting providers may record the IP address that your request
         originated from. They may also retain server logs which include the IP address of every
         request to their servers. They may also collect other information from your requests.
+      </Text>
+
+      <Text fontSize="sm" marginTop="1rem" textAlign="justify">
+        Our current first-party cloud hosting providers are:
       </Text>
       <UnorderedList fontSize="sm" mt="1rem" ml="2rem">
         <ListItem>
@@ -112,9 +115,10 @@ export const PrivacyPolicy = () => {
       <Text fontSize="sm" marginTop="1rem" textAlign="justify">
         By using our site, you consent to our web site privacy policy.
       </Text>
-      <Text fontSize="sm" marginTop="1rem" textAlign="justify">
+
+      <Heading as="h4" size="sm" mt="1rem">
         Changes to our Privacy Policy
-      </Text>
+      </Heading>
       <Text fontSize="sm" marginTop="1rem" textAlign="justify">
         If we decide to change our privacy policy, we will post those changes on this page.
       </Text>

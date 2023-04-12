@@ -33,13 +33,13 @@ const Footer = () => {
       <Link size="sm" cursor="pointer" onClick={onOpen}>
         How does it work?
       </Link>
+      <Link size="sm" cursor="pointer" onClick={onPrivacyModalOpen}>
+        Privacy Policy
+      </Link>
       <Link href="https://github.com/ScopeLift/token-shielder" isExternal>
         <Flex align="center">
           Github <ExternalLinkIcon mx="4px" />
         </Flex>
-      </Link>
-      <Link size="sm" cursor="pointer" onClick={onPrivacyModalOpen}>
-        Privacy Policy
       </Link>
       <HowItWorksModal onClose={onClose} isOpen={isOpen} />
       <PrivacyPolicyModal onClose={onPrivacyModalClose} isOpen={isPrivacyModalOpen} />
