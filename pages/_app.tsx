@@ -52,7 +52,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="og:title" content={APP_TITLE} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tokenshielder.com" />
-        <meta property="og:image" content="" />
+        <meta
+          property="og:image"
+          content="https://raw.githubusercontent.com/ScopeLift/token-shielder/77a5dcfe7530f70f3883af54aa16034fdbd34252/public/home.png"
+        />
         <meta property="og:image:alt" content={`${APP_TITLE} site preview`} />
         <meta property="og:description" content={APP_DESCRIPTION} />
         <meta
