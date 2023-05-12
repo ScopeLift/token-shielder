@@ -16,6 +16,7 @@ import { chains, provider, webSocketProvider } from '@/utils/networks';
 import { initialize } from '@/utils/railgun';
 
 const APP_TITLE = 'Token Shielder';
+
 const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
 
 const colors = {
