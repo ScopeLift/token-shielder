@@ -48,7 +48,7 @@ const celoAlfajores = {
 
 // Configure supported networks.
 export const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli],
+  [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli, celoAlfajores],
   [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }), publicProvider()]
 );
 
@@ -64,7 +64,6 @@ export type NetworkConfig = {
 };
 
 const getRpcUrl = (chainId: number) => {
-  const { chains } = provider({ chainId }); // Returns array of all known chains.
   const chain = chains.find((chain) => chain.id === chainId);
   if (!chain) throw new Error(`Chain with id ${chainId} not found`);
   return chain.rpcUrls.default.http[0];
@@ -148,6 +147,21 @@ export const networks = {
     fallbackProviders: {
       chainId: arbitrum.id,
       providers: [{ provider: getRpcUrl(arbitrum.id), priority: 1, weight: 1 }],
+    },
+  },
+  [celoAlfajores.id]: {
+    blockExplorerUrl: 'https://alfajores.celoscan.io/',
+    railgunNetworkName: NetworkName.Celo,
+    chainId: celoAlfajores.id,
+    wethAddress: '0x524d97A67f50F4A062C28c74F60703Aec9028a94',
+    baseToken: {
+      symbol: 'CELO',
+      name: 'Celo',
+      logoURI: '',
+    },
+    fallbackProviders: {
+      chainId: celoAlfajores.id,
+      providers: [{ provider: getRpcUrl(celoAlfajores.id), priority: 1, weight: 1 }],
     },
   },
 } as { [key: number]: NetworkConfig };
