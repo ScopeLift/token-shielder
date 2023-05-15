@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { Grid, GridItem } from '@chakra-ui/layout';
@@ -16,6 +16,7 @@ import { chains, provider, webSocketProvider } from '@/utils/networks';
 import { initialize } from '@/utils/railgun';
 
 const APP_TITLE = 'Token Shielder';
+
 const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
 
 const colors = {
@@ -40,7 +41,7 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useMemo(initialize, []);
+  useEffect(initialize, []);
   const { isProviderLoaded, shieldingFees } = useRailgunProvider();
   return (
     <>
