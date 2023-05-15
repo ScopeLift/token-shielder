@@ -3,12 +3,48 @@ import { NetworkName } from '@railgun-community/shared-models';
 import { EVMGasType } from '@railgun-community/shared-models';
 import { FallbackProviderJsonConfig } from '@railgun-community/shared-models';
 import { BigNumber } from 'ethers';
-import { configureChains } from 'wagmi';
+import { configureChains, Chain } from 'wagmi';
 import { arbitrum, bsc, goerli, mainnet, polygon } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { ethAddress } from '@/utils/constants';
 import { bscIcon } from '@/utils/constants';
+
+const celoAlfajores = {
+  id: 44_787,
+  name: 'Alfajores',
+  network: 'celo-alfajores',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'CELO',
+    symbol: 'A-CELO',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://alfajores-forno.celo-testnet.org'],
+    },
+    infura: {
+      http: ['https://celo-alfajores.infura.io/v3'],
+    },
+    public: {
+      http: ['https://alfajores-forno.celo-testnet.org'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Celo Explorer',
+      url: 'https://explorer.celo.org/alfajores',
+    },
+    etherscan: { name: 'CeloScan', url: 'https://alfajores.celoscan.io/' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+      blockCreated: 14569001,
+    },
+  },
+  testnet: true
+} satisfies Chain
 
 // Configure supported networks.
 export const { chains, provider, webSocketProvider } = configureChains(
