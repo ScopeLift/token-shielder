@@ -2232,9 +2232,9 @@
     levelup "^5.1.1"
     msgpack-lite "^0.1.26"
 
-"@railgun-community/quickstart@git://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915":
+"@railgun-community/quickstart@https://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915":
   version "4.4.3"
-  resolved "git://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915"
+  resolved "https://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915"
   dependencies:
     "@graphql-mesh/cache-localforage" "^0.7.20"
     "@graphql-mesh/cross-helpers" "^0.3.4"
@@ -2256,6 +2256,14 @@
 "@railgun-community/shared-models@git://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f":
   version "4.2.2"
   resolved "git://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f"
+  dependencies:
+    "@ethersproject/contracts" "^5.7.0"
+    "@ethersproject/transactions" "^5.7.0"
+
+"@railgun-community/shared-models@https://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f":
+  version "4.2.2"
+  uid "89b4695d58249e735751b2a1d18add012706411f"
+  resolved "https://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f"
   dependencies:
     "@ethersproject/contracts" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
