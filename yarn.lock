@@ -2232,10 +2232,9 @@
     levelup "^5.1.1"
     msgpack-lite "^0.1.26"
 
-"@railgun-community/quickstart@^4.3.23":
+"@railgun-community/quickstart@git://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915":
   version "4.4.3"
-  resolved "https://registry.yarnpkg.com/@railgun-community/quickstart/-/quickstart-4.4.3.tgz#5af975b8c388a1ddccdf52c2528dc562c610ddc1"
-  integrity sha512-7rzNtCqhM7JlDSbyleWWBGWbKQNxM615mDrFdbhXgpLRSQjwRGrPIPFIYojM6m1MMomV92ohJG5yzKUCcOqQog==
+  resolved "git://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915"
   dependencies:
     "@graphql-mesh/cache-localforage" "^0.7.20"
     "@graphql-mesh/cross-helpers" "^0.3.4"
@@ -2248,16 +2247,15 @@
     "@graphql-mesh/utils" "^0.43.22"
     "@noble/ed25519" "^1.7.1"
     "@railgun-community/engine" "4.3.5"
-    "@railgun-community/shared-models" "4.2.2"
+    "@railgun-community/shared-models" "git://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f"
     "@whatwg-node/fetch" "^0.8.4"
     axios "0.27.2"
     brotli "^1.3.3"
     graphql "^16.6.0"
 
-"@railgun-community/shared-models@4.2.2", "@railgun-community/shared-models@^4.2.2":
+"@railgun-community/shared-models@git://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f":
   version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@railgun-community/shared-models/-/shared-models-4.2.2.tgz#61d108fa910d10581ab7ef594ae0d4d51b73fecd"
-  integrity sha512-jztN89eVnC8eOEPDnPX52bCMBL8nYT7/dvSk9jNhiWC7FEzk645BBG4P3ORL/5to/XW7aoLr5Vrn07gey5MzEQ==
+  resolved "git://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f"
   dependencies:
     "@ethersproject/contracts" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
