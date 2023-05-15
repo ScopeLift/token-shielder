@@ -49,7 +49,7 @@ const celoAlfajores = {
 // Configure supported networks.
 export const { chains, provider, webSocketProvider } = configureChains(
   [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli, celoAlfajores],
-  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }), publicProvider()]
+  [publicProvider()]
 );
 
 type BaseToken = { symbol: string; name: string; logoURI: string };
