@@ -40,6 +40,7 @@ Thumbs.db
 
 # Next.js
 .next
+out/
 
 *.env
 .yarn/*

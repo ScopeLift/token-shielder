@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "checkFormat": "yarn prettier --check . ",
-    "format": "yarn prettier --write ."
+    "format": "yarn prettier --write .",
+    "export": "yarn build && next export"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.17",
