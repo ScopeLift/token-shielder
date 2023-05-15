@@ -7,26 +7,20 @@ import { configureChains, Chain } from 'wagmi';
 import { arbitrum, bsc, goerli, mainnet, polygon } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
-import { ethAddress } from '@/utils/constants';
+import { celoIcon, ethAddress } from '@/utils/constants';
 import { bscIcon } from '@/utils/constants';
 
 const celoAlfajores = {
-  id: 44_787,
+  id: 44787,
   name: 'Alfajores',
   network: 'celo-alfajores',
   nativeCurrency: {
     decimals: 18,
     name: 'CELO',
-    symbol: 'A-CELO',
+    symbol: 'CELO',
   },
   rpcUrls: {
     default: {
-      http: ['https://alfajores-forno.celo-testnet.org'],
-    },
-    infura: {
-      http: ['https://celo-alfajores.infura.io/v3'],
-    },
-    public: {
       http: ['https://alfajores-forno.celo-testnet.org'],
     },
   },
@@ -48,8 +42,8 @@ const celoAlfajores = {
 
 // Configure supported networks.
 export const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli, celoAlfajores],
-  [publicProvider()]
+  [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli, { ...celoAlfajores, iconUrl: celoIcon }],
+  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }), publicProvider()]
 );
 
 type BaseToken = { symbol: string; name: string; logoURI: string };
@@ -151,7 +145,7 @@ export const networks = {
   },
   [celoAlfajores.id]: {
     blockExplorerUrl: 'https://alfajores.celoscan.io/',
-    railgunNetworkName: NetworkName.Celo,
+    railgunNetworkName: NetworkName.CeloAlfajores,
     chainId: celoAlfajores.id,
     wethAddress: '0x524d97A67f50F4A062C28c74F60703Aec9028a94',
     baseToken: {
