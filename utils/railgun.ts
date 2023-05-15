@@ -23,9 +23,6 @@ export const loadProviders = async () => {
   );
 };
 
-// LevelDOWN compatible database for storing encrypted wallets.
-const db = new BrowserLevel('');
-
 const setLogging = () => {
   const logMessage = console.log;
   const logError = console.error;
@@ -49,13 +46,16 @@ export const initialize = () => {
   // Maximum of 16 characters, lowercase.
   const walletSource = 'hi';
 
+
+  // LevelDOWN compatible database for storing encrypted wallets.
+  const db = new BrowserLevel('');
+
   // Persistent store for downloading large artifact files.
   // See Quickstart Developer Guide for platform implementations.
 
   // Whether to download native C++ or web-assembly artifacts.
   // True for mobile. False for nodejs and browser.
   const useNativeArtifacts = false;
-
   // Whether to forward Engine debug logs to Logger.
   const shouldDebug = true;
 
