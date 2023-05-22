@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { BigNumber } from '@ethersproject/bignumber';
 import { readContracts } from '@wagmi/core';
 import useSWR from 'swr';
@@ -14,12 +15,13 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
     data: balance,
     isError,
     isLoading: balanceLoading,
+    refetch,
   } = useBalance({
     address,
   });
 
   const chainId = chain?.id || 1; // default to mainnet if no chain id
-  const { isLoading, error, data } = useSWR(
+  const { isLoading, error, data, mutate } = useSWR(
     `userTokenList-${chainId}-${tokenList.length}`,
     async () => {
       if (!tokenList || tokenList.length === 0) {
@@ -38,24 +40,32 @@ const useTokenBalances = ({ tokenList }: { tokenList: TokenListItem[] }) => {
       const data = await readContracts({
         contracts: readContractsArgs,
       });
-      const tokenListWithUserBalance = tokenList.map((token, i) => {
-        if (token.address === ethAddress)
+      const tokenListWithUserBalance = Promise.all(
+        tokenList.map(async (token, i) => {
+          if (token.address === ethAddress)
+            return {
+              ...token,
+              balance: balance?.value || null,
+            };
           return {
             ...token,
-            balance: balance?.value || null,
+            balance: data[i - 1] as BigNumber | null, // Subtract 1 because the native token is the first token and is handled by the conditional above
           };
-        return {
-          ...token,
-          balance: data[i - 1] as BigNumber | null, // Subtract 1 because the native token is the first token and is handled by the conditional above
-        };
-      });
+        })
+      );
       return tokenListWithUserBalance;
     }
   );
+
+  const refetchBalances = useCallback(async () => {
+    await Promise.all([refetch(), mutate()]);
+  }, [refetch, mutate]);
+
   return {
     isLoading: isLoading || balanceLoading,
     error: error || isError,
     data,
+    refetchBalances,
   };
 };
 
