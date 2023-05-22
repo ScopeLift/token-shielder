@@ -4,11 +4,13 @@ import Head from 'next/head';
 import { Grid, GridItem } from '@chakra-ui/layout';
 import { ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/theme-utils';
+import { Groth16, getProver } from '@railgun-community/quickstart';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { WagmiConfig, createClient } from 'wagmi';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { RailgunWalletProvider } from '@/contexts/RailgunWalletContext';
 import { TokenListProvider } from '@/contexts/TokenContext';
 import { useRailgunProvider } from '@/hooks/useRailgunProvider';
 import '@/styles/globals.css';
@@ -41,8 +43,12 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(initialize, []);
-  const { isProviderLoaded, shieldingFees } = useRailgunProvider();
+  useEffect(() => {
+    initialize();
+    getProver().setSnarkJSGroth16((window as any).snarkjs.groth16 as Groth16);
+
+  }, []);
+  const { isProviderLoaded, shieldingFees, unshieldingFees } = useRailgunProvider();
   return (
     <>
       <Head>
@@ -68,29 +74,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <ChakraProvider theme={theme}>
             {isProviderLoaded && (
-              <TokenListProvider shieldingFees={shieldingFees}>
-                <Grid
-                  templateAreas={`". header ."
+              <RailgunWalletProvider>
+                <TokenListProvider shieldingFees={shieldingFees} unshieldingFees={unshieldingFees}>
+                  <Grid
+                    templateAreas={`". header ."
                                   ". body ."
 									                ". footer ."
 										`}
-                  gridTemplateRows={'4.8rem 1fr 4.8rem'}
-                  gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
-                  gap="1"
-                  h="100vh"
-                  marginX="1rem"
-                >
-                  <GridItem area={'header'}>
-                    <Header />
-                  </GridItem>
-                  <GridItem area={'body'}>
-                    <Component {...pageProps} />
-                  </GridItem>
-                  <GridItem area={'footer'}>
-                    <Footer />
-                  </GridItem>
-                </Grid>
-              </TokenListProvider>
+                    gridTemplateRows={'4.8rem 1fr 4.8rem'}
+                    gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
+                    gap="1"
+                    h="100vh"
+                    marginX="1rem"
+                  >
+                    <GridItem area={'header'}>
+                      <Header />
+                    </GridItem>
+                    <GridItem area={'body'}>
+                      <Component {...pageProps} />
+                    </GridItem>
+                    <GridItem area={'footer'}>
+                      <Footer />
+                    </GridItem>
+                  </Grid>
+                </TokenListProvider>
+              </RailgunWalletProvider>
             )}
           </ChakraProvider>
         </RainbowKitProvider>
