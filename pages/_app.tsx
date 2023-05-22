@@ -17,9 +17,9 @@ import '@/styles/globals.css';
 import { chains, provider, webSocketProvider } from '@/utils/networks';
 import { initialize } from '@/utils/railgun';
 
-const APP_TITLE = 'Token Shielder';
+const APP_TITLE = 'Railgun Integration UI';
 
-const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
+const APP_DESCRIPTION = 'Shield, unshield and transfer funds privately using Railgun';
 
 const colors = {
   brand: {
@@ -58,7 +58,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <meta property="og:title" content={APP_TITLE} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tokenshielder.com" />
+        <meta property="og:url" content="http://v23zkp-railgun-integrations-ui.surge.sh/" />
         <meta
           property="og:image"
           content="https://raw.githubusercontent.com/ScopeLift/token-shielder/77a5dcfe7530f70f3883af54aa16034fdbd34252/public/home.png"
