@@ -15,10 +15,16 @@ Object.keys(networks).forEach((chainId) => {
   // Current fees are 0.25% everywhere, so we initialize with that
   fallbackShieldingFees[Number(chainId)] = BigNumber.from('25');
 });
+const fallbackUnshieldingFees: ShieldFee = {};
+Object.keys(networks).forEach((chainId) => {
+  // Current fees are 0.25% everywhere, so we initialize with that
+  fallbackUnshieldingFees[Number(chainId)] = BigNumber.from('25');
+});
 
 export const useRailgunProvider = () => {
   const [isProviderLoaded, setProviderLoaded] = useState<Boolean>(false);
   const [shieldingFees, setShieldingFees] = useState<ShieldFee>(fallbackShieldingFees);
+  const [unshieldingFees, setunshieldingFees] = useState<ShieldFee>(fallbackUnshieldingFees);
   const { chain } = useNetwork();
   const network = getNetwork(chain?.id);
   const provider = useProvider();
@@ -36,7 +42,16 @@ export const useRailgunProvider = () => {
           [response.chainId]: BigNumber.from(newFee || fallbackShieldingFees[response.chainId]),
         };
       }, {});
+      // Set the unshield fees for each network.
+      const unshieldingFeesFromNetwork = res.reduce((acc, response) => {
+        const newFee = response.providerInfo.feesSerialized?.unshield;
+        return {
+          ...acc,
+          [response.chainId]: BigNumber.from(newFee || fallbackShieldingFees[response.chainId]),
+        };
+      }, {});
       setShieldingFees(shieldingFeesFromNetwork);
+      setunshieldingFees(unshieldingFeesFromNetwork);
 
       // Provider is done loading.
       setProviderLoaded(true);
@@ -48,5 +63,5 @@ export const useRailgunProvider = () => {
     setProviderForNetwork(network.railgunNetworkName, provider);
   }, [provider, network.railgunNetworkName]);
 
-  return { isProviderLoaded, shieldingFees };
+  return { isProviderLoaded, shieldingFees, unshieldingFees };
 };
