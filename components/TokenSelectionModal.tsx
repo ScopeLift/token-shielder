@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SearchIcon } from '@chakra-ui/icons';
+import { RepeatIcon, SearchIcon } from '@chakra-ui/icons';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/image';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
@@ -12,7 +12,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/modal';
-import { useDisclosure } from '@chakra-ui/react';
+import { IconButton, useDisclosure } from '@chakra-ui/react';
 import { Spinner } from '@chakra-ui/spinner';
 import { Address } from 'abitype';
 import { BigNumber, FixedNumber, ethers } from 'ethers';
@@ -50,6 +50,7 @@ type CustomTokenSelectionItemProps = {
 
 const TokenSelectionItem = ({ token, onClick, isBalanceLoading }: TokenSelectionItemProps) => {
   const tokenBalance = token?.balance || BigNumber.from(0);
+  const privateBalance = token?.privateBalance || BigNumber.from(0);
   return (
     <Flex
       justify="space-between"
@@ -80,17 +81,26 @@ const TokenSelectionItem = ({ token, onClick, isBalanceLoading }: TokenSelection
         <Text fontSize="md">{token.name}</Text>
         <Text fontSize="xs">{token.symbol}</Text>
       </Flex>
-      <Flex direction="column" justify="center">
+      <Flex direction="column" align="flex-end">
         {isBalanceLoading ? (
           <Spinner />
         ) : (
-          <Text size="md">
+          <>
+          <Text fontSize="md">
             {FixedNumber.from(
               formatUnits(tokenBalance.toString() || '0', token?.decimals || 0).toString()
             )
               .round(4)
               .toString() || 0}
           </Text>
+          <Text fontSize="xs">
+            {FixedNumber.from(
+              formatUnits(privateBalance.toString() || '0', token?.decimals || 0).toString()
+            )
+              .round(4)
+              .toString() || 0}
+          </Text>
+          </>
         )}
       </Flex>
     </Flex>
@@ -162,7 +172,7 @@ const CustomTokenSelectionItem = ({ onSelect, tokenAddress }: CustomTokenSelecti
   }
 
   if (data) {
-    const token = { ...data, logoURI: '', chainId: chain!.id, balance: balanceData?.value || null };
+    const token = { ...data, logoURI: '', chainId: chain!.id, balance: balanceData?.value || null, privateBalance: null };
     return (
       <>
         <TokenSelectionItem token={token} onClick={openModal} isBalanceLoading={isBalanceLoading} />
@@ -227,6 +237,7 @@ const CustomTokenSelectionItem = ({ onSelect, tokenAddress }: CustomTokenSelecti
 const TokenSelectionModal = (props: TokenSelectionModalProps) => {
   const { tokenList } = useToken();
   const [searchTerm, setSearchTerm] = useState('');
+  const { isLoading: isBalanceLoading, updateBalances } = useToken();
   const options = {
     includeScore: true,
     keys: ['address', 'name', 'symbol'],
@@ -250,7 +261,7 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
         <ModalHeader>Select Token</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Flex direction="column">
+          <Flex direction="row">
             <InputGroup>
               <InputLeftElement pointerEvents="none" height="100%">
                 <SearchIcon color="gray.300" />
@@ -262,6 +273,15 @@ const TokenSelectionModal = (props: TokenSelectionModalProps) => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </InputGroup>
+            <IconButton
+              marginLeft="1"
+              variant="outline"
+              boxSize={12}
+              aria-label='Refresh acount balances'
+              icon={<RepeatIcon />} 
+              onClick={() => {
+                if (!isBalanceLoading) updateBalances()
+              }}/>
           </Flex>
           <Flex direction="column" paddingTop="1rem">
             {results.length === 0 && isAddress(searchTerm) ? (
