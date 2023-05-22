@@ -184,6 +184,7 @@ export const buildBaseToken = (baseToken: BaseToken, chainId: number) => {
     name: baseToken.name,
     logoURI: baseToken.logoURI,
     balance: BigNumber.from(0),
+    privateBalance: BigNumber.from(0),
   };
 };
 
