@@ -7,22 +7,17 @@ import { Input, InputGroup } from '@chakra-ui/input';
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { useDisclosure } from '@chakra-ui/react';
 import { Textarea } from '@chakra-ui/textarea';
-import { getRailgunSmartWalletContractForNetwork } from '@railgun-community/quickstart';
 import { validateRailgunAddress } from '@railgun-community/quickstart';
-import { erc20ABI } from '@wagmi/core';
 import { GetNetworkResult, watchNetwork } from '@wagmi/core';
-import { BigNumber, ethers } from 'ethers';
-import { parseUnits } from 'ethers/lib/utils.js';
-import { useSWRConfig } from 'swr';
-import { useAccount, useContractWrite, useNetwork, usePrepareContractWrite } from 'wagmi';
+import { BigNumber } from 'ethers';
+import { isAddress, parseUnits } from 'ethers/lib/utils.js';
+import { useAccount, useNetwork } from 'wagmi';
 import ReviewTransactionModal from '@/components/ReviewTransactionModal';
 import TokenInput from '@/components/TokenInput';
-import { useToken } from '@/contexts/TokenContext';
-import { TokenListContextItem } from '@/contexts/TokenContext';
+import { TokenListContextItem, useToken } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useResolveUnstoppableDomainAddress from '@/hooks/useResolveUnstoppableDomainAddress';
-import useTokenAllowance from '@/hooks/useTokenAllowance';
-import { UNSTOPPABLE_DOMAIN_SUFFIXES, VALID_AMOUNT_REGEX, ethAddress } from '@/utils/constants';
+import { UNSTOPPABLE_DOMAIN_SUFFIXES, VALID_AMOUNT_REGEX } from '@/utils/constants';
 import { buildBaseToken, getNetwork } from '@/utils/networks';
 import { endsWithAny } from '@/utils/string';
 import { isAmountParsable } from '@/utils/token';
@@ -34,12 +29,11 @@ type TxFormValues = {
 };
 
 export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
-  const { tokenAllowances, tokenList } = useToken();
-  const { mutate } = useSWRConfig();
+  const { tokenList } = useToken();
   const { chain } = useNetwork();
   const { isConnected } = useAccount();
   const network = getNetwork(chain?.id);
-  const { notifyUser, txNotify } = useNotifications();
+  const { notifyUser } = useNotifications();
   const {
     handleSubmit,
     register,
@@ -57,27 +51,11 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const [selectedToken, setSelectedToken] = useState<TokenListContextItem>(tokenList[0]);
   const [validAddress, setValidAddress] = useState(false);
   const [tokenAmount, setTokenAmount] = useState<string>('');
-  const { config } = usePrepareContractWrite({
-    address: selectedToken?.address,
-    abi: erc20ABI,
-    functionName: 'approve',
-    args: [
-      getRailgunSmartWalletContractForNetwork(network.railgunNetworkName).address as `0x{string}`,
-      ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals),
-    ],
-  });
-  const { writeAsync: doErc20Approval } = useContractWrite(config);
-  const [isApprovalLoading, setIsApprovalLoading] = useState(false);
-  const { data } = useTokenAllowance({ address: selectedToken?.address || '' });
-  const tokenAllowance =
-    tokenAllowances.get(selectedToken?.address || '') || data || BigNumber.from(0);
+
   const [recipient, setRecipient] = useState<string>(recipientAddress || '');
   const [recipientDisplayName, setRecipientDisplayName] = useState<string>(recipientAddress || '');
   const { data: resolvedUnstoppableDomain, trigger: resolveDomain } =
     useResolveUnstoppableDomainAddress();
-  const needsApproval =
-    selectedToken?.address !== ethAddress &&
-    ethers.utils.parseUnits(tokenAmount || '0', selectedToken?.decimals).gt(tokenAllowance);
   const onCopy = () => {
     navigator.clipboard.writeText(`${window.location.host}/send?address=${recipientDisplayName}`);
     notifyUser({
@@ -130,7 +108,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
                 textAlign="center"
                 onClick={onCopy}
               >
-                Copy Shield Link
+                Copy Tx Link
                 <CopyIcon ml=".25rem" />
               </Text>
             )}
@@ -141,16 +119,14 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
             resize="none"
             mb=".25rem"
             height="9rem"
-            placeholder="0zk1qyn0qa5rgk7z2l8wyncpynmydgj7ucrrcczhl8k27q2rw5ldvv2qrrv7j6fe3z53ll5j4fjs9j5cmq7mxsaulah7ykk6jwqna3nwvxudp5w6fwyg8cgwkwwv3g4"
+            placeholder="0x... or 0zk... address"
             {...register('recipient', {
               required: 'This is required',
               onChange: (e) => {
                 setRecipientDisplayName(e.target.value);
               },
               validate: async (value) => {
-                const validRailgunAddress = validateRailgunAddress(value);
-
-                if (validRailgunAddress) {
+                if (isAddress(value) || validateRailgunAddress(value)) {
                   setValidAddress(true);
                   return true;
                 }
@@ -164,7 +140,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
                   }
                 }
                 setValidAddress(false);
-                return 'Invalid railgun address or unstoppable domain does not resolve to a railgun address';
+                return 'Invalid public (or railgun) address or unstoppable domain does not resolve to a railgun address';
               },
             })}
           />
@@ -224,48 +200,15 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
           </InputGroup>
           <FormErrorMessage my=".25rem">{errors.amount && errors.amount.message}</FormErrorMessage>
         </FormControl>
-        {needsApproval ? (
-          <Button
-            size="lg"
-            mt=".75rem"
-            width="100%"
-            isDisabled={!isConnected || chain?.unsupported || isApprovalLoading}
-            onClick={async () => {
-              if (!doErc20Approval) {
-                notifyUser({
-                  alertType: 'error',
-                  message:
-                    'Page is not prepared for ERC20 approval. Please try again in a few seconds',
-                });
-                return;
-              }
-              setIsApprovalLoading(true);
-              const tx = await doErc20Approval().catch((err) => console.error(err));
-              if (tx) {
-                await txNotify(tx.hash);
-                mutate((key) => typeof key === 'string' && key.startsWith('useTokenAllowance'));
-              } else {
-                notifyUser({
-                  alertType: 'error',
-                  message: 'Failed to approve token',
-                });
-              }
-              setIsApprovalLoading(false);
-            }}
-          >
-            Approve
-          </Button>
-        ) : (
-          <Button
-            isDisabled={!isConnected || chain?.unsupported}
-            type="submit"
-            size="lg"
-            mt=".75rem"
-            width="100%"
-          >
-            Shield
-          </Button>
-        )}
+        <Button
+          isDisabled={!isConnected || chain?.unsupported}
+          type="submit"
+          size="lg"
+          mt=".75rem"
+          width="100%"
+        >
+          Review
+        </Button>
         {selectedToken && (
           <ReviewTransactionModal
             isOpen={isReviewOpen}
