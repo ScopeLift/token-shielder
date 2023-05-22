@@ -36,7 +36,7 @@ const Footer = () => {
       <Link size="sm" cursor="pointer" onClick={onPrivacyModalOpen}>
         Privacy Policy
       </Link>
-      <Link href="https://github.com/ScopeLift/token-shielder" isExternal>
+      <Link href="https://github.com/venture23-zkp/railgun-integrations-ui" isExternal>
         <Flex align="center">
           Github <ExternalLinkIcon mx="4px" />
         </Flex>
