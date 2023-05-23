@@ -4,20 +4,22 @@ import Head from 'next/head';
 import { Grid, GridItem } from '@chakra-ui/layout';
 import { ChakraProvider } from '@chakra-ui/react';
 import { extendTheme } from '@chakra-ui/theme-utils';
+import { Groth16, getProver } from '@railgun-community/quickstart';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { WagmiConfig, createClient } from 'wagmi';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { RailgunWalletProvider } from '@/contexts/RailgunWalletContext';
 import { TokenListProvider } from '@/contexts/TokenContext';
 import { useRailgunProvider } from '@/hooks/useRailgunProvider';
 import '@/styles/globals.css';
 import { chains, provider, webSocketProvider } from '@/utils/networks';
 import { initialize } from '@/utils/railgun';
 
-const APP_TITLE = 'Token Shielder';
+const APP_TITLE = 'Railgun Integration UI';
 
-const APP_DESCRIPTION = 'Shield funds by depositing them into Railgun';
+const APP_DESCRIPTION = 'Shield, unshield and transfer funds privately using Railgun';
 
 const colors = {
   brand: {
@@ -41,8 +43,12 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  useEffect(initialize, []);
-  const { isProviderLoaded, shieldingFees } = useRailgunProvider();
+  useEffect(() => {
+    initialize();
+    getProver().setSnarkJSGroth16((window as any).snarkjs.groth16 as Groth16);
+
+  }, []);
+  const { isProviderLoaded, shieldingFees, unshieldingFees } = useRailgunProvider();
   return (
     <>
       <Head>
@@ -52,7 +58,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
         <meta property="og:title" content={APP_TITLE} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://tokenshielder.com" />
+        <meta property="og:url" content="https://v23zkp-railgun-integrations-ui.surge.sh/" />
         <meta
           property="og:image"
           content="https://raw.githubusercontent.com/ScopeLift/token-shielder/77a5dcfe7530f70f3883af54aa16034fdbd34252/public/home.png"
@@ -68,29 +74,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider chains={chains}>
           <ChakraProvider theme={theme}>
             {isProviderLoaded && (
-              <TokenListProvider shieldingFees={shieldingFees}>
-                <Grid
-                  templateAreas={`". header ."
+              <RailgunWalletProvider>
+                <TokenListProvider shieldingFees={shieldingFees} unshieldingFees={unshieldingFees}>
+                  <Grid
+                    templateAreas={`". header ."
                                   ". body ."
 									                ". footer ."
 										`}
-                  gridTemplateRows={'4.8rem 1fr 4.8rem'}
-                  gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
-                  gap="1"
-                  h="100vh"
-                  marginX="1rem"
-                >
-                  <GridItem area={'header'}>
-                    <Header />
-                  </GridItem>
-                  <GridItem area={'body'}>
-                    <Component {...pageProps} />
-                  </GridItem>
-                  <GridItem area={'footer'}>
-                    <Footer />
-                  </GridItem>
-                </Grid>
-              </TokenListProvider>
+                    gridTemplateRows={'4.8rem 1fr 4.8rem'}
+                    gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
+                    gap="1"
+                    h="100vh"
+                    marginX="1rem"
+                  >
+                    <GridItem area={'header'}>
+                      <Header />
+                    </GridItem>
+                    <GridItem area={'body'}>
+                      <Component {...pageProps} />
+                    </GridItem>
+                    <GridItem area={'footer'}>
+                      <Footer />
+                    </GridItem>
+                  </Grid>
+                </TokenListProvider>
+              </RailgunWalletProvider>
             )}
           </ChakraProvider>
         </RainbowKitProvider>

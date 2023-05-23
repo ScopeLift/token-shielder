@@ -3,9 +3,8 @@ import { NetworkName } from '@railgun-community/shared-models';
 import { EVMGasType } from '@railgun-community/shared-models';
 import { FallbackProviderJsonConfig } from '@railgun-community/shared-models';
 import { BigNumber } from 'ethers';
-import { configureChains, Chain } from 'wagmi';
+import { Chain, configureChains } from 'wagmi';
 import { arbitrum, bsc, goerli, mainnet, polygon } from 'wagmi/chains';
-import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { celoIcon, ethAddress } from '@/utils/constants';
 import { bscIcon } from '@/utils/constants';
@@ -37,13 +36,20 @@ const celoAlfajores = {
       blockCreated: 14569001,
     },
   },
-  testnet: true
-} satisfies Chain
+  testnet: true,
+} satisfies Chain;
 
 // Configure supported networks.
 export const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet, arbitrum, { ...bsc, iconUrl: bscIcon }, polygon, goerli, { ...celoAlfajores, iconUrl: celoIcon }],
-  [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! }), publicProvider()]
+  [
+    mainnet,
+    arbitrum,
+    { ...bsc, iconUrl: bscIcon },
+    polygon,
+    goerli,
+    { ...celoAlfajores, iconUrl: celoIcon },
+  ],
+  [publicProvider()]
 );
 
 type BaseToken = { symbol: string; name: string; logoURI: string };
@@ -184,6 +190,7 @@ export const buildBaseToken = (baseToken: BaseToken, chainId: number) => {
     name: baseToken.name,
     logoURI: baseToken.logoURI,
     balance: BigNumber.from(0),
+    privateBalance: BigNumber.from(0),
   };
 };
 

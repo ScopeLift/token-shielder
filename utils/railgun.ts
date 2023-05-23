@@ -59,7 +59,7 @@ export const initialize = () => {
   // Whether to forward Engine debug logs to Logger.
   const shouldDebug = true;
 
-  const skipMerkleTreeScans = true;
+  const skipMerkleTreeScans = false;
 
   startRailgunEngine(
     walletSource,

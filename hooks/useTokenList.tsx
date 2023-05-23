@@ -1,8 +1,9 @@
-import { useNetwork } from 'wagmi';
+import { useNetwork, useToken } from 'wagmi';
 import useLocalForageGet from '@/hooks/useLocalForageGet';
 import tokenListJson from '@/public/tokenlist.json';
 import { CUSTOM_TOKENS_STORAGE_KEY, TOKEN_PRIORITY_SORT } from '@/utils/constants';
 import { buildBaseToken, getNetwork } from '@/utils/networks';
+import useLocalForageSet from './useLocalForageSet';
 
 export interface TokenListItem {
   chainId: number;
@@ -28,9 +29,28 @@ export const useTokenList = () => {
       return 0;
     });
   const baseToken = buildBaseToken(network.baseToken, chain?.id || 1);
+  const { data: wethToken } = useToken({ address: network.wethAddress as '0x{string}' });
+  
+  const { setItem } = useLocalForageSet();
   const { data: localTokenList } = useLocalForageGet<TokenListItem[]>({
     itemPath: CUSTOM_TOKENS_STORAGE_KEY,
   });
+
+  if (!localTokenList?.find(({ address }) => address === network.wethAddress) && wethToken) {
+    setItem<TokenListItem[]>({
+      path: CUSTOM_TOKENS_STORAGE_KEY,
+      key: `localForageGet-${CUSTOM_TOKENS_STORAGE_KEY}`,
+      value: [
+        ...(localTokenList || []),
+        {
+          ...wethToken,
+          chainId,
+          logoURI: '',
+        },
+      ],
+    });
+  }
+
   const tokens = [baseToken, ...tokenList];
   const localTokens = localTokenList || [];
   return { tokenList: [...tokens, ...localTokens] };

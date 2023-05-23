@@ -6,7 +6,7 @@ const Home = ({ recipientAddress }: { recipientAddress?: string }) => {
   return (
     <Flex direction="column" align="center" justify="center">
       <Heading as="h1" size="2xl" mb="1rem">
-        TokenShielder
+        Railgun Wallet
       </Heading>
       <Image
         boxSize="7rem"
@@ -17,8 +17,7 @@ const Home = ({ recipientAddress }: { recipientAddress?: string }) => {
         mb="1.5rem"
       />
       <Heading as="h4" size="xs" mb="2rem">
-        Use your crypto wallet of choice to transfer tokens directly into a RAILGUN Private 0zk
-        balance.
+        Shield, Unshield and Transfer tokens between your public address and RAILGUN Private 0zk address.
       </Heading>
       <TxForm recipientAddress={recipientAddress} />
     </Flex>
