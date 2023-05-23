@@ -57,7 +57,7 @@ export const TxForm = ({ recipientAddress }: { recipientAddress?: string }) => {
   const { data: resolvedUnstoppableDomain, trigger: resolveDomain } =
     useResolveUnstoppableDomainAddress();
   const onCopy = () => {
-    navigator.clipboard.writeText(`${window.location.host}/send?address=${recipientDisplayName}`);
+    navigator.clipboard.writeText(`${window.location.host}/wallet?address=${recipientDisplayName}`);
     notifyUser({
       alertType: 'success',
       message: 'Shield link copied to clipboard',
