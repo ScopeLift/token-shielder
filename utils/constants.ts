@@ -4,6 +4,7 @@ export const ethAddress = getAddress(`0x${'e'.repeat(40)}`);
 export const ipfsDomain = 'https://gateway.ipfs.io/ipfs/';
 export const VALID_AMOUNT_REGEX = /^[\d\\.]+$/;
 
+export const CUSTOM_NFTS_STORAGE_KEY = 'customNFTs';
 export const CUSTOM_TOKENS_STORAGE_KEY = 'customTokens';
 export const TOKEN_PRIORITY_SORT = ['USDC', 'DAI', 'USDT'];
 

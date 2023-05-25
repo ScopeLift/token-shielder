@@ -1,0 +1,21 @@
+{
+    "name": "Railgun Integrations UI",
+    "timestamp": "2023-05-25T12:00:00.000Z",
+    "version": {
+      "major": 1,
+      "minor": 0,
+      "patch": 0
+    },
+    "description": "A list of NFTs supported by default",
+    "tokens": [
+      {
+        "chainId": 5,
+        "address": "0x92F8B8B507Bb7742a0EC7336c22FaB1d0CBe2154",
+        "name": "Account Contract Manager",
+        "symbol": "ACM",
+        "logoURI": "",
+        "extensions": {}
+      }
+    ]
+  }
+  

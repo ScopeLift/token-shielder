@@ -16,6 +16,8 @@
     "@chakra-ui/react": "^2.4.6",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@railgun-community/cookbook": "https://github.com/venture23-zkp/railgun_cookbook.git#642f0693de62031a1270a7af840ecfaa34bf109a",
+    "@railgun-community/engine": "^4.3.5",
     "@railgun-community/quickstart": "https://github.com/venture23-zkp/quickstart.git#d67df4c1a59c7840a3e548aa36b70eb656eab915",
     "@railgun-community/shared-models": "https://github.com/venture23-zkp/shared-models.git#89b4695d58249e735751b2a1d18add012706411f",
     "@rainbow-me/rainbowkit": "^0.8.1",

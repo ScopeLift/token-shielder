@@ -10,6 +10,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { WagmiConfig, createClient } from 'wagmi';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { NFTListProvider } from '@/contexts/NFTContext';
 import { RailgunWalletProvider } from '@/contexts/RailgunWalletContext';
 import { TokenListProvider } from '@/contexts/TokenContext';
 import { useRailgunProvider } from '@/hooks/useRailgunProvider';
@@ -46,7 +47,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     initialize();
     getProver().setSnarkJSGroth16((window as any).snarkjs.groth16 as Groth16);
-
   }, []);
   const { isProviderLoaded, shieldingFees, unshieldingFees } = useRailgunProvider();
   return (
@@ -76,27 +76,29 @@ function MyApp({ Component, pageProps }: AppProps) {
             {isProviderLoaded && (
               <RailgunWalletProvider>
                 <TokenListProvider shieldingFees={shieldingFees} unshieldingFees={unshieldingFees}>
-                  <Grid
-                    templateAreas={`". header ."
+                  <NFTListProvider>
+                    <Grid
+                      templateAreas={`". header ."
                                   ". body ."
 									                ". footer ."
 										`}
-                    gridTemplateRows={'4.8rem 1fr 4.8rem'}
-                    gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
-                    gap="1"
-                    h="100vh"
-                    marginX="1rem"
-                  >
-                    <GridItem area={'header'}>
-                      <Header />
-                    </GridItem>
-                    <GridItem area={'body'}>
-                      <Component {...pageProps} />
-                    </GridItem>
-                    <GridItem area={'footer'}>
-                      <Footer />
-                    </GridItem>
-                  </Grid>
+                      gridTemplateRows={'4.8rem 1fr 4.8rem'}
+                      gridTemplateColumns={'1fr minmax(auto, 150rem) 1fr'}
+                      gap="1"
+                      h="100vh"
+                      marginX="1rem"
+                    >
+                      <GridItem area={'header'}>
+                        <Header />
+                      </GridItem>
+                      <GridItem area={'body'}>
+                        <Component {...pageProps} />
+                      </GridItem>
+                      <GridItem area={'footer'}>
+                        <Footer />
+                      </GridItem>
+                    </Grid>
+                  </NFTListProvider>
                 </TokenListProvider>
               </RailgunWalletProvider>
             )}
