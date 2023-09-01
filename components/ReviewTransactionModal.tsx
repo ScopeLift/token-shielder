@@ -14,11 +14,11 @@ import { Tooltip } from '@chakra-ui/tooltip';
 import { getShieldPrivateKeySignatureMessage } from '@railgun-community/quickstart';
 import { ethers } from 'ethers';
 import { parseUnits } from 'ethers/lib/utils.js';
-import { useNetwork } from 'wagmi';
+import { useAccount, useNetwork } from 'wagmi';
 import { TokenListContextItem, useToken } from '@/contexts/TokenContext';
 import useNotifications from '@/hooks/useNotifications';
 import useRailgunTx from '@/hooks/useRailgunTx';
-import { shortenAddress } from '@/utils/address';
+import { assertSupportedAddress, shortenAddress } from '@/utils/address';
 
 type ReviewTransactionModalProps = {
   isOpen: boolean;
@@ -39,6 +39,7 @@ const ReviewTransactionModal = ({
   token,
   onSubmitClick,
 }: ReviewTransactionModalProps) => {
+  const { address } = useAccount();
   const { shieldingFees } = useToken();
   const { txNotify } = useNotifications();
   const { shield, isShielding, shieldPrivateKey } = useRailgunTx();
@@ -56,6 +57,7 @@ const ReviewTransactionModal = ({
   const doSubmit: React.FormEventHandler = async () => {
     if (!token.address || !amount || !token?.decimals || !recipient) throw new Error('bad form');
     try {
+      await assertSupportedAddress(address || '');
       setError(undefined);
       const tx = await shield({
         tokenAddress: token.address,
